@@ -1,0 +1,93 @@
+<html lang="se-SE">
+<head>
+	<title th:text="#{display.ph.d.positions.title}"> Doktorandernas kontering och aktivitetsgrad </title>
+	<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
+	<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default-application.css"></link>
+	<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default.css"></link>
+</head>
+<body>
+<!-- 
+Logged user: <span sec:authentication="name">Bob</span>
+ -->
+	<div id="container">
+		<div>
+			<h1 th:text="#{display.ph.d.positions.title}">Förslag till bemanning, typ</h1>
+		</div>
+
+		<div id="content">
+			<br class="clr" />
+			<div id="PersonAssignment" class="table">
+				<h2 th:text="${#dates.format(#dates.createNow(),'yyyy-MM-dd')}">
+					Budgetår 2017, Institutionen för Organismbiologi, 2017-04-02 
+				</h2>
+				<br />
+<!-- 
+				<div th:each="entry: ${ous}">
+ -->
+					<p />
+					<p />
+<!-- 
+					<h3 th:text="${entry.key.svName}" />
+ -->
+					<p />
+						<div th:each="phdStudent: ${phdStudents}">
+<!-- 
+							<div th:if="${teacher.totalHours > 0}">
+ -->
+								<h4 th:text="${phdStudent.person.name}+', Antagen som doktorand ' + ${#dates.format(phdStudent.start,'yyyy-MM-dd')} " />
+			<h5>
+				<span th:text="#{view.phdposition.remainingProjectTime}"></span>
+<!-- 
+				<span th:text="${#numbers.formatDecimal(phdStudent.currentRemainingProjectTime(),1,1)}"></span>
+ -->
+				<span th:text="${phdStudent.currentRemainingProjectTime()}"></span>
+				<span th:text="#{view.phdposition.timeUnit}+', '+#{view.phdposition.calcEndDate}"></span>
+				<span th:text="${#dates.format(phdStudent.predictedFinishDate(),'yyyy-MM-dd')}"></span>
+			</h5>
+									<p />
+									<hr align="center" />
+									<table>
+										<tr>
+											<th />
+											<th />
+											<th colspan="3" th:text="#{view.phdposition.accounting}"></th>
+											<th colspan="3" th:text="#{view.phdposition.remainingProjectTime}"></th>
+											<th />
+										</tr>
+										<tr>
+											<th th:text="#{view.phdposition.date}">Dept</th>
+											<th th:text="#{view.phdposition.activity}">Kurs</th>
+											<th th:text="#{view.phdposition.projfraction}">Administration</th>
+											<th th:text="#{view.phdposition.gufraction}">Utveckling</th>
+											<th th:text="#{view.phdposition.otherfraction}">Föreläsning</th>
+											<th th:text="#{view.phdposition.calcremianmonts}">Laboration, Lektion</th>
+											<th th:text="#{view.phdposition.reportremianmonts}">Exkursion, Seminarium</th>
+											<th th:text="#{view.phdposition.addedmonts}">Presentation, Handledning</th>
+											<th th:text="#{view.phdposition.note}">Totalt</th>
+										</tr>
+										<tr th:each="progress, iterStat: ${phdStudent.progresses}" th:class="${iterStat.odd}? 'odd' : 'even'">
+											<td th:text="${#dates.format(progress.date,'yyyy-MM-dd')}">  </td>
+											<td th:text="${progress.activity}" />
+											<td th:text="${#numbers.formatInteger(progress.projectFraction*100,1)} + ' %'" />
+											<td th:text="${#numbers.formatInteger(progress.guFraction*100,1)}+ ' %'" />
+											<div th:with="otherFraction=${1.0-progress.projectFraction-progress.guFraction}">
+												<td th:text="${#numbers.formatInteger(otherFraction*100,1)}+ ' %'" />
+											</div>
+											<td th:text="${#numbers.formatDecimal( progress.calcRemainMonths(),1,1 )}" />
+											<td th:text="${progress.remainingMonths}" />
+											<td th:text="${progress.addedMonths}" />
+											<td> </td>
+										</tr>
+									</table>
+<!-- 
+							</div>								
+ -->
+<!-- 
+					</div>
+ -->
+			</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

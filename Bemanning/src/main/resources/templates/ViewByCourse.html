@@ -1,0 +1,100 @@
+<html lang="se-SE">
+<head>
+	<title th:text="#{display.course.assignments.title}"> Förslag till bemanning, per kurs </title>
+	<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
+	<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default-application.css"></link>
+	<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default.css"></link>
+</head>
+<body>
+<!-- 
+Logged user: <span sec:authentication="name">Bob</span>
+ -->
+	<div id="container">
+		<div>
+			<h1 th:text="#{display.course.assignments.title}">Förslag till bemanning, typ</h1>
+		</div>
+
+		<div id="content">
+			<div id="selectYear" class="action">
+				<h3>
+					Välj år 
+				</h3>
+				<div class="trigger">
+					<form action="#" th:action="@{/view/ViewByCourse}" th:object="${budgetYear}" method="post">
+<!-- 
+						<select th:field="*{year}">
+ -->
+						<select name="year">
+							<option th:each="selectYear : ${budgetYear.allYears}" th:value="${selectYear}" th:text="${selectYear}" th:selected="${ selectYear==year }">År</option>
+						</select>
+						<input type="submit" value="V&auml;lj &aring;r" id="form_submit" />
+					</form>
+				</div>
+			</div>
+			<br class="clr" />
+			<div id="CourseAssignment" class="table">
+				<h2 th:text="'Budgetår ' + ${year} +', ' + ${budgetDept} + ', ' + ${#dates.format(#dates.createNow(),'yyyy-MM-dd')}">
+					Budgetår 2017, Institutionen för Organismbiologi, 2017-04-02 
+				</h2>
+				<br />
+				<p />
+					<div th:each="courseInstance: ${courses}">
+						<div th:if="${courseInstance.totalHours > 0}">
+							<h4 th:text="${courseInstance.course.code} +' ' + ${courseInstance.course.seName} + ', ' + ${courseInstance.courseLeader.person.name}" />
+								<p />
+								<hr align="center" />
+								<table>
+									<tr>
+										<th th:text="#{display.person.assignments.credDepttag}">Dept</th>
+										<th th:text="#{display.person.assignments.teachertag}">Kurs</th>
+										<th th:text="#{display.person.assignments.admintag}">Administration</th>
+										<th th:text="#{display.person.assignments.developtag}">Utveckling</th>
+										<th th:text="#{display.person.assignments.lecturetag}">Föreläsning</th>
+										<th th:text="#{display.person.assignments.practictag}">Laboration, Lektion</th>
+										<th th:text="#{display.person.assignments.excursiontag}">Exkursion, Seminarium</th>
+										<th th:text="#{display.person.assignments.seminartag}">Presentation, Handledning</th>
+										<th th:text="#{display.person.assignments.totaltag}">Totalt</th>
+									</tr>
+									<tr th:each="assignment, iterStat: ${courseInstance.assignments}" th:class="${iterStat.odd}? 'odd' : 'even'">
+										<td th:text="${assignment.assigningDept.abbreviation}"> IOB </td>
+										<td th:text="${assignment.staff.person.name}" />
+										<td th:text="${assignment.hoursAdmin}" />
+										<td th:text="${assignment.hoursDevelopment}" />
+										<td th:text="${assignment.hoursLecture}" />
+										<td th:text="${assignment.hoursPractical}" />
+										<td th:text="${assignment.hoursExcursion}" />
+										<td th:text="${assignment.hoursSeminar}" />
+										<td th:text="${assignment.totalHours}" />
+									</tr>
+									<tr>
+										<td />
+										<td th:text="#{display.course.assignments.total}"> Summa timmar </td>
+										<td />
+										<td />
+										<td />
+										<td />
+										<td />
+										<td />
+										<td th:text="${courseInstance.totalHours}"> Årstimmar </td>
+									</tr>
+<!-- 
+									<tr>
+										<td />
+										<td th:text="#{display.course.assignments.needed}"> Utgående balans </td>
+										<td />
+										<td />
+										<td />
+										<td />
+										<td />
+										<td />
+										<td th:text="${teacher.ub}"> UB </td>
+									</tr>
+ -->
+								</table>
+						</div>								
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

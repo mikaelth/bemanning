@@ -1,0 +1,146 @@
+package se.uu.ebc.bemanning;
+
+import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+
+import org.apache.log4j.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.cas.authentication.CasAuthenticationProvider;
+import org.springframework.security.cas.ServiceProperties;
+import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
+import org.springframework.security.cas.web.CasAuthenticationFilter;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+
+import se.uu.ebc.bemanning.security.BemanningUserService;
+import se.uu.ebc.bemanning.security.SecurityService;
+import se.uu.ebc.bemanning.security.RESTAuthenticationEntryPoint;
+
+@Configuration
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@EnableAutoConfiguration
+@EnableWebMvcSecurity
+public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	static Logger log = Logger.getLogger(BemanningSecurityConfig.class.getName());
+
+	@Value("${portable.base.url}")
+	String baseUrl;
+
+	@Bean
+    public AuthenticationUserDetailsService authenticationUserDetailsService() {
+		log.debug("authenticationUserDetailsService()");
+        return new SecurityService();
+    }
+
+    @Bean
+    public ServiceProperties serviceProperties() {
+        ServiceProperties serviceProperties = new ServiceProperties();
+        serviceProperties.setService(baseUrl + "/login/cas");
+        serviceProperties.setSendRenew(false);
+		log.debug("serviceProperties() " + serviceProperties);
+System.out.println("serviceProperties() " + serviceProperties.getService());
+        return serviceProperties;
+    }
+
+    @Bean
+    public CasAuthenticationProvider casAuthenticationProvider() {
+		log.debug("authenticationUserDetailsService()");
+        CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
+        casAuthenticationProvider.setAuthenticationUserDetailsService(authenticationUserDetailsService());
+        casAuthenticationProvider.setServiceProperties(serviceProperties());
+        casAuthenticationProvider.setTicketValidator(cas20ServiceTicketValidator());
+        casAuthenticationProvider.setKey("ThisIsSomeKindOfKey");
+		log.debug("casAuthenticationProvider() " + casAuthenticationProvider);
+        return casAuthenticationProvider;
+    }
+
+    @Bean
+    public Cas20ServiceTicketValidator cas20ServiceTicketValidator() {
+        return new Cas20ServiceTicketValidator("https://cas.weblogin.uu.se/cas");
+    }
+
+    @Bean
+    public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
+        CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
+        casAuthenticationFilter.setAuthenticationManager(authenticationManager());
+		log.debug("casAuthenticationFilter() " + casAuthenticationFilter);
+        return casAuthenticationFilter;
+    }
+
+
+    @Bean
+    public CasAuthenticationEntryPoint casAuthenticationEntryPoint() {
+        CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
+        casAuthenticationEntryPoint.setLoginUrl("https://cas.weblogin.uu.se/cas/login");
+        casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
+        return casAuthenticationEntryPoint;
+    }
+ 
+ 
+ 
+    @Bean
+    public RESTAuthenticationEntryPoint restcasAuthenticationEntryPoint() {
+        RESTAuthenticationEntryPoint restcasAuthenticationEntryPoint = new RESTAuthenticationEntryPoint();
+        restcasAuthenticationEntryPoint.setCasAuthenticationEntryPoint(casAuthenticationEntryPoint());
+        return restcasAuthenticationEntryPoint;
+    }
+ 
+
+ 
+   @Override
+    protected void configure(HttpSecurity http) throws Exception {
+		log.debug("configure()");
+ 
+        http
+            .addFilter(casAuthenticationFilter()).csrf().disable();
+
+ 		http.csrf().disable();
+
+// 		http.authorizeRequests()
+// 			.antMatchers("/index.*").authenticated()
+// 			.antMatchers("/document.*").authenticated()
+// 			.antMatchers("/login/**").permitAll()
+// 			.antMatchers("/PorTableClient/**").permitAll()
+// 			.antMatchers("/*").permitAll()
+// 			.antMatchers("/**").authenticated();
+
+//			.antMatchers("/rest/**").authenticated();
+ 
+
+		
+ 		http.authorizeRequests()
+ 			.antMatchers("/index.html").authenticated()
+			.antMatchers("/**").authenticated();
+ 				
+// 		http
+// 			.authorizeRequests().antMatchers("/**").permitAll();
+
+ 			
+        http
+            .exceptionHandling()
+                .authenticationEntryPoint(restcasAuthenticationEntryPoint());
+    }
+ 
+//    @Override
+    @Autowired
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		log.debug("configureGloabal() " + auth);
+        auth
+            .authenticationProvider(casAuthenticationProvider());
+    }
+
+
+
+}
