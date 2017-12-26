@@ -9,7 +9,7 @@ Ext.define('Bemanning.Application', {
     name: 'Bemanning',
 
     stores: [
-        // TODO: add global / shared stores here
+		'PersonStore', 'CourseStore'		
     ],
     
     launch: function () {

@@ -16,9 +16,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import se.uu.ebc.bemanning.entity.Person;
-import se.uu.ebc.bemanning.security.UserRole;
+import se.uu.ebc.bemanning.enums.UserRoleType;
 import se.uu.ebc.bemanning.security.UserRepo;
-import se.uu.ebc.bemanning.security.UserRoleRepo;
 import se.uu.ebc.bemanning.security.SecurityServiceException;
 import se.uu.ebc.bemanning.security.BemanningUserService;
 
@@ -35,8 +34,6 @@ public class SecurityService implements BemanningUserService {
     @Autowired
     UserRepo userRepo;
 
-    @Autowired
-    UserRoleRepo userRoleRepo;
 
 	private final boolean ENABLED = true;
 	private final boolean ACCOUNT_NON_EXPIRED = true;
@@ -82,11 +79,18 @@ System.out.println("loadUserByUsername, localUser: "+ localUser);
 
 			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
  
+/* 
 			for (UserRole userRole : localUser.getUserRoles()) {
 				authorities.add( new SimpleGrantedAuthority(ROLE_PREFIX + userRole.getRole().toString().toUpperCase()) );
 				if (logger.isDebugEnabled()) {
 					logger.debug("MTh loadUserByUsername, role "+userRole);
 				}
+			}
+ */
+ 
+			for (UserRoleType userRole : localUser.getUserRoles()) {
+				authorities.add( new SimpleGrantedAuthority(ROLE_PREFIX + userRole.toString().toUpperCase()) );
+				logger.debug("MTh loadUserByUsername, role "+userRole);
 			}
  
 //			authorities.add( new SimpleGrantedAuthority("ROLE_USER") );
@@ -105,7 +109,6 @@ System.out.println("loadUserByUsername, localUser: "+ localUser);
     public UserDetails loadUserDetails(Authentication token) 
     	throws UsernameNotFoundException 
     {
-System.out.println("loadUserDetails: "+ token + (String)token.getPrincipal());
 		logger.debug("MTh loadUserDetails, got token "+token);
 		logger.debug("MTh loadUserDetails, got principal "+(String)token.getPrincipal());
 

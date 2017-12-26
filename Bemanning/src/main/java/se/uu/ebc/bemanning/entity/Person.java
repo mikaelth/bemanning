@@ -1,6 +1,12 @@
 package se.uu.ebc.bemanning.entity;
 
 import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,17 +15,27 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.ElementCollection;
+import javax.persistence.CollectionTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 
 import javax.validation.constraints.NotNull;
 
 import se.uu.ebc.bemanning.entity.PhDPosition;
 import se.uu.ebc.bemanning.entity.Staff;
-import se.uu.ebc.bemanning.security.UserRole;
+import se.uu.ebc.bemanning.enums.UserRoleType;
+
+import org.apache.log4j.Logger;
 
 @Entity
 @Table(name = "PERSON")
 public class Person {
+
     
+    private static Logger logger = Logger.getLogger(Person.class.getName());
+	    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
@@ -40,8 +56,10 @@ public class Person {
     @OneToMany(mappedBy = "person")
     private Set<Staff> staff;
     
-    @OneToMany(mappedBy = "user")
+/* 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserRole> userRoles;
+ */
     
     @Column(name = "GIVEN_NAME", length = 255)
     @NotNull
@@ -64,8 +82,25 @@ public class Person {
     
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;
+
+ 
+	@ElementCollection(targetClass = UserRoleType.class)
+	@CollectionTable(name="USER_ROLE", joinColumns=@JoinColumn(name="user_fk"))
+	@Column(name="ROLE")
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	Set<UserRoleType> userRoles = new HashSet<UserRoleType>();
+ 
     
  
+	/* Constructors */
+	
+	public Person() {
+//		userRoles = new HashSet<UserRole>();
+		staff = new HashSet<Staff>();
+		userRoles.add(UserRoleType.Staff);
+	}
+	
  	/* Setters and getters */
  	   
     public PhDPosition getPhDPosition() {
@@ -84,6 +119,7 @@ public class Person {
         this.staff = staff;
     }
     
+/* 
     public Set<UserRole> getUserRoles() {
         return userRoles;
     }
@@ -91,6 +127,7 @@ public class Person {
     public void setUserRoles(Set<UserRole> userRoles) {
         this.userRoles = userRoles;
     }
+ */
     
     public String getGivenName() {
         return givenName;
@@ -142,6 +179,14 @@ public class Person {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
+
+    public Set<UserRoleType> getUserRoles() {
+        return this.userRoles;
+    }
+    
+    public void setUserRoles(Set<UserRoleType> userRoles) {
+        this.userRoles = userRoles;
+    }
     
     /* Public methods */
 
@@ -163,5 +208,15 @@ public class Person {
 	{
 		return ( (this.getPhDPosition() != null) && (this.getPhDPosition().getProgresses().size()>0) );	
 	}
-    
+  
+/* 
+  	public Set<UserRole> getRoles() {
+  		return this.roles;
+  	}
+  	
+  	public void setRoles( Set<UserRole> roles) {
+  		this.roles = roles;
+  	}
+
+  */
 }

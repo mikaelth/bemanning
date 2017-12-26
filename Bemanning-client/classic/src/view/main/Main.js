@@ -15,7 +15,6 @@ Ext.define('Bemanning.view.main.Main', {
 
         'Bemanning.view.main.MainController',
         'Bemanning.view.main.MainModel',
-        'Bemanning.view.main.List'
     ],
 
     controller: 'main',
@@ -76,26 +75,41 @@ Ext.define('Bemanning.view.main.Main', {
     },
 
     items: [{
-        title: 'Home',
-        iconCls: 'fa-home',
+        title: 'Bemanning',
+        iconCls: 'fa-hourglass-2',
         // The following grid shares a store with the classic version's grid as well!
         items: [{
-            xtype: 'mainlist'
+        }]
+    },{
+        title: 'Personal',
+        iconCls: 'fa-graduation-cap',
+        // The following grid shares a store with the classic version's grid as well!
+        items: [{
+        }]
+    },{
+        title: 'Kurstillfällen',
+        iconCls: 'fa-pencil',
+        // The following grid shares a store with the classic version's grid as well!
+        items: [{
         }]
     }, {
-        title: 'Users',
+        title: 'Personer',
         iconCls: 'fa-user',
-        bind: {
-            html: '{loremIpsum}'
-        }
+        items: [{
+            xtype: 'personlist', 
+			height: 900,
+//			viewModel: 'specimens'
+        }]
     }, {
-        title: 'Groups',
-        iconCls: 'fa-users',
-        bind: {
-            html: '{loremIpsum}'
-        }
+        title: 'Kurser',
+        iconCls: 'fa-bank',
+        items: [{
+            xtype: 'courselist', 
+			height: 900,
+//			viewModel: 'specimens'
+        }]
     }, {
-        title: 'Settings',
+        title: 'Inställningar',
         iconCls: 'fa-cog',
         bind: {
             html: '{loremIpsum}'

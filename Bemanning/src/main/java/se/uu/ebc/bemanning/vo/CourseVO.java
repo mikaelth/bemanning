@@ -1,93 +1,67 @@
-package  se.uu.ebc.bemanning.entity;
+package  se.uu.ebc.bemanning.vo;
 
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import  se.uu.ebc.bemanning.entity.Course;
-import  se.uu.ebc.bemanning.entity.CourseInstance;
 
-@Entity
-@Table(name = "COURSE")
-public class Course {
+public class CourseVO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID")
     private Long id;
     
     public Long getId() {
         return this.id;
-    }
-    
+    }    
     public void setId(Long id) {
         this.id = id;
     }
 
-    
-    @OneToMany(mappedBy = "course")
-    private Set<CourseInstance> courseInstances;
-    
-    @Column(name = "CODE", length = 255)
     private String code;
     
-    @Column(name = "SE_NAME", length = 255)
-    @NotNull
     private String seName;
     
-    @Column(name = "EN_NAME", length = 255)
     private String enName;
     
-    @Column(name = "COURSE_GROUP", length = 255)
     private String courseGroup;
     
-    @Column(name = "PERIOD", length = 255)
     private String period;
-    
-    @Column(name = "NOTE", length = 255)
+
     private String note;
     
-    @Column(name = "CREDITS", precision = 12)
     private Float credits;
     
- 
- 
-    @Column(name = "EFFORT_ADMIN")
-    private Integer effortAdmin = 0;
+/* 
+    private Integer effortAdmin;
     
-    @Column(name = "EFFORT_DEVELOPMENT")
-    private Integer effortDevelopment = 0;
+    private Integer effortDevelopment;
     
-    @Column(name = "EFFORT_LECTURE")
-    private Integer effortLecture = 0;
+    private Integer effortLecture;
     
-    @Column(name = "EFFORT_PRACTICAL")
-    private Integer effortPractical = 0;
+    private Integer effortPractical;
     
-    @Column(name = "EFFORT_EXCURSION")
-    private Integer effortExcursion = 0;
+    private Integer effortExcursion;
     
-    @Column(name = "EFFORT_SEMINAR")
-    private Integer effortSeminar = 0;
+    private Integer effortSeminar;
+ */
+    
     
 
-
-	/* Setters and getters */
- 
-    public Set<CourseInstance> getCourseInstances() {
-        return courseInstances;
-    }
-    
-    public void setCourseInstances(Set<CourseInstance> courseInstances) {
-        this.courseInstances = courseInstances;
-    }
-    
+	/* Constructors */
+	
+	public CourseVO() {}
+	
+	public CourseVO(Course c) {
+		this.id = c.getId();
+		this.code = c.getCode();
+		this.seName = c.getSeName();
+		this.enName = c.getEnName();
+		this.courseGroup = c.getCourseGroup();
+		this.period = c.getPeriod();
+		this.note = c.getNote();
+		this.credits = c.getCredits();
+	}
+	
+	/* Setters and getters */ 
+	    
     public String getCode() {
         return code;
     }
@@ -128,6 +102,7 @@ public class Course {
         this.period = period;
     }
     
+/* 
     public Integer getEffortAdmin() {
         return effortAdmin;
     }
@@ -175,6 +150,7 @@ public class Course {
     public void setEffortSeminar(Integer effortSeminar) {
         this.effortSeminar = effortSeminar;
     }
+ */
     
     public String getNote() {
         return note;

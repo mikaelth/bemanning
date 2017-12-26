@@ -122,6 +122,9 @@ System.out.println("serviceProperties() " + serviceProperties.getService());
 		
  		http.authorizeRequests()
  			.antMatchers("/index.html").authenticated()
+ 			.antMatchers("/Bemanning/**").permitAll()
+ 			.antMatchers("/rest/**").permitAll()
+// 			.antMatchers("/rest/**").hasAnyRole("DIRECTOROFSTUDIES","PHDADMIN","ADMINISTRATOR","SYSADMIN")
 			.antMatchers("/**").authenticated();
  				
 // 		http
