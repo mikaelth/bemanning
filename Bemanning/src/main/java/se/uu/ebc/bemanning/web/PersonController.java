@@ -23,6 +23,7 @@ import se.uu.ebc.bemanning.repo.PersonRepo;
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.service.PeopleService;
 import se.uu.ebc.bemanning.vo.PersonVO;
+import se.uu.ebc.bemanning.vo.StaffVO;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -106,7 +107,7 @@ public class PersonController {
 
 
 	@RequestMapping(value = "/people/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public ResponseEntity<String> deleteProtocol(@PathVariable("id") Long id) {
+	public ResponseEntity<String> deletePerson(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
@@ -116,50 +117,53 @@ public class PersonController {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-/* 
-    @RequestMapping(value="/rest/protocols/{id}", method = RequestMethod.GET)
+
+
+	/* Staff */
+		
+    @RequestMapping(value="/staff", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<String> getProtocol(@PathVariable("id") Long id) {
+    public ResponseEntity<String> allStaff() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
- 			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class","*.experimentKind").rootName("protocols").transform(new DateTransformer("yyyy-MM-dd"), "updated").serialize(protocolRepo.findById(id)), headers, HttpStatus.OK);
+ 			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class","*.person","*.organisationUnit").rootName("staff").transform(new DateTransformer("yyyy-MM-dd"), "updated").serialize(peopleService.getAllStaff()), headers, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
   	
     }
-
- */
-
-
-	/* ExperimentKinds */
-
-/* 
-    @RequestMapping(value="/rest/expkinds", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<String> allExpKinds() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json; charset=utf-8");
-        try {
- 			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("experimentkinds").deepSerialize(protocolService.getAllExperimentKinds()), headers, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-  	
-    }
-
-    @RequestMapping(value="/rest/expkinds", method = RequestMethod.POST, headers = "Accept=application/json")
-    public ResponseEntity<String> createExperimentKind(@RequestBody String json, UriComponentsBuilder uriBuilder) {
+ 
+    @RequestMapping(value="/staff/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    public ResponseEntity<String> updateStaff(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-			ExpKindVO eVO = new JSONDeserializer<ExpKindVO>().use(null, ExpKindVO.class).deserialize(json);
-			eVO = protocolService.saveExperimentKind(eVO);
-            RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
-            headers.add("Location",uriBuilder.path(a.value()[0]+"/"+eVO.getId().toString()).build().toUriString());
+			StaffVO sVO = new JSONDeserializer<StaffVO>().use(null, StaffVO.class).deserialize(json);
+			sVO.setId(id);
+			sVO = peopleService.saveStaff(sVO);
+			
+ 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("staff").deepSerialize(sVO);
+			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
- 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("experimentkinds").deepSerialize(eVO);
+            return new ResponseEntity<String>(restResponse, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+ 
+    @RequestMapping(value="/staff", method = RequestMethod.POST, headers = "Accept=application/json")
+    public ResponseEntity<String> createStaff(@RequestBody String json, UriComponentsBuilder uriBuilder) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        try {
+			StaffVO sVO = new JSONDeserializer<StaffVO>().use(null, StaffVO.class).use(Date.class, new DateTransformer("yyyy-MM-dd") ).deserialize(json);
+			sVO = peopleService.saveStaff(sVO);
+            RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
+            headers.add("Location",uriBuilder.path(a.value()[0]+"/"+sVO.getId().toString()).build().toUriString());
+
+ 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("staff").deepSerialize(sVO);
 			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
             return new ResponseEntity<String>(restResponse, headers, HttpStatus.CREATED);
@@ -168,36 +172,18 @@ public class PersonController {
         }
     }
 
-    @RequestMapping(value="/rest/expkinds/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
-    public ResponseEntity<String> updateExperimentKind(@RequestBody String json, @PathVariable("id") Long id) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        try {
-			ExpKindVO eVO = new JSONDeserializer<ExpKindVO>().use(null, ExpKindVO.class).deserialize(json);
-			eVO.setId(id);
-			eVO = protocolService.saveExperimentKind(eVO);
-			
- 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("experimentkinds").serialize(eVO);
-			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
-            return new ResponseEntity<String>(restResponse, headers, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
- 
-	@RequestMapping(value = "/rest/expkinds/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public ResponseEntity<String> deleteExperimentKind(@PathVariable("id") Long id) {
+	@RequestMapping(value = "/staff/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	public ResponseEntity<String> deleteStaff(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-			protocolService.deleteExperimentKind(id);
+			peopleService.deleteStaff(id);
             return new ResponseEntity<String>("{success: true, id : " +id.toString() + "}", headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
- */
 
 
 

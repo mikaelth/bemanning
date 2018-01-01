@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import se.uu.ebc.bemanning.enums.UserRoleType;
 import se.uu.ebc.bemanning.enums.GrantType;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 import se.uu.ebc.bemanning.enums.CourseGroup;
+import se.uu.ebc.bemanning.repo.StaffRepo;
 
 import org.apache.log4j.Logger;
 
@@ -25,6 +27,20 @@ import org.apache.log4j.Logger;
 public class AuxItemsController {
 
     private static Logger logger = Logger.getLogger(AuxItemsController.class.getName());
+
+	@Autowired
+	StaffRepo staffRepo;
+	
+	@RequestMapping("/years")
+    public List<Map<String, String>> usedYears() {
+    	List theList = new ArrayList<Map<String, String>>();
+    	for (String s : staffRepo.getStaffedYears()) {
+			java.util.Map<String,String> vMap = new java.util.HashMap<String, String>();
+			vMap.put("label", s.toString());
+    		theList.add(vMap);
+    	}
+    	return theList;
+    }
 
 
 	@RequestMapping("/userroletypes")

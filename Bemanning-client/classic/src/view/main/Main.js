@@ -83,8 +83,10 @@ Ext.define('Bemanning.view.main.Main', {
     },{
         title: 'Personal',
         iconCls: 'fa-graduation-cap',
-        // The following grid shares a store with the classic version's grid as well!
         items: [{
+            xtype: 'stafflist', 
+			height: 900,
+//			viewModel: 'specimens'
         }]
     },{
         title: 'Kurstillfällen',

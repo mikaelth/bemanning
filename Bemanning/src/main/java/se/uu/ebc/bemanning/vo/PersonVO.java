@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 public class PersonVO {
 
     
-    private static Logger logger = Logger.getLogger(Person.class.getName());
+    private static Logger logger = Logger.getLogger(PersonVO.class.getName());
 	    
     private Long id;
     

@@ -56,9 +56,9 @@ import se.uu.ebc.bemanning.entity.OrganisationUnit;
 @Controller
 @RequestMapping("/view")
 @CrossOrigin(origins = "http://localhost:1841", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
-public class AssignmentController {
+public class AssignmentViewController {
 
-    private Log logger = LogFactory.getLog(AssignmentController.class);
+    private Log logger = LogFactory.getLog(AssignmentViewController.class);
 
     private String roleArr[] = { "ROLE_DIRECTOROFSTUDIES", "ROLE_ADMINISTRATOR", "ROLE_PHDADMIN" };
     private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));
@@ -282,4 +282,6 @@ public class AssignmentController {
         }
 	}
 
+
+	
 }

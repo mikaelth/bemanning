@@ -13,17 +13,25 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
+import javax.persistence.FetchType;
 import org.hibernate.annotations.Formula;
+
+import org.apache.log4j.Logger;
 
 import se.uu.ebc.bemanning.enums.EmploymentType;
 
 @Entity
 @Table(name = "STAFF")
 public class Staff {
+
+    private static Logger logger = Logger.getLogger(Staff.class.getName());
 
     private final static int YEARLY_HOURS = 1700;
 	private final static int LECTURE_HOUR_COST = 1285;
@@ -42,7 +50,7 @@ public class Staff {
     }
 
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(name = "PERSON_FK")
 	private Person person;
@@ -51,38 +59,39 @@ public class Staff {
 	{
 		return this.person;
 	}
-
 	public void setPerson(Person person)
 	{
 		this.person = person;
 	}
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(name = "OU_FK")
 	private OrganisationUnit organisationUnit;
 
-    @OneToMany(mappedBy = "staff")
-    private Set<Assignment> assignments;
 
+    @OneToMany(mappedBy = "staff", fetch = FetchType.LAZY)
+    private Set<Assignment> assignments;
     
-    @OneToMany(mappedBy = "courseLeader")
+    @OneToMany(mappedBy = "courseLeader", fetch = FetchType.LAZY)
     private Set<CourseInstance> courseInstances;
     
+
     @Column(name = "PROGRAM", length = 255)
     private String program;
     
     @Column(name = "PERCENT_G_U", precision = 12)
     private Float percentGU;
     
-  	@Enumerated(EnumType.STRING)    
-    @Column(name = "POSITION", length = 255)
+
+	@Enumerated(EnumType.STRING)    
+//	@Column(name = "POSITION", length = 255)
     private EmploymentType position;
     
     @Column(name = "HOURLY_CHARGE", precision = 12)
     private Float hourlyCharge;
     
-    @Column(name = "YEAR", length = 255)
+//	@Column(name = "YEAR", length = 255)
     private String year;
     
     @Column(name = "NOTE", length = 255)
@@ -97,15 +106,52 @@ public class Staff {
     
  */
     
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "OLD_ID")
+	private Staff previousYearAppointment;
+
+	public Staff getPreviousYearAppointment()
+	{
+		return this.previousYearAppointment;
+	}
+
+	public void setPreviousYearAppointment(Staff previousYearAppointment)
+	{
+		this.previousYearAppointment = previousYearAppointment;
+	}
+
+
+    @ManyToOne
+    @JoinColumns({
+        @JoinColumn(
+            name = "year",
+            referencedColumnName = "STAFFYEAR", insertable = false, updatable = false),
+        @JoinColumn(
+            name = "position",
+            referencedColumnName = "STAFFPOSITION", insertable = false, updatable = false)
+    })	
+    private MaxCost maxCost;
+
+ 
+    public MaxCost getMaxCost()
+    {
+    	return this.maxCost;
+    }
+
+    public void setMaxCost(MaxCost maxCost)
+    {
+    	this.maxCost = maxCost;
+    }
+
+
+
 
 	/* Computed properties*/
 	
-	@Formula("(select max(s.HOURLY_CHARGE) from staff as s where s.YEAR=(select c.YEAR from staff as c where c.id = id) AND s.POSITION=(select c.POSITION from staff as c where c.id = id) )")
-	private Float maxHourlyCharge;
-
 	public Float getMaxHourlyCharge()
 	{
-		return this.maxHourlyCharge;
+		return this.maxCost.getMaxHourlyCharge();
 	}
 
 	
@@ -226,6 +272,30 @@ public class Staff {
         return getTotalHours() - getPercentGU() * YEARLY_HOURS + getIb();
     }
     
+    public float getPreviousUb() {
+  		try {
+  			return previousYearAppointment == null ? 0.0f : previousYearAppointment.getUb();
+  		} catch (Exception e) {
+  			logger.error ("getPreviousUb caught a pesky exeption " + e);
+  			return 0.0f;
+  		}
+    	
+    }
+
+	public float getAccumulatedHours() {
+ 		try {	
+		
+			return this.previousYearAppointment == null ? this.getTotalHours() : this.previousYearAppointment.getAccumulatedHours() + this.getTotalHours();
+  		
+  		} catch (Exception e) {
+  			logger.error ("getAccumulatedHours caught a pesky exeption " + e);
+  			return this.getTotalHours();
+  		}
+    	
+		
+	}    
+    
+    
     public float computeAppointmentCost() 
     {    	
     	float cost = 0.0f;
@@ -260,123 +330,6 @@ public class Staff {
 		return (this.getHourlyCharge() == 0 || this.getHourlyCharge() == null) ? this.getMaxHourlyCharge() : this.getHourlyCharge() ;	
 	}
 	
-// 	private HashMap<String, String> ldapSessionMap = null;
-// 
-// 	private void doLookup() {
-// 
-// 		ldapSessionMap = new HashMap<String, String>();
-// 		
-// 		Properties env = new Properties();
-// 		env.put(Context.INITIAL_CONTEXT_FACTORY,
-// 				"com.sun.jndi.ldap.LdapCtxFactory");
-// 		env.put(Context.PROVIDER_URL,
-// 			"ldap://ldap.katalog.uu.se:389");
-// 		
-// 		try {
-// 
-// 			if (this.getPerson().getUsername() == null || this.getPerson().getUsername().trim().length() == 0)
-// 			{
-// 				throw new IllegalArgumentException(
-// 					"se.uu.ebc.courseres.service.StaffingService.getPersonAssignments(String year, String username) - 'username' can not be null or empty");
-// 			}
-// 
-// 			InitialLdapContext ctx = new InitialLdapContext(env, null);
-// 
-// 			Attributes matchAttrs = new BasicAttributes(true);
-// 			matchAttrs.put("uid",this.getPerson().getUsername());
-// 
-// 			if (logger.isDebugEnabled()) {
-// 				logger.debug("MTh doLookup finding "+ matchAttrs.get("sn")+", "+matchAttrs.get("givenname"));
-// 			}
-// 
-// 			NamingEnumeration ans = ctx.search("cn=People,dc=uu,dc=se", matchAttrs);
-// 
-// 			if (logger.isDebugEnabled()) {
-// 				logger.debug("MTh doLookup namingEnum "+ ans);
-// 			}
-// 
-// 			while (ans.hasMore()) {
-// 				SearchResult sr = (SearchResult) ans.next();
-// 				if (logger.isDebugEnabled()) {
-// 					logger.debug("MTh doLookup sr "+ sr);
-// 				}
-// 				Attributes attrs = sr.getAttributes();
-// 				if (logger.isDebugEnabled()) {
-// 					logger.debug("MTh doLookup attributes "+ attrs);
-// 				}
-// 				NamingEnumeration ids = attrs.getIDs();
-// 				while (ids.hasMore()) {
-// 					String id = (String) ids.next();
-// 					if (logger.isDebugEnabled()) {
-// 						logger.debug("MTh doLookup id "+ id);
-// 					}
-// 					Attribute val = attrs.get(id);
-// 					for (int idx = 0; idx < val.size(); idx++) {
-// 						String dir_val = (String) val.get(idx);
-// 						ldapSessionMap.put(id, dir_val);
-// 						if (logger.isDebugEnabled()) {
-// 							logger.debug("MTh doLookup dir_val "+ dir_val);
-// 						}
-// 					}
-// 				}
-// 			}
-// 
-// 
-// 		} catch (Exception ne) {
-// 			ne.printStackTrace();
-// 			logger.error("MTh doLookup experienced pesky exception "+ ne);
-// 		}
-// 
-// 	}
-// 	
-// 	public String getEmail ()
-// 	{
-// 		if (logger.isDebugEnabled()) {
-// 			logger.debug("MTh getEmail");
-// 		}
-// 		if (ldapSessionMap == null) {
-// 			doLookup();
-// 		}
-// 		if (logger.isDebugEnabled()) {
-// 			logger.debug("MTh getEmail, done LDAP lookup, map " + ldapSessionMap);
-// 		}
-// 	
-// 		return ldapSessionMap.containsKey("mail") ? ldapSessionMap.get("mail") :"";
-// 	}
-// 	
-// 	public String getPhone ()
-// 	{
-// 		if (logger.isDebugEnabled()) {
-// 			logger.debug("MTh getPhone");
-// 		}
-// 		if (ldapSessionMap == null) {
-// 			doLookup();
-// 		}
-// 		if (logger.isDebugEnabled()) {
-// 			logger.debug("MTh getPhone, done LDAP lookup, map " + ldapSessionMap);
-// 		}
-// 	
-// 		return ldapSessionMap.containsKey("telephoneNumber") ? ldapSessionMap.get("telephoneNumber") :"";
-// 	}
-// 
-// 	public String getUuUser ()
-// 	{
-// 		if (ldapSessionMap == null) {
-// 			doLookup();
-// 		}
-// 
-// 		String uuUser = "";
-// 		
-// 		if (ldapSessionMap.containsKey("edupersonprincipalname")) {
-// 			Matcher matcher = Pattern.compile("([\\w\\d]+)@(.*)").matcher(ldapSessionMap.get("edupersonprincipalname"));
-// 		
-// 			while (matcher.find()) {
-// 				uuUser=matcher.group(1);
-// 			}
-// 		}
-// 
-// 		return uuUser;
-// 	}
 
 	private float getPlainTeachingHours()
     {

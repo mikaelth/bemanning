@@ -9,7 +9,7 @@ Ext.define('Bemanning.Application', {
     name: 'Bemanning',
 
     stores: [
-		'PersonStore', 'CourseStore'		
+		'PersonStore', 'CourseStore','StaffStore'		
     ],
     
     launch: function () {

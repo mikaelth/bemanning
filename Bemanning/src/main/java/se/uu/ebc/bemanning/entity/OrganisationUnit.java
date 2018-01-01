@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.persistence.FetchType;
 
 
 @Entity
@@ -34,26 +35,26 @@ public class OrganisationUnit {
     public void setId(Long id) {
         this.id = id;
     }
+
  
-	@OneToMany(mappedBy = "assigningDept")
+	@OneToMany(mappedBy = "assigningDept", fetch = FetchType.LAZY)
     private Set<Assignment> assignments;
     
- 
-    @OneToMany(mappedBy = "debitUnit")
+    @OneToMany(mappedBy = "debitUnit", fetch = FetchType.LAZY)
     private Set<CourseGrant> debitGrants;
     
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private Set<CourseGrant> creditGrants;
- 
     
-    @OneToMany(mappedBy = "organisationUnit")
+    @OneToMany(mappedBy = "organisationUnit", fetch = FetchType.LAZY)
     private Set<Staff> staff;
     
-    @OneToMany(mappedBy = "superUnit")
+    @OneToMany(mappedBy = "superUnit", fetch = FetchType.LAZY)
     private Set<YearsOfHierarchy> subUnits;
     
-    @OneToMany(mappedBy = "subUnit")
+    @OneToMany(mappedBy = "subUnit", fetch = FetchType.LAZY)
     private Set<YearsOfHierarchy> superUnits;
+
     
     @Column(name = "SV_NAME", length = 255)
     @NotNull
