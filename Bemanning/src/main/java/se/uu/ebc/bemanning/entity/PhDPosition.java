@@ -23,8 +23,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import se.uu.ebc.bemanning.entity.PhDPosition;
@@ -35,7 +35,7 @@ import se.uu.ebc.bemanning.entity.Progress;
 public class PhDPosition {
 
     @Transient
-    private Log logger = LogFactory.getLog(PhDPosition.class);
+    private static Logger logger = Logger.getLogger(PhDPosition.class.getName());
 
 	private static final float MONTH_IN_MILLS = 24*60*60*1000*(365.0f/12.0f);
 	private static final float HOUR_IN_MILLS = 60*60*1000.0f;

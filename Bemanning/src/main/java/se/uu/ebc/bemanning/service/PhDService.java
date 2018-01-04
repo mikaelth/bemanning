@@ -22,15 +22,15 @@ import se.uu.ebc.bemanning.security.UserRepo;
 import se.uu.ebc.bemanning.repo.PhDPositionRepo;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 
 @Service
 public class PhDService {
 
-    private Log logger = LogFactory.getLog(PhDService.class);
+    private static Logger logger = Logger.getLogger(PhDService.class.getName());
 
 /* 
 	@Autowired

@@ -30,6 +30,7 @@ Ext.define('Bemanning.model.Staff', {
 		{name: 'ib', type: 'float'},
 		{name: 'ubLastYear', type: 'float'},
 		{name: 'name', type: 'string'},
+		{name: 'formName', type: 'string'},
 		{name: 'ouDesignation', type: 'string'},
 		{name: 'accumulatedHours', type: 'float'},
 		{name: 'maxHourlyCharge', type: 'float'},

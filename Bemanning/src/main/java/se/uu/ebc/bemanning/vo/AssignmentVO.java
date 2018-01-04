@@ -29,6 +29,9 @@ public class AssignmentVO {
 
     private String note;
 
+	private String year;
+    private Float totalHours;
+
 	
  	/* Setters and getters */
  	   
@@ -155,7 +158,30 @@ public class AssignmentVO {
     	this.note = note;
     }
 
-    
+ 
+ 	public String getYear()
+	{
+		return this.year;
+	}
+
+	public void setYear(String year)
+	{
+		this.year = year;
+	}
+
+    public Float getTotalHours()
+    {
+    	return this.totalHours;
+    }
+
+    public void setTotalHours(Float totalHours)
+    {
+    	this.totalHours = totalHours;
+    }
+
+
+
+   
     /* Public methods */
 
   
@@ -175,6 +201,9 @@ public class AssignmentVO {
 		this.hoursExcursion = xe.getHoursExcursion();
 		this.hoursSeminar = xe.getHoursSeminar();
 		this.note = xe.getNote();
+
+		this.year = xe.getCourseInstance().getYear();
+		this.totalHours = xe.getTotalHours();
 	}
 	
 	public AssignmentVO() {}

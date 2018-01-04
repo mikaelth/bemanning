@@ -12,8 +12,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+
 
 @Entity
 @Table(name = "YEARS_OF_HIERARCHY")
@@ -40,9 +40,12 @@ public class YearsOfHierarchy {
     @JoinColumn(name = "SUB_UNIT_FK")
 	private OrganisationUnit subUnit;
 
+    @Column(name = "NOTE")
+    private String note;
+
 
     @Transient
-    private Log logger = LogFactory.getLog(YearsOfHierarchy.class);
+    private static Logger logger = Logger.getLogger(YearsOfHierarchy.class.getName());
 
     public Long getId() {
         return this.id;
@@ -86,6 +89,17 @@ public class YearsOfHierarchy {
 	{
 		this.subUnit = subUnit;
 	}
+
+    public String getNote()
+    {
+    	return this.note;
+    }
+
+    public void setNote(String note)
+    {
+    	this.note = note;
+    }
+
 
     
     /* Public methods */

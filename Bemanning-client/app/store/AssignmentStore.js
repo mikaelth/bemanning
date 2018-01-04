@@ -3,6 +3,7 @@ Ext.define('Bemanning.store.AssignmentStore', {
     requires: ['Ext.data.proxy.Rest', 'Ext.data.reader.Json'],
     alias: 'store.assignments',
 	model: 'Bemanning.model.Assignment',
+	groupField: 'staffId',
     autoLoad: true
 });
 

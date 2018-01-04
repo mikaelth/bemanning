@@ -22,8 +22,6 @@ import se.uu.ebc.bemanning.security.SecurityServiceException;
 import se.uu.ebc.bemanning.security.BemanningUserService;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -42,7 +40,6 @@ public class SecurityService implements BemanningUserService {
 	private final String ROLE_PREFIX = "ROLE_";
 	
     private Logger logger = Logger.getLogger(SecurityService.class.getName());
-//	private Log logger = LogFactory.getLog(SecurityService.class);
 	
     /**
      * @see se.uu.ebc.bemanning.security.SecurityService#loadUserByUsername(String)

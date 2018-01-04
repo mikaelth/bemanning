@@ -28,6 +28,8 @@ Ext.define('Bemanning.model.Assignment', {
 		{name: 'hoursExcursion', type: 'float'},
 		{name: 'hoursSeminar', type: 'float'},
 		{name: 'note', type: 'string'},
+		{name: 'totalHours', type: 'float'},
+		{name: 'year', type: 'string'}
 
     ]
 

@@ -39,6 +39,7 @@ public class StaffVO {
     private Float accumulatedHours;
 
 	private String name;
+	private String formName;
 	private String ouDesignation;
 
 
@@ -228,6 +229,17 @@ public class StaffVO {
     }
 
 
+
+	public String getFormName()
+	{
+		return this.formName;
+	}
+
+	public void setFormName(String formName)
+	{
+		this.formName = formName;
+	}
+
     
     /* Public methods */
 
@@ -243,6 +255,8 @@ public class StaffVO {
 
 		this.personId = xe.getPerson().getId();
 		this.name = xe.getPerson().getName();
+		this.formName = xe.getPerson().getFormName();
+
 		this.organisationUnitId = xe.getOrganisationUnit().getId();
 		this.ouDesignation = xe.getOrganisationUnit().getSvName();	
 		

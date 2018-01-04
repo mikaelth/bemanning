@@ -39,8 +39,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.apache.log4j.Logger;
 
 import se.uu.ebc.bemanning.service.TestService;
 import se.uu.ebc.bemanning.service.PhDService;
@@ -58,7 +58,7 @@ import se.uu.ebc.bemanning.entity.OrganisationUnit;
 @CrossOrigin(origins = "http://localhost:1841", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class AssignmentViewController {
 
-    private Log logger = LogFactory.getLog(AssignmentViewController.class);
+    private static Logger logger = Logger.getLogger(AssignmentViewController.class.getName());
 
     private String roleArr[] = { "ROLE_DIRECTOROFSTUDIES", "ROLE_ADMINISTRATOR", "ROLE_PHDADMIN" };
     private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));

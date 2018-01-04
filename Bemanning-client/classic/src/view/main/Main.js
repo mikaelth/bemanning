@@ -14,7 +14,7 @@ Ext.define('Bemanning.view.main.Main', {
         'Ext.window.MessageBox',
 
         'Bemanning.view.main.MainController',
-        'Bemanning.view.main.MainModel',
+        'Bemanning.view.main.MainModel'
     ],
 
     controller: 'main',
@@ -79,13 +79,16 @@ Ext.define('Bemanning.view.main.Main', {
         iconCls: 'fa-hourglass-2',
         // The following grid shares a store with the classic version's grid as well!
         items: [{
+        	xtype: 'assignmentlist',
+        	height: 900
         }]
     },{
         title: 'Personal',
-        iconCls: 'fa-graduation-cap',
+//        iconCls: 'fa-graduation-cap',
+        iconCls: 'fa-group',
         items: [{
             xtype: 'stafflist', 
-			height: 900,
+			height: 900
 //			viewModel: 'specimens'
         }]
     },{
@@ -99,17 +102,31 @@ Ext.define('Bemanning.view.main.Main', {
         iconCls: 'fa-user',
         items: [{
             xtype: 'personlist', 
-			height: 900,
+			height: 900
 //			viewModel: 'specimens'
         }]
     }, {
         title: 'Kurser',
-        iconCls: 'fa-bank',
+//        iconCls: 'fa-bank',
+        iconCls: 'fa-book',
         items: [{
             xtype: 'courselist', 
-			height: 900,
+			height: 900
 //			viewModel: 'specimens'
         }]
+    }, {
+        title: 'Enheter',
+        iconCls: 'fa-sitemap',
+		viewModel: {type: 'ous'},
+
+        items: [{
+            xtype: 'oulist', 
+			height: 600
+        },{
+            xtype: 'yohlist', 
+			height: 300
+        }]
+
     }, {
         title: 'Inställningar',
         iconCls: 'fa-cog',

@@ -26,7 +26,7 @@ Ext.define('Bemanning.view.main.BasicYearListGrid', {
 
 							xtype: 'combobox',
 							name: 'siteType',
-							reference: 'comboYear',
+							reference: 'comboCurrentYear',
 							bind: {value: '{workingYear}', store: '{usedYears}'},
 							width: 200,
 							typeAhead: true,
@@ -35,17 +35,15 @@ Ext.define('Bemanning.view.main.BasicYearListGrid', {
 							lastQuery: '',
 							displayField: 'label',
 			    			valueField: 'label',
+/* 
 							listeners: {
 								select: function(c,r){
-/* 
-									var grid = this.up('grid');
-									var etc = grid.etc[c.getValue()];
-//									grid.reconfigure(etc.store, etc.columns);
-									grid.reconfigure(etc.columns);
-									grid.getStore().filter('stationKind', this.value);		
- */
+									console.log(c);
+									console.log(r);
+
 								}
 							}
+ */
 					},
 					'->', {
 						text: 'Remove',

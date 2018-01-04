@@ -4,6 +4,7 @@ Ext.define('Bemanning.store.StaffStore', {
     alias: 'store.staff',
 	model: 'Bemanning.model.Staff',
 //	sorters: {property:'familyName', direction: 'ASC'},
+//	groupField: 'organisationUnitId',
     autoLoad: true
 });
 

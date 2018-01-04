@@ -1,7 +1,7 @@
-Ext.define('Bemanning.view.staff.StaffModel', {
+Ext.define('Bemanning.view.assignments.AssignmenModel', {
     extend: 'Ext.app.ViewModel',
 
-    alias: 'viewmodel.staff',
+    alias: 'viewmodel.assignments',
 
     data: {
 		current : {
@@ -10,6 +10,7 @@ Ext.define('Bemanning.view.staff.StaffModel', {
     },
     
     stores: {
+/* 
 		person : 'PersonStore',
 		employmentTypes: {
 			xtype: 'store.store',
@@ -31,6 +32,12 @@ Ext.define('Bemanning.view.staff.StaffModel', {
 			source: 'OUStore',
 			sorters: {property:'svName', direction: 'ASC'}
 		},    	
+ */
+		assignments: {
+			type: 'chained',
+			source: 'AssignmentStore',
+			filters: [{property: 'year', value: '{current.year.label}', exactMatch: true}]
+		},    	
 		usedYears: {
 			xtype: 'store.store',
 			fields: [
@@ -46,6 +53,7 @@ Ext.define('Bemanning.view.staff.StaffModel', {
 			autoLoad: true
     			
 		},    	
+/* 
 		usertypes: {
 			xtype: 'store.store',
 			fields: [
@@ -62,13 +70,12 @@ Ext.define('Bemanning.view.staff.StaffModel', {
 			autoLoad: true
     			
 		},    	
+ */
 		staff: {
 			type: 'chained',
 			source: 'StaffStore',
-			sorters: {property:'formName', direction: 'ASC'},
 			filters: [{property: 'year', value: '{current.year.label}', exactMatch: true}],
-//			groupField: 'ouDesignation'
-			groupField: 'organisationUnitId'
+			sorters: {property:'formName', direction: 'ASC'},
 		}    	
 	},
 	

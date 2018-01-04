@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Collection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+
 
 public class BemanningUser
     extends User
@@ -18,7 +18,7 @@ public class BemanningUser
 	private static final long serialVersionUID = 1210242130L;
 	
 	private Map<String,String> deptMap = new HashMap<String,String> ();
-    private Log logger = LogFactory.getLog(BemanningUser.class);
+	private static Logger logger = Logger.getLogger(BemanningUser.class.getName());
 	
 	private BemanningUser()
 	{

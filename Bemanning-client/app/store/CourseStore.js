@@ -4,6 +4,7 @@ Ext.define('Bemanning.store.CourseStore', {
     alias: 'store.courses',
 	model: 'Bemanning.model.Course',
 	sorters: {property:'code', direction: 'ASC'},
+	groupField: 'courseGroup',
     autoLoad: true
 });
 
