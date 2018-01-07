@@ -66,7 +66,7 @@ Ext.define('Bemanning.view.staff.StaffModel', {
 			type: 'chained',
 			source: 'StaffStore',
 			sorters: {property:'formName', direction: 'ASC'},
-			filters: [{property: 'year', value: '{current.year.label}', exactMatch: true}],
+			filters: [{property: 'year', value: '{current.year}', exactMatch: true}],
 //			groupField: 'ouDesignation'
 			groupField: 'organisationUnitId'
 		}    	
@@ -76,7 +76,7 @@ Ext.define('Bemanning.view.staff.StaffModel', {
         workingYear: {
             // We need to bind deep to be notified on each model change
             bind: {
-                bindTo: '{comboCurrentYear.selection}', //--> reference configurated on the grid view (reference: comboCurrentYear)
+                bindTo: '{comboCurrentYear.selection.label}', //--> reference configurated on the grid view (reference: comboCurrentYear)
                 deep: true
             },
             get: function(year) {

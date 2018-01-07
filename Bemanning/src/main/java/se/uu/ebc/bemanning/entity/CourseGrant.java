@@ -1,19 +1,25 @@
 package  se.uu.ebc.bemanning.entity;
 
 import java.util.Date;
+
 import javax.persistence.Column;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
-import se.uu.ebc.bemanning.entity.CourseGrant;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import se.uu.ebc.bemanning.entity.CourseGrant;
+import se.uu.ebc.bemanning.enums.GrantType;
 
 @Entity
 @Table(name = "COURSE_GRANT")
@@ -83,9 +89,10 @@ public class CourseGrant {
     @Column(name = "AMOUNT")
     private Integer amount;
     
+	@Enumerated(EnumType.STRING)    
     @Column(name = "TYPE", length = 255)
     @NotNull
-    private String type;
+    private GrantType type;
     
     @Column(name = "NOTE", length = 255)
     private String note;
@@ -103,11 +110,11 @@ public class CourseGrant {
         this.amount = amount;
     }
     
-    public String getType() {
+    public GrantType getType() {
         return type;
     }
     
-    public void setType(String type) {
+    public void setType(GrantType type) {
         this.type = type;
     }
     

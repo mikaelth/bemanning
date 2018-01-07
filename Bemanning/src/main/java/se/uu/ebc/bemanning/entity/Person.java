@@ -89,7 +89,7 @@ public class Person {
 	@Column(name="ROLE")
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	Set<UserRoleType> userRoles = new HashSet<UserRoleType>();
+	private Set<UserRoleType> userRoles = new HashSet<UserRoleType>();
  
     
  

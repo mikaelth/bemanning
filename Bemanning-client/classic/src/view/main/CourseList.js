@@ -8,7 +8,7 @@ Ext.define('Bemanning.view.main.CourseList', {
     title: 'Kurser',
 
 	controller: 'courselist',
-	viewModel: 'courses',
+	viewModel: {type:'coursemodel'},
 
 
 	store: 'CourseStore',
@@ -24,20 +24,11 @@ Ext.define('Bemanning.view.main.CourseList', {
 				xtype: 'combobox',
 				typeAhead: true,
 				triggerAction: 'all',
-				bind: {store: '{coursegroup}'},
+				bind: {store: '{coursegroups}'},
 				queryMode: 'local',
 				lastQuery: '',
 				displayField: 'label',
 			    valueField: 'label',
-/* 
-			    listeners: {
-					// delete the previous query in the beforequery event or set
-					// combo.lastQuery = null (this will reload the store the next time it expands)
-					beforequery: function(qe){
-						delete qe.combo.lastQuery;
-					}							    
-			    }				
- */
 			}
 		},
 		{ text: 'Kursperiod', dataIndex: 'period', editor: 'textfield', align: 'left', width: 80 },

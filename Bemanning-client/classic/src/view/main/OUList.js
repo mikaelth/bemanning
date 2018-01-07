@@ -10,8 +10,10 @@ Ext.define('Bemanning.view.main.OUList', {
 	controller: 'oulist',
 
 
-	store: 'OUStore',
-	
+//	store: 'OUStore',
+
+	bind: {store: '{ous}'},
+		
 	features: [{ ftype: 'grouping',startCollapsed: true }],
 
     columns: [

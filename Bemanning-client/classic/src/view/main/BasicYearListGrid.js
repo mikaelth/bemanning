@@ -24,26 +24,21 @@ Ext.define('Bemanning.view.main.BasicYearListGrid', {
 					}, 
 					{
 
-							xtype: 'combobox',
-							name: 'siteType',
-							reference: 'comboCurrentYear',
-							bind: {value: '{workingYear}', store: '{usedYears}'},
-							width: 200,
-							typeAhead: true,
-							triggerAction: 'all',
-							queryMode: 'local',
-							lastQuery: '',
-							displayField: 'label',
-			    			valueField: 'label',
-/* 
-							listeners: {
-								select: function(c,r){
-									console.log(c);
-									console.log(r);
-
-								}
+						xtype: 'combobox',
+						reference: 'comboCurrentYear',
+						bind: {value: '{workingYear}', store: '{usedYears}'},
+						width: 200,
+						typeAhead: true,
+						triggerAction: 'all',
+						queryMode: 'local',
+						lastQuery: '',
+						displayField: 'label',
+						valueField: 'label',
+						listeners: {
+							select: function() {
+								this.lookupReferenceHolder().lookupReference('btnCreate').enable();
 							}
- */
+						}
 					},
 					'->', {
 						text: 'Remove',
@@ -55,6 +50,7 @@ Ext.define('Bemanning.view.main.BasicYearListGrid', {
 					}, {
 						text: 'Create',
 						reference: 'btnCreate',
+						disabled: true,
 						listeners: {
 							click: 'onCreate'
 						}

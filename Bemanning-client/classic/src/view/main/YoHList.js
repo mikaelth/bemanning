@@ -9,10 +9,48 @@ Ext.define('Bemanning.view.main.YoHList', {
 
 	controller: 'yohlist',
 
+	dockedItems: [{
+		xtype: 'toolbar',
+		items: [
+		 			{
+						text: 'Reload all',
+						reference: 'btnReload',
+						disabled: false,
+						 listeners: {
+							click: 'onReload'
+						}
+					}, 
+					'->', {
+						text: 'Remove',
+						reference: 'btnRemove',
+//						disabled: true,
+//						bind:{disabled: '{((current.ou == null) || (current.ou.id != current.yoh.unitId))}'},
+//						bind:{disabled: '{current.yoh == null}'},
+						bind:{disabled: '{current.ou.id != current.yoh.unitId}'},
+						 listeners: {
+							click: 'onRemove'
+						}
+					}, {
+						text: 'Create',
+						reference: 'btnCreate',
+						bind:{disabled: '{current.ou == null}'},
+						listeners: {
+							click: 'onCreate'
+						}
+					}, {
+						text: 'Save',
+						reference: 'btnSave',
+						listeners: {
+							click: 'onSave'
+						}
+					}
+
+			]
+	}],
+
 
 	bind: {
 		store: '{ouyohs}',
-//		title: {bindTo: '{current.ou.svName}', deep: true}
 		title: '{current.ou.svName}'
 	},
 	

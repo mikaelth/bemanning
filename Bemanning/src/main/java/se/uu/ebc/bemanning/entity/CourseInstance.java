@@ -155,7 +155,9 @@ public class CourseInstance {
     
     @Column(name = "OLD_ID")
     private Long oldId;
-    
+ 
+ 
+ 	/* Setters and getters */   
     public Set<Assignment> getAssignments() {
         return assignments;
     }
@@ -355,7 +357,9 @@ public class CourseInstance {
     public void setOldId(Long oldId) {
         this.oldId = oldId;
     }
- 
+
+	/* Public methods */
+	 
  	public String getDesignation() {
         return course.getCode() +" " + course.getSeName() + " " + extraDesignation;
     }
@@ -367,4 +371,16 @@ public class CourseInstance {
    		}
    		return hours;
    }
+
+	/* Constructors */
+	
+	public CourseInstance() {
+		assetDistributionEb= 0.0f;
+		assetDistributionFb= 0.0f;
+		assetDistributionMe= 0.0f;
+		assetDistributionSb= 0.0f;
+		assetDistributionEfg= 0.0f;
+		assetDistributionIegs= 0.0f;	
+	}
+
 }

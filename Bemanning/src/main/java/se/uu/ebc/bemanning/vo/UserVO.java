@@ -18,15 +18,29 @@ public class UserVO {
 
     
     private static Logger logger = Logger.getLogger(UserVO.class.getName());
-	    
+	 
+	private Long id;
+	   
     private String username;
   	private String formName;
 	private String name;
 
 	private Map<String, String> principalDepts = new HashMap<String, String>();
-	
+	private Set<UserRoleType> userRoles = new HashSet<UserRoleType>();
+
  	/* Setters and getters */
  	   
+
+	public Long getId()
+	{
+		return this.id;
+	}
+
+	public void setId(Long id)
+	{
+		this.id = id;
+	}
+
     public String getUsername() {
         return username;
     }
@@ -65,6 +79,15 @@ public class UserVO {
 		this.principalDepts = principalDepts;
 	}
 
+	public Set<UserRoleType> getUserRoles()
+	{
+		return this.userRoles;
+	}
+
+	public void setUserRoles(Set<UserRoleType> userRoles)
+	{
+		this.userRoles = userRoles;
+	}
     
     /* Public methods */
 
@@ -73,12 +96,16 @@ public class UserVO {
 
 	public UserVO (Person p) {
 
+		this.id = p.getId();
+		
 		this.username= p.getUsername();
 		this.formName = p.getFormName();
 		this.name = p.getName();
 		
+		this.userRoles = p.getUserRoles();
+		
 		for (Staff s : p.getStaff()){
-			this.principalDepts.put(s.getYear(),s.getOrganisationUnit().getAbbreviation());
+			this.principalDepts.put(s.getYear(),s.getOrganisationUnit().getEconomyHolder(s.getYear()).getAbbreviation());
 		}
 	}
 	

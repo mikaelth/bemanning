@@ -24,6 +24,7 @@ Ext.define('Bemanning.model.Course', {
 		{name: 'seName', type: 'string'},
 		{name: 'credits', type: 'float'},
 		{name: 'period', type: 'string'},
+		{name: 'formName', type: 'string', calculate: function (data) {return data.code.concat(data.code == '' ? '':' ').concat(data.seName)}},
 		{name: 'note', type: 'string'}
 
     ]

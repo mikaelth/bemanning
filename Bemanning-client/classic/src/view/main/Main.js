@@ -77,7 +77,6 @@ Ext.define('Bemanning.view.main.Main', {
     items: [{
         title: 'Bemanning',
         iconCls: 'fa-hourglass-2',
-        // The following grid shares a store with the classic version's grid as well!
         items: [{
         	xtype: 'assignmentlist',
         	height: 900
@@ -89,21 +88,26 @@ Ext.define('Bemanning.view.main.Main', {
         items: [{
             xtype: 'stafflist', 
 			height: 900
-//			viewModel: 'specimens'
         }]
     },{
         title: 'Kurstillfällen',
         iconCls: 'fa-pencil',
-        // The following grid shares a store with the classic version's grid as well!
+		viewModel: {type:'coursemodel'},
+
         items: [{
+            xtype: 'cilist', 
+			height: 600
+        },{
+            xtype: 'grantlist', 
+			height: 300
         }]
+
     }, {
         title: 'Personer',
         iconCls: 'fa-user',
         items: [{
             xtype: 'personlist', 
 			height: 900
-//			viewModel: 'specimens'
         }]
     }, {
         title: 'Kurser',
@@ -112,7 +116,6 @@ Ext.define('Bemanning.view.main.Main', {
         items: [{
             xtype: 'courselist', 
 			height: 900
-//			viewModel: 'specimens'
         }]
     }, {
         title: 'Enheter',
