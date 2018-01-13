@@ -25,9 +25,15 @@ import org.apache.log4j.Logger;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import org.apache.log4j.Logger;
+
+
 @Service ("securityService")
 @Transactional(readOnly = true)
 public class SecurityService implements BemanningUserService {
+
+
+	private static Logger logger = Logger.getLogger(SecurityService.class.getName());
 
     @Autowired
     UserRepo userRepo;
@@ -39,7 +45,6 @@ public class SecurityService implements BemanningUserService {
 	private final boolean ACCOUNT_NON_LOCKED = true;
 	private final String ROLE_PREFIX = "ROLE_";
 	
-    private Logger logger = Logger.getLogger(SecurityService.class.getName());
 	
     /**
      * @see se.uu.ebc.bemanning.security.SecurityService#loadUserByUsername(String)
@@ -50,25 +55,22 @@ public class SecurityService implements BemanningUserService {
 		if (logger.isDebugEnabled()) {
 			logger.debug("MTh handleLoadUserByUsername, processing "+username);
 		}
-System.out.println("loadUserByUsername, username: "+ username);
+		logger.debug("loadUserByUsername, username: "+ username);
 
-       if (username == null || username.trim().length() == 0)
-        {
+		if (username == null || username.trim().length() == 0) {
             throw new IllegalArgumentException(
                 "se.uu.ebc.portaxnotes.security.loadUserByUsername(String username) - 'username' can not be null or empty");
         }
         try
         {
-System.out.println("loadUserByUsername, repo: "+ userRepo);
+			logger.debug("loadUserByUsername, repo: "+ userRepo);
 
 			Person localUser = userRepo.findUserByUsername(username);
 
-System.out.println("loadUserByUsername, localUser: "+ localUser);
+			logger.debug("loadUserByUsername, localUser: "+ localUser);
 	
-			if (logger.isDebugEnabled()) {
-				logger.debug("MTh handleLoadUserByUsername, got user "+localUser);
-				logger.debug("MTh handleLoadUserByUsername, user is "+ReflectionToStringBuilder.toString(localUser, ToStringStyle.MULTI_LINE_STYLE));
-			}
+			logger.debug("MTh handleLoadUserByUsername, got user "+localUser);
+			logger.debug("MTh handleLoadUserByUsername, user is "+ReflectionToStringBuilder.toString(localUser, ToStringStyle.MULTI_LINE_STYLE));
 
 			if (localUser == null) {
 					throw new UsernameNotFoundException("User "+username+" not found!");

@@ -5,6 +5,7 @@ public enum UserRoleType
 	Staff,
 	DirectorOfStudies,
 	PhDAdmin,
+	CoreDataAdmin,
 	Administrator,
 	SysAdmin;
 }

@@ -9,7 +9,8 @@ Ext.define('Bemanning.Application', {
     name: 'Bemanning',
 
     stores: [
-		'PersonStore', 'CourseStore','StaffStore', 'OUStore', 'YoHStore', 'AssignmentStore', 'CourseInstanceStore', 'GrantStore', 'CurrentUserStore'		
+		'PersonStore', 'CourseStore','StaffStore', 'OUStore', 'YoHStore', 'AssignmentStore', 
+		'CourseInstanceStore', 'GrantStore', 'CurrentUserStore', 'PhDStore','ProgressStore'		
     ],
     
     launch: function () {
@@ -20,9 +21,13 @@ Ext.define('Bemanning.Application', {
 		Ext.Ajax.on('requestexception', function (connection, response, requestOptions, listenerOptions) {
 			console.log("RequestException: " + response.status);
 			if (response.status == 401) {
-				window.location.replace(PorTableClient.data.Constants.CORE_URL.concat('index.html'));
+				if(requestOptions.method == 'GET') {
+					window.location.replace(Bemanning.data.Constants.CORE_URL.concat('index.html'));
+				} else {
+					Ext.MessageBox.alert('Status', 'Du saknar behörighet för detta, eller har blivit utloggad');
+				}
 			} else {
-				Ext.MessageBox.alert('Status', 'RESTful interaction was seriously f-cked up: ' + response.statusText + ' Do not blame me when things subsequently do not work!');
+				Ext.MessageBox.alert('Status', 'RESTful-kommunikation gick inte som det skulle: ' + response.statusText + ' Skyll inte på mig om saker inte fungerar från och med nu!');
 			}
 		});
 		

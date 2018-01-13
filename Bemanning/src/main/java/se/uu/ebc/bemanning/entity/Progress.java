@@ -66,14 +66,14 @@ public class Progress {
     
     @Column(name = "TO_ECO_SYS")
     @NotNull
-    private Short toEcoSys;
+    private boolean toEcoSys;
     
     @Column(name = "REMAINING_MONTHS", precision = 12)
     private Float remainingMonths;
     
     @Column(name = "TO_UP_DOK")
     @NotNull
-    private Short toUpDok;
+    private boolean toUpDok;
     
     @Column(name = "NOTE", length = 255)
     private String note;
@@ -113,11 +113,11 @@ public class Progress {
         this.guFraction = guFraction;
     }
     
-    public Short getToEcoSys() {
+    public boolean getToEcoSys() {
         return toEcoSys;
     }
     
-    public void setToEcoSys(Short toEcoSys) {
+    public void setToEcoSys(boolean toEcoSys) {
         this.toEcoSys = toEcoSys;
     }
     
@@ -129,11 +129,11 @@ public class Progress {
         this.remainingMonths = remainingMonths;
     }
     
-    public Short getToUpDok() {
+    public boolean getToUpDok() {
         return toUpDok;
     }
     
-    public void setToUpDok(Short toUpDok) {
+    public void setToUpDok(boolean toUpDok) {
         this.toUpDok = toUpDok;
     }
     

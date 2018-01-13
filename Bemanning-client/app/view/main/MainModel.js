@@ -8,9 +8,80 @@ Ext.define('Bemanning.view.main.MainModel', {
 
     data: {
         name: 'Bemanning',
+		current: {
+			user : null,
+		},
+		hidden : {
+			assignment: false,
+			staff: false,
+			cis: false,
+			persons: false,
+			courses: false,
+			ous: false,
+			phdstudents: true
+		},
+		required : {
+			assignment: ['slask'],
+			staff: ['DirectorOfStudies'],
+			cis: ['DirectorOfStudies'],
+			persons: ['DirectorOfStudies'],
+			courses: ['DirectorOfStudies'],
+			ous: ['DirectorOfStudies'],
+			phdstudents: ['PhDAdmin']
+		},
+    },
+    
+    stores: {
+		cuser: {
+			type: 'chained',
+			source: 'CurrentUserStore'
+		}    	
+    },
 
-        loremIpsum: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    }
-
+	formulas: {
+        currentUser: {
+            // We need to bind deep to be notified on each model change
+            bind: {
+                bindTo: '{cuser}', //--> reference configurated on the grid view (reference: comboCurrentYear)
+                deep: true
+            },
+            get: function(user) {
+            	this.set('current.user', user.getAt(0));
+                return user.getAt(0);
+            }
+        },
+        authorized: {
+            // We need to bind deep to be notified on each model change
+            bind: {
+                auths: '{current.user.userRoles}',
+                reqs: '{required}',
+                autd : '{current.authzed}'
+            },
+            get: function(data) {
+				this.set('authzed','!{reqs.assignment} in {auths}');
+                return data.autd.assignment;
+            }
+        },
+        authAssignment: {
+            // We need to bind deep to be notified on each model change
+            bind: {
+                auths: '{current.user.userRoles}',
+                req: '{required.assignment}',
+                visible : '{current.visible.assignment}'
+            },
+            get: function(data) {
+				var findOne = function (haystack, arr) {
+					return arr.some(function (v) {
+						return haystack.indexOf(v) >= 0;
+					});
+				};
+            	if (findOne(data.auths, data.req)) {
+            		this.set('current.visible.assignment',true);	
+            	}
+                return data.autd;
+            }
+        }
+ 
+	}
     //TODO - add data, formulas and/or methods to support your view
 });

@@ -76,6 +76,7 @@ Ext.define('Bemanning.view.main.Main', {
 
     items: [{
         title: 'Bemanning',
+        reference: 'tabAssignment',
         iconCls: 'fa-hourglass-2',
         items: [{
         	xtype: 'assignmentlist',
@@ -131,10 +132,25 @@ Ext.define('Bemanning.view.main.Main', {
         }]
 
     }, {
-        title: 'Inställningar',
+        title: 'Doktorander',
+        iconCls: 'fa-graduation-cap',
+		viewModel: 'phds',
+		
+        items: [{
+            xtype: 'phdlist', 
+			height: 600
+        },{
+            xtype: 'progresslist', 
+			height: 300
+        }]
+    }, {
+        title: 'Logga ut',
+        reference: 'logOutTab',
         iconCls: 'fa-cog',
-        bind: {
-            html: '{loremIpsum}'
-        }
-    }]
+    }],
+     
+	listeners: {
+ 		beforeTabChange: 'onTabChange'
+ 	}
+
 });

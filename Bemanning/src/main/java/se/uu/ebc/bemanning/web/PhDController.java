@@ -20,17 +20,22 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
  
-import se.uu.ebc.bemanning.service.OrganisationUnitService;
-import se.uu.ebc.bemanning.vo.OrganisationUnitVO;
-import se.uu.ebc.bemanning.vo.YoHVO;
+import se.uu.ebc.bemanning.security.UserRepo;
+import se.uu.ebc.bemanning.repo.PhDPositionRepo;
+import se.uu.ebc.bemanning.entity.PhDPosition;
+import se.uu.ebc.bemanning.service.PhDService;
+import se.uu.ebc.bemanning.vo.PhDPositionVO;
+import se.uu.ebc.bemanning.vo.ProgressVO;
+import se.uu.ebc.bemanning.vo.UserVO;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
-import flexjson.transformer.DateTransformer;
+import se.uu.ebc.bemanning.util.DateNullTransformer;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -40,39 +45,44 @@ import org.apache.log4j.Logger;
 @Controller
 @RequestMapping(value = "/rest")
 @CrossOrigin(origins = "http://localhost:1841", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
-public class OrganisationUnitController {
+public class PhDController {
 
-    private Logger logger = Logger.getLogger(OrganisationUnitController.class.getName());
+    private Logger logger = Logger.getLogger(PhDController.class.getName());
+
+/* 
+	@Autowired
+	PhDPositionRepo personRepo;
+ */
 
 	@Autowired
-	OrganisationUnitService ouService;
+	PhDService phdService;
 
-	/* Organisation Units */
+	/* PhDPositions */
 		
-    @RequestMapping(value="/ous", method = RequestMethod.GET)
+    @RequestMapping(value="/phdpositions", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<String> allOus() {
+    public ResponseEntity<String> allPeople() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
- 			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("ous").serialize(ouService.getAllOrganisationUnits()), headers, HttpStatus.OK);
+ 			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("phdpositions").transform(new DateNullTransformer("yyyy-MM-dd"), Date.class).serialize(phdService.getAllPhDPositions()), headers, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
   	
     }
  
-	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
-    @RequestMapping(value="/ous/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
-    public ResponseEntity<String> updateOu(@RequestBody String json, @PathVariable("id") Long id) {
+//	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
+    @RequestMapping(value="/phdpositions/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    public ResponseEntity<String> updatePhDPosition(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-			OrganisationUnitVO ouVO = new JSONDeserializer<OrganisationUnitVO>().use(null, OrganisationUnitVO.class).deserialize(json);
-			ouVO.setId(id);
-			ouVO = ouService.saveOrganisationUnit(ouVO);
+			PhDPositionVO pVO = new JSONDeserializer<PhDPositionVO>().use(null, PhDPositionVO.class).deserialize(json);
+			pVO.setId(id);
+			pVO = phdService.savePhDPosition(pVO);
 			
- 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("ous").serialize(ouVO);
+ 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("phdpositions").transform(new DateNullTransformer("yyyy-MM-dd"), Date.class).serialize(pVO);
 			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
             return new ResponseEntity<String>(restResponse, headers, HttpStatus.OK);
@@ -82,18 +92,18 @@ public class OrganisationUnitController {
     }
 
  
-	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
-    @RequestMapping(value="/ous", method = RequestMethod.POST, headers = "Accept=application/json")
-    public ResponseEntity<String> createOu(@RequestBody String json, UriComponentsBuilder uriBuilder) {
+//	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
+    @RequestMapping(value="/phdpositions", method = RequestMethod.POST, headers = "Accept=application/json")
+    public ResponseEntity<String> createPhDPosition(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-			OrganisationUnitVO ouVO = new JSONDeserializer<OrganisationUnitVO>().use(null, OrganisationUnitVO.class).deserialize(json);
-			ouVO = ouService.saveOrganisationUnit(ouVO);
+			PhDPositionVO pVO = new JSONDeserializer<PhDPositionVO>().use(null, PhDPositionVO.class).use(Date.class, new DateNullTransformer("yyyy-MM-dd") ).deserialize(json);
+			pVO = phdService.savePhDPosition(pVO);
             RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
-            headers.add("Location",uriBuilder.path(a.value()[0]+"/"+ouVO.getId().toString()).build().toUriString());
+            headers.add("Location",uriBuilder.path(a.value()[0]+"/"+pVO.getId().toString()).build().toUriString());
 
- 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("ous").deepSerialize(ouVO);
+ 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("phdpositions").transform(new DateNullTransformer("yyyy-MM-dd"), Date.class).serialize(pVO);
 			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
             return new ResponseEntity<String>(restResponse, headers, HttpStatus.CREATED);
@@ -103,13 +113,13 @@ public class OrganisationUnitController {
     }
 
 
-	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
-	@RequestMapping(value = "/ous/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public ResponseEntity<String> deleteOu(@PathVariable("id") Long id) {
+//	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
+	@RequestMapping(value = "/phdpositions/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	public ResponseEntity<String> deletePhDPosition(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-			ouService.deleteOrganisationUnit(id);
+			phdService.deletePhDPosition(id);
             return new ResponseEntity<String>("{success: true, id : " +id.toString() + "}", headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -117,33 +127,32 @@ public class OrganisationUnitController {
     }
 
 
-
-	/* Years of Hierarchy */
+	/* Progress */
 		
-    @RequestMapping(value="/yoh", method = RequestMethod.GET)
+    @RequestMapping(value="/progress", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<String> allYoH() {
+    public ResponseEntity<String> allProgress() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
         try {
- 			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("yoh").serialize(ouService.getAllYearsOfHierarchy()), headers, HttpStatus.OK);
+ 			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("progress").transform(new DateNullTransformer("yyyy-MM-dd"), Date.class).serialize(phdService.getAllProgress()), headers, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
   	
     }
  
-	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
-    @RequestMapping(value="/yoh/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
-    public ResponseEntity<String> updateYoH(@RequestBody String json, @PathVariable("id") Long id) {
+//	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
+    @RequestMapping(value="/progress/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    public ResponseEntity<String> updateProgress(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-			YoHVO yohVO = new JSONDeserializer<YoHVO>().use(null, YoHVO.class).deserialize(json);
-			yohVO.setId(id);
-			yohVO = ouService.saveYearsOfHierarchy(yohVO);
+			ProgressVO sVO = new JSONDeserializer<ProgressVO>().use(null, ProgressVO.class).use(Date.class, new DateNullTransformer("yyyy-MM-dd") ).deserialize(json);
+			sVO.setId(id);
+			sVO = phdService.saveProgress(sVO);
 			
- 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("yoh").serialize(yohVO);
+ 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("progress").transform(new DateNullTransformer("yyyy-MM-dd"), Date.class).serialize(sVO);
 			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
             return new ResponseEntity<String>(restResponse, headers, HttpStatus.OK);
@@ -152,18 +161,19 @@ public class OrganisationUnitController {
         }
     }
 
-	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
-    @RequestMapping(value="/yoh", method = RequestMethod.POST, headers = "Accept=application/json")
-    public ResponseEntity<String> createYoH(@RequestBody String json, UriComponentsBuilder uriBuilder) {
+ 
+//	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
+    @RequestMapping(value="/progress", method = RequestMethod.POST, headers = "Accept=application/json")
+    public ResponseEntity<String> createProgress(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-			YoHVO yohVO = new JSONDeserializer<YoHVO>().use(null, YoHVO.class).deserialize(json);
-			yohVO = ouService.saveYearsOfHierarchy(yohVO);
+			ProgressVO sVO = new JSONDeserializer<ProgressVO>().use(null, ProgressVO.class).use(Date.class, new DateNullTransformer("yyyy-MM-dd") ).deserialize(json);
+			sVO = phdService.saveProgress(sVO);
             RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
-            headers.add("Location",uriBuilder.path(a.value()[0]+"/"+yohVO.getId().toString()).build().toUriString());
+            headers.add("Location",uriBuilder.path(a.value()[0]+"/"+sVO.getId().toString()).build().toUriString());
 
- 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("yoh").deepSerialize(yohVO);
+ 			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("progress").transform(new DateNullTransformer("yyyy-MM-dd"), Date.class).serialize(sVO);
 			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
             return new ResponseEntity<String>(restResponse, headers, HttpStatus.CREATED);
@@ -172,17 +182,19 @@ public class OrganisationUnitController {
         }
     }
 
-	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
-	@RequestMapping(value = "/yoh/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public ResponseEntity<String> deleteYoH(@PathVariable("id") Long id) {
+
+//	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
+	@RequestMapping(value = "/progress/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	public ResponseEntity<String> deleteProgress(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-			ouService.deleteYearsOfHierarchy(id);
+			phdService.deleteProgress(id);
             return new ResponseEntity<String>("{success: true, id : " +id.toString() + "}", headers, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 	
 } 

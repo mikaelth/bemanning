@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
  
@@ -70,6 +71,7 @@ public class PersonController {
   	
     }
  
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @RequestMapping(value="/people/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updatePerson(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -89,6 +91,7 @@ public class PersonController {
     }
 
  
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @RequestMapping(value="/people", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createPerson(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
@@ -109,6 +112,7 @@ public class PersonController {
     }
 
 
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
 	@RequestMapping(value = "/people/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deletePerson(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();
@@ -137,6 +141,7 @@ public class PersonController {
   	
     }
  
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/staff/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateStaff(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -156,6 +161,7 @@ public class PersonController {
     }
 
  
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/staff", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createStaff(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
@@ -176,6 +182,7 @@ public class PersonController {
     }
 
 
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
 	@RequestMapping(value = "/staff/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deleteStaff(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();

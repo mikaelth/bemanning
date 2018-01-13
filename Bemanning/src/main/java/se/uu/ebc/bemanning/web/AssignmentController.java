@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
  
@@ -60,6 +61,7 @@ public class AssignmentController {
   	
     }
  
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/assignments/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateAssignment(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -79,6 +81,7 @@ public class AssignmentController {
     }
 
  
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/assignments", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createAssignment(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
@@ -99,6 +102,7 @@ public class AssignmentController {
     }
 
 
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
 	@RequestMapping(value = "/assignments/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deleteAssignment(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();

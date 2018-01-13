@@ -16,6 +16,17 @@ Ext.define('Bemanning.view.main.CourseList', {
 	features: [{ ftype: 'grouping',startCollapsed: false }],
 
     columns: [
+		{xtype:'actioncolumn',
+            width:40,
+            items: [{
+				iconCls: 'x-fa fa-list-alt',
+				tooltip: 'Kursplan',
+				handler: function(grid, rowIndex, colIndex){
+					var rec = grid.getStore().getAt(rowIndex);
+					window.open(Bemanning.data.Constants.SELMA_URL.concat(rec.get('code')));				
+				}
+			}]
+        },
 		{ text: 'Kurskod', dataIndex: 'code', editor: 'textfield', align: 'left', width: 100 },
 		{ text: 'Benämning', dataIndex: 'seName', editor: 'textfield', align: 'left', flex: 2},
 		{ text: 'Engelsk benämning', dataIndex: 'enName', editor: 'textfield', align: 'left', flex: 1 },

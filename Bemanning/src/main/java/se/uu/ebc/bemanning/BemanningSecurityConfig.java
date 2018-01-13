@@ -22,6 +22,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import se.uu.ebc.bemanning.security.BemanningUserService;
 import se.uu.ebc.bemanning.security.SecurityService;
@@ -31,6 +32,7 @@ import se.uu.ebc.bemanning.security.RESTAuthenticationEntryPoint;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @EnableAutoConfiguration
 @EnableWebMvcSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	static Logger log = Logger.getLogger(BemanningSecurityConfig.class.getName());
@@ -124,6 +126,7 @@ System.out.println("serviceProperties() " + serviceProperties.getService());
  			.antMatchers("/index.html").authenticated()
  			.antMatchers("/Bemanning/**").permitAll()
  			.antMatchers("/rest/**").permitAll()
+// 			.antMatchers("/rest/phds/**").hasAnyRole("PHDADMIN")
 // 			.antMatchers("/rest/**").hasAnyRole("DIRECTOROFSTUDIES","PHDADMIN","ADMINISTRATOR","SYSADMIN")
 			.antMatchers("/**").authenticated();
  				

@@ -92,7 +92,7 @@ public class PhDPosition {
     private String note;
     
     @Column(name = "INACTIVE")
-    private Short inactive;
+    private boolean inactive;
     
     public List<Progress> getProgresses() {
 
@@ -137,11 +137,11 @@ public class PhDPosition {
         this.note = note;
     }
     
-    public Short getInactive() {
+    public boolean getInactive() {
         return inactive;
     }
     
-    public void setInactive(Short inactive) {
+    public void setInactive(boolean inactive) {
         this.inactive = inactive;
     }
 
@@ -415,58 +415,16 @@ public class PhDPosition {
 		return endDate.getTime();
 	}
 	
-    /**
-     * @see PhDPosition#predictedHalfTime()
-     */
-	public Date predictedHalfTime()
+ 	public Date predictedHalfTime()
 	{
 		return predictDate(REMAIN_AT_HALF);
 	}
 
-    /**
-     * @see PhDPosition#predicted80Percent()
-     */
 	public Date predicted80Percent()
 	{
 		return predictDate(REMAIN_AT_80);
 	}
 
-	private Date predictDate (float months)
-	{
-	
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh predictedHalfTime " );
-		}
-		
-		Calendar now = Calendar.getInstance();
-		String thisYear = Integer.toString((now.get(Calendar.YEAR)));
-
-		Calendar ey = Calendar.getInstance();
-		ey.set(Calendar.MONTH, Calendar.DECEMBER);
-		ey.set(Calendar.DATE, 31);
-	
-		java.util.Iterator<Progress> entryIterator = this.getProgresses().iterator();
-		Progress entry = entryIterator.next();
-		while (entryIterator.hasNext() && months > remainingProjectTime(entry.getDate(), false) ) {
-			entry = entryIterator.next();
-		}
-		float remainAtLatest = remainingProjectTime(entry.getDate(), false);
-
-		float remainPredInDays = (remainAtLatest-months)*MONTH_IN_DAYS/(entry.getActivity()*entry.getProjectFraction()) ;
-				
-		Calendar endDate = Calendar.getInstance();
-		endDate.setTime(entry.getDate());
-		endDate.add(Calendar.DAY_OF_MONTH,Math.round(remainPredInDays));
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh predictedHalfTime is "+ endDate.getTime() );
-		}
-		
-		return endDate.getTime();	
-	
-	}
-
- 
     public Float yearlyGU(String year)
     {
 		if (logger.isDebugEnabled()) {
@@ -618,6 +576,45 @@ public class PhDPosition {
 		return remainingProjectTime( Calendar.getInstance().getTime(), false );
 	}
 
+
+	/* Private utility methods */
+	
+	private Date predictDate (float months)
+	{
+	
+		if (logger.isDebugEnabled()) {
+			logger.debug("MTh predictedHalfTime " );
+		}
+		
+		Calendar now = Calendar.getInstance();
+		String thisYear = Integer.toString((now.get(Calendar.YEAR)));
+
+		Calendar ey = Calendar.getInstance();
+		ey.set(Calendar.MONTH, Calendar.DECEMBER);
+		ey.set(Calendar.DATE, 31);
+	
+		java.util.Iterator<Progress> entryIterator = this.getProgresses().iterator();
+		Progress entry = entryIterator.next();
+		while (entryIterator.hasNext() && months > remainingProjectTime(entry.getDate(), false) ) {
+			entry = entryIterator.next();
+		}
+		float remainAtLatest = remainingProjectTime(entry.getDate(), false);
+
+		float remainPredInDays = (remainAtLatest-months)*MONTH_IN_DAYS/(entry.getActivity()*entry.getProjectFraction()) ;
+				
+		Calendar endDate = Calendar.getInstance();
+		endDate.setTime(entry.getDate());
+		endDate.add(Calendar.DAY_OF_MONTH,Math.round(remainPredInDays));
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("MTh predictedHalfTime is "+ endDate.getTime() );
+		}
+		
+		return endDate.getTime();	
+	
+	}
+
+ 
 	private Float endYearRemainingProjectTime()
 	{
 		Calendar ey = Calendar.getInstance();
@@ -625,5 +622,6 @@ public class PhDPosition {
 		ey.set(Calendar.DATE, 31);
 		return remainingProjectTime( ey.getTime(), false );
 	}
-		    
+
+			    
 }

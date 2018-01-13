@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
  
@@ -64,6 +65,7 @@ public class CourseController {
   	
     }
  
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @RequestMapping(value="/courses/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateCourse(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -83,6 +85,7 @@ public class CourseController {
     }
 
  
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @RequestMapping(value="/courses", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createCourse(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
@@ -103,6 +106,7 @@ public class CourseController {
     }
 
 
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
 	@RequestMapping(value = "/courses/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deleteCourse(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();
@@ -133,6 +137,7 @@ public class CourseController {
   	
     }
  
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/cis/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateCourseInstance(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -152,6 +157,7 @@ public class CourseController {
     }
 
  
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/cis", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createCourseInstance(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
@@ -172,6 +178,7 @@ public class CourseController {
     }
 
 
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
 	@RequestMapping(value = "/cis/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deleteCourseInstance(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();
@@ -203,6 +210,7 @@ public class CourseController {
   	
     }
  
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @RequestMapping(value="/cgs/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateCourseGrant(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -223,6 +231,7 @@ public class CourseController {
     }
 
  
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @RequestMapping(value="/cgs", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createCourseGrant(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
@@ -243,6 +252,7 @@ public class CourseController {
     }
 
 
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
 	@RequestMapping(value = "/cgs/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deleteCourseGrant(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();

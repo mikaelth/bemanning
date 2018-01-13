@@ -13,8 +13,7 @@ Ext.define('Bemanning.view.main.Main', {
         'Ext.MessageBox',
 
         'Bemanning.view.main.MainController',
-        'Bemanning.view.main.MainModel',
-        'Bemanning.view.main.List'
+        'Bemanning.view.main.MainModel'
     ],
 
     controller: 'main',
