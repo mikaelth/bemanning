@@ -23,6 +23,8 @@ Ext.define('Bemanning.view.main.MainController', {
 //		console.log(newCard);
 		if (newCard.getReference() == 'logOutTab') {
 			window.location.replace('https://weblogin.uu.se/idp/profile/Logout');
+		} else if (newCard.getReference() == 'goBackTab') {
+			window.location.replace(Bemanning.data.Constants.CORE_URL);
 		}
    	}
     

@@ -210,7 +210,7 @@ public class CourseController {
   	
     }
  
-	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/cgs/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateCourseGrant(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -231,7 +231,7 @@ public class CourseController {
     }
 
  
-	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/cgs", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createCourseGrant(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
@@ -252,7 +252,7 @@ public class CourseController {
     }
 
 
-	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
+	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
 	@RequestMapping(value = "/cgs/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deleteCourseGrant(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();

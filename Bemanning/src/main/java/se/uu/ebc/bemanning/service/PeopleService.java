@@ -16,11 +16,13 @@ import se.uu.ebc.bemanning.vo.PersonVO;
 import se.uu.ebc.bemanning.vo.StaffVO;
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.entity.Staff;
+import se.uu.ebc.bemanning.entity.AKKAUser;
 import se.uu.ebc.bemanning.enums.UserRoleType;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 import se.uu.ebc.bemanning.repo.PersonRepo;
 import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
+import se.uu.ebc.bemanning.ldap.AKKAUserRepo;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -32,13 +34,18 @@ public class PeopleService {
     private static Logger logger = Logger.getLogger(PeopleService.class.getName());
 
 	@Autowired
-	PersonRepo personRepo;
+	private PersonRepo personRepo;
 
 	@Autowired
-	StaffRepo staffRepo;
+	private StaffRepo staffRepo;
 
 	@Autowired
-	OrganisationUnitRepo ouRepo;
+	private OrganisationUnitRepo ouRepo;
+
+/* 
+	@Autowired
+	private AKKAUserRepo ldapRepo;
+ */
 
 	/* Person */
 
@@ -47,6 +54,7 @@ public class PeopleService {
 		try {	
 			for (Person p : personRepo.findAll()) {
  				pVO.add(new PersonVO(p));
+//				logger.debug(ReflectionToStringBuilder.toString(ldapRepo.findByUsername(p.getUsername()), ToStringStyle.MULTI_LINE_STYLE));
  			}
          	return pVO;        	        
         } catch (Exception e) {

@@ -84,7 +84,10 @@ public class IndexViewController {
     public String indexPage(Model model, Principal principal, HttpServletRequest request) {
 			logger.debug("indexPage, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("indexPage, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
-        try {
+ 			logger.debug("indexPage, user "+ReflectionToStringBuilder.toString(userRepo.findUserByUsername(principal.getName()), ToStringStyle.MULTI_LINE_STYLE));
+
+       try {
+			model.addAttribute("user", userRepo.findUserByUsername(principal.getName()));
     		return "EntryPage";
         } catch (Exception e) {
 			logger.error("indexPage, caught a pesky exception "+ e);

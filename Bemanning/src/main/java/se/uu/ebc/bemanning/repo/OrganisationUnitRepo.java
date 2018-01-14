@@ -26,6 +26,8 @@ public interface OrganisationUnitRepo extends JpaRepository<OrganisationUnit, Lo
 	@Query("SELECT ou FROM OrganisationUnit AS ou WHERE ou.abbreviation = ?1")
 	public OrganisationUnit findByAbbreviation(String abbreviation);    
  
- 
+ 	@Query("SELECT ou FROM OrganisationUnit AS ou WHERE (ou.inSystem=true AND ou.courseEconomyHolder=true)")
+	public List<OrganisationUnit> findOusInSystem();    
+
 
 }

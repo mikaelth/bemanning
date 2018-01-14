@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 @CrossOrigin(origins = "http://localhost:1841", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class AssignmentController {
 
-    private Logger logger = Logger.getLogger(PersonController.class.getName());
+	private Logger logger = Logger.getLogger(PersonController.class.getName());
 
 	@Autowired
 	AssignmentService asnmtService;

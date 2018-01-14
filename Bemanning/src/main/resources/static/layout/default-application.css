@@ -1,4 +1,7 @@
-
+.number-column
+{
+	text-align: right;
+}
 #container
 {
     position: relative;

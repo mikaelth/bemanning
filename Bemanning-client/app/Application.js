@@ -22,7 +22,7 @@ Ext.define('Bemanning.Application', {
 			console.log("RequestException: " + response.status);
 			if (response.status == 401) {
 				if(requestOptions.method == 'GET') {
-					window.location.replace(Bemanning.data.Constants.CORE_URL.concat('index.html'));
+					window.location.replace(Bemanning.data.Constants.CORE_URL.concat('loginredirect.html'));
 				} else {
 					Ext.MessageBox.alert('Status', 'Du saknar behörighet för detta, eller har blivit utloggad');
 				}

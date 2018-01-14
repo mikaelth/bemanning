@@ -1,0 +1,85 @@
+<html lang="se-SE">
+<head>
+	<title th:text="#{display.staff.overview.title}"> Förslag till bemanning, per kurs </title>
+	<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
+	<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default-application.css"></link>
+	<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default.css"></link>
+</head>
+<body>
+	<div id="container">
+		<div>
+			<h1 th:text="#{display.staff.overview.title}+' '+${budgetDept.svName}+', '+${year}">Förslag till bemanning, typ</h1>
+		</div>
+
+		<div id="content">
+			<div id="selectYear" class="action">
+				<h3>
+					Välj år och enhet
+				</h3>
+				<div class="trigger">
+					<form action="#" th:action="@{/view/ViewStaffSummary}" th:object="${budgetYear}" method="post">
+						<select name="year">
+							<option th:each="selectYear : ${budgetYear.allYears}" th:value="${selectYear}" th:text="${selectYear}" th:selected="${ selectYear==year }">År</option>
+						</select>
+						<select name="ou">
+							<option th:each="selectDept : ${activeDepts}" th:value="${selectDept.id}" th:text="${selectDept.svName}" th:selected="${ selectDept==budgetDept }">Enhet</option>
+						</select>
+						<input type="submit" value="V&auml;lj" id="form_submit" />
+					</form>
+				</div>
+			</div>
+			<br class="clr" />
+			<div id="coursesOverview" class="table">
+				<br />
+				<p />
+				<table>
+					<thead>
+						<tr>
+							<th th:text="#{display.staff.overview.name}" />
+<!-- 
+							<th th:text="#{display.staff.overview.email}" />
+ -->
+							<th th:text="#{display.staff.overview.position}" />
+							<th th:text="#{display.staff.overview.unit}"/>
+
+							<th th:text="#{display.staff.overview.gucost}" />
+							<th th:text="#{display.staff.overview.ib}" />
+							<th th:text="#{display.staff.overview.percentGU}" />
+							<th th:text="#{display.staff.overview.guhours}" />
+
+							<th th:text="#{display.staff.overview.totalpercent}" />
+							<th th:text="#{display.staff.overview.total}" />
+							<th th:text="#{display.staff.overview.ub}" />
+
+							<th th:text="#{display.staff.overview.accumulated}" />
+							<th th:text="#{display.staff.overview.note}" />
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="teacher, iterStat: ${staff}" th:class="${iterStat.odd}? 'odd' : 'even'">
+							<td th:text="${teacher.person.name}" />
+<!-- 
+							<td th:text="${teacher.akka.email}" />
+ -->
+							<td th:text="${teacher.position}" />
+							<td th:text="${teacher.organisationUnit.svName}" />
+
+							<td class="number-column" th:text="${#numbers.formatInteger(teacher.computeAppointmentCost(),1,'WHITESPACE')}+ ' kr'" />
+							<td class="number-column" th:text="${#numbers.formatInteger(teacher.ib,1)}" />
+							<td class="number-column" th:text="${#numbers.formatInteger(teacher.percentGU*100,1)} + '%'" />
+							<td class="number-column" th:text="${#numbers.formatInteger(teacher.percentGU*1700,1,'WHITESPACE')}" />
+
+							<td class="number-column" th:text="${#numbers.formatInteger(teacher.totalHours/17,1)} + '%'" />
+							<td class="number-column" th:text="${#numbers.formatInteger(teacher.totalHours,1,'WHITESPACE')}" />
+							<td class="number-column" th:text="${#numbers.formatInteger(teacher.ub,1)}" />
+
+							<td class="number-column" th:text="${#numbers.formatInteger(teacher.accumulatedHours,1)}" />
+							<td th:text="${teacher.note}" />
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

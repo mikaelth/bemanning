@@ -3,10 +3,14 @@ package se.uu.ebc.bemanning;
 //import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import org.springframework.boot.builder.SpringApplicationBuilder;
+
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+
 import org.springframework.boot.SpringApplication;
 
 import org.springframework.context.annotation.Bean;
@@ -67,7 +71,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @RestController("/")
 @SpringBootApplication
 @CrossOrigin(origins = "http://localhost:1841")
-@Import({StaticResourceConfiguration.class, BemanningSecurityConfig.class})
+@Import({BemanningLDAPConfiguration.class, StaticResourceConfiguration.class, BemanningSecurityConfig.class})
 @ComponentScan(basePackages = {"se.uu.ebc.bemanning.service","se.uu.ebc.bemanning.web","se.uu.ebc.bemanning.security"})
 //public class Bemanning extends WebMvcConfigurerAdapter {		/* Testing with embedded server */
 public class Bemanning extends SpringBootServletInitializer { /* Deploying to Tomcat container */
@@ -115,6 +119,7 @@ public class Bemanning extends SpringBootServletInitializer { /* Deploying to To
     	redirectView.setUrl("index.html");
     	return redirectView;
 	}
+
 
 
 }

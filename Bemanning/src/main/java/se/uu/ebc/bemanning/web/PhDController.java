@@ -72,7 +72,7 @@ public class PhDController {
   	
     }
  
-//	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
+	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
     @RequestMapping(value="/phdpositions/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updatePhDPosition(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -92,7 +92,7 @@ public class PhDController {
     }
 
  
-//	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
+	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
     @RequestMapping(value="/phdpositions", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createPhDPosition(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
@@ -113,7 +113,7 @@ public class PhDController {
     }
 
 
-//	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
+	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
 	@RequestMapping(value = "/phdpositions/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deletePhDPosition(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();
@@ -142,7 +142,7 @@ public class PhDController {
   	
     }
  
-//	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
+	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
     @RequestMapping(value="/progress/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateProgress(@RequestBody String json, @PathVariable("id") Long id) {
         HttpHeaders headers = new HttpHeaders();
@@ -162,7 +162,7 @@ public class PhDController {
     }
 
  
-//	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
+	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
     @RequestMapping(value="/progress", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createProgress(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         HttpHeaders headers = new HttpHeaders();
@@ -183,7 +183,7 @@ public class PhDController {
     }
 
 
-//	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
+	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
 	@RequestMapping(value = "/progress/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deleteProgress(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();

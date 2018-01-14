@@ -1,0 +1,68 @@
+<html lang="se-SE">
+<head>
+	<title th:text="#{display.course.assignments.title}"> Förslag till bemanning, per kurs </title>
+	<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
+	<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default-application.css"></link>
+	<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default.css"></link>
+</head>
+<body>
+	<div id="container">
+		<div>
+			<h1 th:text="#{display.courses.overview.title}">Förslag till bemanning, typ</h1>
+		</div>
+
+		<div id="content">
+			<div id="selectYear" class="action">
+				<h3>
+					Välj år 
+				</h3>
+				<div class="trigger">
+					<form action="#" th:action="@{/view/ViewCourseOverview}" th:object="${budgetYear}" method="post">
+						<select name="year">
+							<option th:each="selectYear : ${budgetYear.allYears}" th:value="${selectYear}" th:text="${selectYear}" th:selected="${ selectYear==year }">År</option>
+						</select>
+						<input type="submit" value="V&auml;lj &aring;r" id="form_submit" />
+					</form>
+				</div>
+			</div>
+			<br class="clr" />
+			<div id="coursesOverview" class="table">
+<!-- 
+				<h2 th:text="'Budgetår ' + ${year} +', ' + ${budgetDept} + ', ' + ${#dates.format(#dates.createNow(),'yyyy-MM-dd')}">
+					Budgetår 2017, Institutionen för Organismbiologi, 2017-04-02 
+				</h2>
+ -->
+				<br />
+				<table>
+					<thead>
+						<tr>
+							<th th:text="#{display.courses.overview.course}">Kursens namn</th>
+							<th th:text="#{display.courses.overview.startdate}">Startdatum</th>
+							<th th:text="#{display.courses.overview.enddate}">Slutdatum</th>
+							<th th:text="#{display.courses.overview.courseleader}">Kursansvarig lärare</th>
+							<th th:text="#{display.courses.overview.unit}">Enhet</th>
+<!-- 
+							<th th:text="#{display.courses.overview.email}">Email</th>
+							<th th:text="#{display.courses.overview.phone}">Telefon</th>
+ -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="course, iterStat: ${courses}" th:class="${iterStat.odd}? 'odd' : 'even'">
+							<td th:text="${course.course.code}+' '+${course.course.seName}" />
+							<td th:text="${#dates.format(course.startDate,'yyyy-MM-dd')}" />
+							<td th:text="${#dates.format(course.endDate,'yyyy-MM-dd')}" />
+							<td th:text="${course.courseLeader.person.name}" />
+							<td th:text="${course.courseLeader.organisationUnit.svName}" />
+<!-- 
+							<td th:text="${course.courseLeader.person.email}" />
+							<td th:text="${course.courseLeader.person.phone}" />
+ -->
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

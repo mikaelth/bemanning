@@ -144,6 +144,10 @@ Ext.define('Bemanning.view.main.Main', {
 			height: 300
         }]
     }, {
+        title: 'Gå till startsidan',
+        reference: 'goBackTab',
+        iconCls: ' fa-map',
+    }, {
         title: 'Logga ut',
         reference: 'logOutTab',
         iconCls: 'fa-cog',

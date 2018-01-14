@@ -37,7 +37,7 @@ public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	static Logger log = Logger.getLogger(BemanningSecurityConfig.class.getName());
 
-	@Value("${portable.base.url}")
+	@Value("${bemanning.base.url}")
 	String baseUrl;
 
 	@Bean
@@ -124,10 +124,11 @@ System.out.println("serviceProperties() " + serviceProperties.getService());
 		
  		http.authorizeRequests()
  			.antMatchers("/index.html").authenticated()
+ 			.antMatchers("/loginredirect.html").authenticated()
  			.antMatchers("/Bemanning/**").permitAll()
- 			.antMatchers("/rest/**").permitAll()
+// 			.antMatchers("/rest/**").permitAll()
 // 			.antMatchers("/rest/phds/**").hasAnyRole("PHDADMIN")
-// 			.antMatchers("/rest/**").hasAnyRole("DIRECTOROFSTUDIES","PHDADMIN","ADMINISTRATOR","SYSADMIN")
+ 			.antMatchers("/rest/**").hasAnyRole("DIRECTOROFSTUDIES","PHDADMIN","ADMINISTRATOR","SYSADMIN","COREDATAADMIN")
 			.antMatchers("/**").authenticated();
  				
 // 		http

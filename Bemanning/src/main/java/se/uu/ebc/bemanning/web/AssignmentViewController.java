@@ -6,6 +6,7 @@ import flexjson.transformer.DateTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
@@ -45,6 +46,8 @@ import org.apache.log4j.Logger;
 import se.uu.ebc.bemanning.service.TestService;
 import se.uu.ebc.bemanning.service.PhDService;
 import se.uu.ebc.bemanning.service.StaffingService;
+import se.uu.ebc.bemanning.repo.CourseInstanceRepo;
+import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
 import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.PhDPositionRepo;
 import se.uu.ebc.bemanning.security.UserRepo;
@@ -67,6 +70,9 @@ public class AssignmentViewController {
 	TestService testService;
 
 	@Autowired
+	CourseInstanceRepo ciRepo;
+	
+	@Autowired
 	StaffRepo staffRepo;
 	
 	@Autowired
@@ -76,10 +82,14 @@ public class AssignmentViewController {
 	UserRepo userRepo;
 
 	@Autowired
+	OrganisationUnitRepo ouRepo;
+	
+	@Autowired
 	PhDService phdService;
 	@Autowired
 	PhDPositionRepo phdPositionRepo;
 	
+/* 
     @RequestMapping("/testen")
     @ResponseBody
     public ResponseEntity<String> allspecimen() {
@@ -92,6 +102,7 @@ public class AssignmentViewController {
            return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
+ */
 
     @RequestMapping(value = "/ViewByPerson", method = RequestMethod.GET)
     public String viewByPerson(@RequestParam(value = "year", required = false) String year, Model model, Principal principal, HttpServletRequest request) {
@@ -100,7 +111,7 @@ public class AssignmentViewController {
 			logger.debug("MTh viewByPerson, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("MTh viewByPerson, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 
-			String thisYear = year==null?"2017":year;
+			String thisYear = year==null ? thisYear() : year;
 			String budgetDept = staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear).getOrganisationUnit().getEconomyHolder(thisYear).getSvName();
 //			Set<Staff> staff = staffRepo.findByYear(thisYear);
 			List<Staff> staff;
@@ -151,7 +162,7 @@ public class AssignmentViewController {
 			logger.debug("MTh viewByCourse, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("MTh viewByCourse, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 
-			String thisYear = year==null?"2017":year;
+			String thisYear = year==null ? thisYear() : year;
 			Staff staff = staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear);
 			String budgetDept = staff.getOrganisationUnit().getEconomyHolder(thisYear).getSvName();
 			
@@ -194,6 +205,119 @@ public class AssignmentViewController {
 			}
 			return viewByCourse(year,model, principal, request);
 	}
+
+
+
+
+    @RequestMapping(value = "/ViewStaffSummary", method = RequestMethod.GET)
+    public String viewStaffSummary(@RequestParam(value = "year", required = false) String year, @RequestParam(value = "ou", required = false) Long ouid, Model model, Principal principal, HttpServletRequest request) {
+		try {
+			logger.debug("MTh viewStaffSummary, year "+ year);
+			logger.debug("MTh viewStaffSummary, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("MTh viewStaffSummary, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+
+			String thisYear = year==null ? thisYear() : year;
+			OrganisationUnit budgetDept = ouid == null ? 
+				staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear).getOrganisationUnit().getEconomyHolder(thisYear) :
+				ouRepo.findById(ouid);
+
+			List<Staff> staff = staffingService.getAssignedStaff(thisYear,budgetDept);
+						
+
+			logger.debug("MTh viewStaffSummary, staff "+ReflectionToStringBuilder.toString(staff, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("MTh viewStaffSummary, budgetYear "+ReflectionToStringBuilder.toString(new BudgetYear(thisYear, staffRepo.getStaffedYears()), ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("MTh viewStaffSummary, budgetDept "+budgetDept.getSvName());
+//			logger.debug("MTh viewStaffSummary, budgetDept "+ReflectionToStringBuilder.toString(budgetDept, ToStringStyle.MULTI_LINE_STYLE));
+
+			model.addAttribute("staff", staff);
+			model.addAttribute("serverTime", new Date());
+			model.addAttribute("budgetYear", new BudgetYear(thisYear, staffRepo.getStaffedYears()));
+			model.addAttribute("budgetDept", budgetDept);
+			model.addAttribute("activeDepts", ouRepo.findOusInSystem());
+			model.addAttribute("year", thisYear);
+
+			return "ViewStaffSummary";
+        } catch (Exception e) {
+			logger.error("MTh viewStaffSummary, pesky exception "+e);
+        	return "{\"ERROR\":"+e.getMessage()+"\"}";        
+        }
+	}
+ 
+    @RequestMapping(value = "/ViewStaffSummary", method = RequestMethod.POST)
+    public String viewStaffSummaryPost(@ModelAttribute("year") String year, @ModelAttribute("ou") Long ouid, Model model, Principal principal, HttpServletRequest request) {
+				logger.debug("MTh viewStaffSummary, POST year "+ year);
+				logger.debug("MTh viewStaffSummary, POST ou "+ ouid);
+				logger.debug("MTh viewStaffSummary, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			return viewStaffSummary(year, ouid, model, principal, request);
+	}
+
+
+
+
+    @RequestMapping(value = "/ViewPhDProgress", method = RequestMethod.GET)
+    public String viewProgressByPhD( Model model, Principal principal, HttpServletRequest request) {
+		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug("MTh viewProgressByPhD, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+				logger.debug("MTh viewProgressByPhD, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+			}
+
+			model.addAttribute("phdStudents", phdService.allSorted());
+//			model.addAttribute("phdStudents", phdPositionRepo.findAll());
+			model.addAttribute("serverTime", new Date());
+
+			return "ViewPhDProgress";
+        } catch (Exception e) {
+			if (logger.isErrorEnabled()) {
+				logger.error("MTh viewProgressByPhD, pesky exception "+e);
+			}
+           return "{\"ERROR\":"+e.getMessage()+"\"}";        
+        }
+	}
+
+
+
+
+
+    @RequestMapping(value = "/ViewCourseOverview", method = RequestMethod.GET)
+    public String viewCourseOverview(@RequestParam(value = "year", required = false) String year, Model model, Principal principal, HttpServletRequest request) {
+		try {
+			logger.debug("MTh viewCourseOverview, year "+ year);
+			logger.debug("MTh viewCourseOverview, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("MTh viewCourseOverview, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+
+			String thisYear = year==null ? thisYear() : year;
+			
+			List<CourseInstance> cis= ciRepo.findByYear(thisYear);			
+
+			logger.debug("MTh viewCourseOverview, courses "+ReflectionToStringBuilder.toString(cis, ToStringStyle.MULTI_LINE_STYLE));
+
+			model.addAttribute("courses", cis);
+			model.addAttribute("serverTime", new Date());
+			model.addAttribute("budgetYear", new BudgetYear(thisYear, staffRepo.getStaffedYears()));
+			model.addAttribute("year", thisYear);
+
+			return "CoursesOverview";
+        } catch (Exception e) {
+			if (logger.isErrorEnabled()) {
+				logger.error("MTh viewByCourse, pesky exception "+e);
+			}
+           return "{\"ERROR\":"+e.getMessage()+"\"}";        
+        }
+	}
+ 
+    @RequestMapping(value = "/ViewCourseOverview", method = RequestMethod.POST)
+    public String viewCourseOverviewPost(@ModelAttribute("year") String year, Model model, Principal principal, HttpServletRequest request) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("MTh viewByCourse, POST year "+ year);
+				logger.debug("MTh viewByCourse, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			}
+			return viewCourseOverview(year,model, principal, request);
+	}
+
+
+
+
 
 
 	public class BudgetYear {
@@ -260,27 +384,11 @@ public class AssignmentViewController {
 		
 	}
 
-
-    @RequestMapping(value = "/ViewPhDProgress", method = RequestMethod.GET)
-    public String viewProgressByPhD( Model model, Principal principal, HttpServletRequest request) {
-		try {
-			if (logger.isDebugEnabled()) {
-				logger.debug("MTh viewProgressByPhD, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
-				logger.debug("MTh viewProgressByPhD, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
-			}
-
-			model.addAttribute("phdStudents", phdService.allSorted());
-//			model.addAttribute("phdStudents", phdPositionRepo.findAll());
-			model.addAttribute("serverTime", new Date());
-
-			return "ViewPhDProgress";
-        } catch (Exception e) {
-			if (logger.isErrorEnabled()) {
-				logger.error("MTh viewProgressByPhD, pesky exception "+e);
-			}
-           return "{\"ERROR\":"+e.getMessage()+"\"}";        
-        }
+	private String thisYear() {
+		Calendar now = Calendar.getInstance();
+		return Integer.toString((now.get(Calendar.YEAR)));
 	}
+
 
 
 	
