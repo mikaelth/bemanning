@@ -14,8 +14,8 @@ Ext.define('Bemaning.view.phds.ProgressController', {
         var r = Ext.create('Bemanning.model.Progress');
         r.set('phdPositionId',phdId);
         
-		grid.getStore().insert(0, r);
-        grid.plugins[0].startEdit(0, 1);
+		var rec = grid.getStore().insert(0, r);
+        grid.plugins[0].startEdit(rec[0]);
         
     },
 

@@ -61,7 +61,13 @@ public class MaxCost {
 		return this.maxHourlyCharge;
 	}
 
+	/* Constructors */
+	
 	public MaxCost() {}
+	
+	public MaxCost(EmploymentType type, String year) {
+		id = new CostId(year, type);
+	}
 	
 	@Embeddable
 	static class CostId implements Serializable {

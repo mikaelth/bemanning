@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -16,13 +17,15 @@ import se.uu.ebc.bemanning.vo.PersonVO;
 import se.uu.ebc.bemanning.vo.StaffVO;
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.entity.Staff;
-import se.uu.ebc.bemanning.entity.AKKAUser;
+import se.uu.ebc.bemanning.entity.MaxCost;
 import se.uu.ebc.bemanning.enums.UserRoleType;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 import se.uu.ebc.bemanning.repo.PersonRepo;
 import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
-import se.uu.ebc.bemanning.ldap.AKKAUserRepo;
+import se.uu.ebc.bemanning.repo.MaxCostRepo;
+import se.uu.ebc.ldap.AKKAUserRepo;
+import se.uu.ebc.ldap.AKKAUser;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -42,6 +45,12 @@ public class PeopleService {
 	@Autowired
 	private OrganisationUnitRepo ouRepo;
 
+	@Autowired
+	private MaxCostRepo mcRepo;
+
+	@Autowired
+	private AKKAService akka;
+	
 /* 
 	@Autowired
 	private AKKAUserRepo ldapRepo;
@@ -52,9 +61,13 @@ public class PeopleService {
 	public List<PersonVO> getAllPersons() throws Exception {
 		List<PersonVO> pVO = new ArrayList<PersonVO>();
 		try {	
+			logger.debug("getAllPersons()");
 			for (Person p : personRepo.findAll()) {
  				pVO.add(new PersonVO(p));
-//				logger.debug(ReflectionToStringBuilder.toString(ldapRepo.findByUsername(p.getUsername()), ToStringStyle.MULTI_LINE_STYLE));
+// Map<String,String> ldapSessionMap = akka.doLookup(p);
+// logger.debug("mail: "+(ldapSessionMap.containsKey("mail") ? ldapSessionMap.get("mail") :"") +", phone: " + (ldapSessionMap.containsKey("telephoneNumber") ? ldapSessionMap.get("telephoneNumber") :""));
+
+//				logger.debug(ReflectionToStringBuilder.toString(akka.doLookup(p), ToStringStyle.MULTI_LINE_STYLE));
  			}
          	return pVO;        	        
         } catch (Exception e) {
@@ -136,6 +149,7 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
     	Staff s = svo.getId() == null ? toStaff(svo) : toStaff(staffRepo.findById(svo.getId()), svo);
     	staffRepo.save(s);
 //		return new StaffVO(s,getPreviousUb(s));
+		logger.error("saveStaff saved staff: "+ s);
 		return new StaffVO(s);
     
     }
@@ -164,6 +178,13 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 			s.setYear(vo.getYear());
 			s.setNote(vo.getNote());
 			s.setIb(vo.getIb());
+	
+			MaxCost m = mcRepo.findByCategoryYear(s.getPosition(), s.getYear());
+			if (m == null){
+				m = new MaxCost(s.getPosition(), s.getYear());
+				mcRepo.save(m);
+			}
+			s.setMaxCost(m);
 
 		} catch (Exception e) {
 			logger.error("toStaff got a pesky exception: "+ e + e.getCause());

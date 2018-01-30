@@ -24,10 +24,10 @@ Ext.define('Bemanning.model.Progress', {
 		{name: 'projectFraction', type: 'float'},
 		{name: 'guFraction', type: 'float'},
 		{name: 'toEcoSys', type: 'boolean'},
-		{name: 'remainingMonths', type: 'float'},
+		{name: 'remainingMonths', type: 'float', convert: function(v,rec){return v == '' ? null : v}},
 		{name: 'toUpDok', type: 'boolean'},
 		{name: 'note', type: 'string'},
-		{name: 'addedMonths', type: 'float'}
+		{name: 'addedMonths', type: 'float', convert: function(v,rec){return v == '' ? null : v}}
 
     ]
 

@@ -14,6 +14,8 @@ Ext.define('Bemaning.view.ous.OrganisationController', {
         var r = Ext.create('Bemanning.model.OrganisationUnit');
 		grid.getStore().insert(0, r);
         grid.plugins[0].startEdit(0, 1);
+		var rec = grid.getStore().insert(0, r);
+        grid.plugins[0].startEdit(rec[0]);
         
     },
 

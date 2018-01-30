@@ -15,7 +15,11 @@ Ext.define('Bemanning.view.phds.PhDModel', {
 		phds : {
 			type: 'chained',
 			source: 'PhDStore',
-			groupField: 'program'
+			groupField: 'program',
+			filters: { filterFn: function(rec,id) {
+					return ( rec.get('dissertation') < 2010-01-01 && !rec.get('inactive') );               
+				}
+			}
 		},
 		person: 'PersonStore',
 		progress: {

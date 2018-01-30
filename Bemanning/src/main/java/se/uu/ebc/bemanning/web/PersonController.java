@@ -136,6 +136,7 @@ public class PersonController {
         try {
  			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class","*.person","*.organisationUnit").rootName("staff").transform(new DateTransformer("yyyy-MM-dd"), "updated").serialize(peopleService.getAllStaff()), headers, HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error("allStaff got a pesky exception: "+ e + e.getCause());
 			return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
   	
@@ -156,6 +157,7 @@ public class PersonController {
 
             return new ResponseEntity<String>(restResponse, headers, HttpStatus.OK);
         } catch (Exception e) {
+			logger.error("updateStaff got a pesky exception: "+ e + e.getCause());
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -167,7 +169,10 @@ public class PersonController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
+			logger.debug("createStaff, json "+ json);
 			StaffVO sVO = new JSONDeserializer<StaffVO>().use(null, StaffVO.class).use(Date.class, new DateTransformer("yyyy-MM-dd") ).deserialize(json);
+			logger.debug("createStaff, sVO "+ ReflectionToStringBuilder.toString(sVO, ToStringStyle.MULTI_LINE_STYLE));
+
 			sVO = peopleService.saveStaff(sVO);
             RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
             headers.add("Location",uriBuilder.path(a.value()[0]+"/"+sVO.getId().toString()).build().toUriString());
@@ -177,6 +182,7 @@ public class PersonController {
 
             return new ResponseEntity<String>(restResponse, headers, HttpStatus.CREATED);
         } catch (Exception e) {
+			logger.error("createStaff got a pesky exception: "+ e + e.getCause());
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -191,6 +197,7 @@ public class PersonController {
 			peopleService.deleteStaff(id);
             return new ResponseEntity<String>("{success: true, id : " +id.toString() + "}", headers, HttpStatus.OK);
         } catch (Exception e) {
+			logger.error("deleteStaff got a pesky exception: "+ e + e.getCause());
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

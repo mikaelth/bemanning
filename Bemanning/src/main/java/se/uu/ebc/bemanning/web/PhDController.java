@@ -78,7 +78,10 @@ public class PhDController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
-			PhDPositionVO pVO = new JSONDeserializer<PhDPositionVO>().use(null, PhDPositionVO.class).deserialize(json);
+			logger.debug("updatePhDPosition, json "+ json);
+			PhDPositionVO pVO = new JSONDeserializer<PhDPositionVO>().use(null, PhDPositionVO.class).use(Date.class, new DateNullTransformer("yyyy-MM-dd") ).deserialize(json);
+			logger.debug("updatePhDPosition, pVO "+ ReflectionToStringBuilder.toString(pVO, ToStringStyle.MULTI_LINE_STYLE));
+
 			pVO.setId(id);
 			pVO = phdService.savePhDPosition(pVO);
 			
@@ -87,6 +90,7 @@ public class PhDController {
 
             return new ResponseEntity<String>(restResponse, headers, HttpStatus.OK);
         } catch (Exception e) {
+			logger.error("updatePhDPosition got a pesky exception: "+ e + e.getCause());
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -148,7 +152,10 @@ public class PhDController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         try {
+			logger.debug("updateProgress, json "+ json);
 			ProgressVO sVO = new JSONDeserializer<ProgressVO>().use(null, ProgressVO.class).use(Date.class, new DateNullTransformer("yyyy-MM-dd") ).deserialize(json);
+			logger.debug("updateProgress, sVO "+ ReflectionToStringBuilder.toString(sVO, ToStringStyle.MULTI_LINE_STYLE));
+
 			sVO.setId(id);
 			sVO = phdService.saveProgress(sVO);
 			
@@ -157,6 +164,7 @@ public class PhDController {
 
             return new ResponseEntity<String>(restResponse, headers, HttpStatus.OK);
         } catch (Exception e) {
+			logger.error("updateProgress got a pesky exception: "+ e + e.getCause());
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

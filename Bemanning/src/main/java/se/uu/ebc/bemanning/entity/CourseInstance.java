@@ -22,7 +22,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Table(name = "COURSE_INSTANCE")
-public class CourseInstance {
+public class CourseInstance  extends Auditable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

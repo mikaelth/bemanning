@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 
 @Entity
 @Table(name = "YEARS_OF_HIERARCHY")
-public class YearsOfHierarchy {
+public class YearsOfHierarchy  extends Auditable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

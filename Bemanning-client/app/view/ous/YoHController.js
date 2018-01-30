@@ -15,8 +15,8 @@ Ext.define('Bemaning.view.ous.YoHController', {
         var r = Ext.create('Bemanning.model.YoH');
         r.set('unitId',ouId);
         
-		grid.getStore().insert(0, r);
-        grid.plugins[0].startEdit(0, 1);
+		var rec = grid.getStore().insert(0, r);
+        grid.plugins[0].startEdit(rec[0]);
         
     },
 

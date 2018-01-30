@@ -19,6 +19,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.domain.AuditorAware;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,12 +61,14 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import se.uu.ebc.bemanning.security.RESTAuthenticationEntryPoint;
+import se.uu.ebc.bemanning.security.AuditorAwareImpl;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
+@EnableJpaAuditing(auditorAwareRef="auditorProvider")
 @EnableScheduling
 @EnableAutoConfiguration
 @Configuration
@@ -90,6 +95,14 @@ public class Bemanning extends SpringBootServletInitializer { /* Deploying to To
 	public InternalResourceViewResolver defaultViewResolver() {
 		return new InternalResourceViewResolver();
 	}	
+
+ 
+
+	@Bean
+    public AuditorAware<String> auditorProvider() {
+        return new AuditorAwareImpl();
+    }
+
 
 	public static void main(String[] args) throws Exception {
 		

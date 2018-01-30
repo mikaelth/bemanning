@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 
 @Entity
 @Table(name = "PERSON")
-public class Person {
+public class Person  extends Auditable {
 
     
     private static Logger logger = Logger.getLogger(Person.class.getName());

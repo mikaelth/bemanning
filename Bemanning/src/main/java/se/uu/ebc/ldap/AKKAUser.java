@@ -1,24 +1,38 @@
-package se.uu.ebc.bemanning.entity;
+package se.uu.ebc.ldap;
 
 import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
 import javax.naming.Name;
 
-@Entry(base = "ou=user", objectClasses = { "person", "inetOrgPerson", "top" })
+@Entry(base = "cn=People", objectClasses = { "person", "inetOrgPerson", "top", "eduPerson", "uuAKKAperson" })
 public class AKKAUser {
 
     @Id
-    private Name id;
+    private Name dn;
     
+/* 
     @Attribute(name = "cn") 
     private String username;
-	
+ */	
+
 	@Attribute(name="sn")
 	private String familyName;
 
+
+	@Attribute(name="cn")
+//	@DnAttribute(value="cn",index=1)
+	private String fullName;
+
+	@Attribute(name="uid")
+	private String uid;
+
+	@Attribute(name="mail")
 	private String mail;
+
+	@Attribute(name="telephoneNumber")
  	private String telephoneNumber;
 
 
@@ -26,17 +40,18 @@ public class AKKAUser {
 	/* Setters and getters */
 	
 
-    public Name getId()
+    public Name getDn()
     {
-    	return this.id;
+    	return this.dn;
     }
 
-    public void setId(Name id)
+    public void setId(Name dn)
     {
-    	this.id = id;
+    	this.dn = dn;
     }
 
 
+/* 
     public String getUsername()
     {
     	return this.username;
@@ -46,7 +61,7 @@ public class AKKAUser {
     {
     	this.username = username;
     }
-
+ */
 
 	public String getFamilyName()
 	{
@@ -57,6 +72,18 @@ public class AKKAUser {
 	{
 		this.familyName = familyName;
 	}
+
+
+	public String getUid()
+	{
+		return this.uid;
+	}
+
+	public void setUid(String uid)
+	{
+		this.uid = uid;
+	}
+
 
 
 	public String getMail()
@@ -85,5 +112,9 @@ public class AKKAUser {
 	/* Constructors */
 	
 	public AKKAUser(){}
+
+	public AKKAUser(Name dn){
+		this.dn = dn;
+	}
 
 }

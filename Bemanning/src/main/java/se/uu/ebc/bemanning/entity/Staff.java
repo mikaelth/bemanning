@@ -29,7 +29,7 @@ import se.uu.ebc.bemanning.enums.EmploymentType;
 
 @Entity
 @Table(name = "STAFF")
-public class Staff {
+public class Staff extends Auditable {
 
     private static Logger logger = Logger.getLogger(Staff.class.getName());
 
@@ -258,11 +258,16 @@ public class Staff {
 
     public float getTotalHours()
     {
-        float theSum = 0;
-        for (Assignment theAssignment : assignments) {
-        	theSum+= theAssignment.getTotalHours(getPosition());
+        float theSum = 0.0f;
+        
+        if (assignments != null) {
+			for (Assignment theAssignment : assignments) {
+				theSum+= theAssignment.getTotalHours(getPosition());
+			}
         }
-        return theSum;
+		
+		return theSum;
+      
     }
 
     public float getUb()
@@ -283,13 +288,16 @@ public class Staff {
     }
 
 	public float getAccumulatedHours() {
+ 		
+ 		float hours = 0.0f;
  		try {	
 		
-			return this.previousYearAppointment == null ? this.getTotalHours() : this.previousYearAppointment.getAccumulatedHours() + this.getTotalHours();
+			hours = this.previousYearAppointment == null ? this.getTotalHours() : this.previousYearAppointment.getAccumulatedHours() + this.getTotalHours();
   		
   		} catch (Exception e) {
   			logger.error ("getAccumulatedHours caught a pesky exeption " + e);
-  			return this.getTotalHours();
+  		} finally {
+  			return hours;
   		}
     	
 		

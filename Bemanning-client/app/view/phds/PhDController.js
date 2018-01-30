@@ -11,8 +11,8 @@ Ext.define('Bemaning.view.phd.PhDController', {
 
         // Create a model instance
         var r = Ext.create('Bemanning.model.PhDPosition');
-		grid.getStore().insert(0, r);
-        grid.plugins[0].startEdit(0, 1);
+		var rec = grid.getStore().insert(0, r);
+        grid.plugins[0].startEdit(rec[0]);
         
     },
 
@@ -21,6 +21,7 @@ Ext.define('Bemaning.view.phd.PhDController', {
    	
    	init: function (view) {
 
+						
 		var tb = view.down('toolbar');
 		
 		tb.insert(1,
@@ -30,12 +31,12 @@ Ext.define('Bemaning.view.phd.PhDController', {
 				tooltip:'Växlar mellan att visa samtliga doktorander och enbart aktiva',
 				menu: {
 					items: [{
-						itemId: 'phd-show',
-						text:'Visar alla',
+						itemId: 'phd-hide',
+						text:'Visar enbart aktiva',
 						checked:true
 					},{
-						itemId: 'phd-hide',
-						text:'Visar enbart aktiva'
+						itemId: 'phd-show',
+						text:'Visar alla'
 					}],
 				},
 				changeHandler:function(cycleBtn, activeItem){

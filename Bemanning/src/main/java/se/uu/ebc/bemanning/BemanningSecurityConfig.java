@@ -126,9 +126,9 @@ System.out.println("serviceProperties() " + serviceProperties.getService());
  			.antMatchers("/index.html").authenticated()
  			.antMatchers("/loginredirect.html").authenticated()
  			.antMatchers("/Bemanning/**").permitAll()
-// 			.antMatchers("/rest/**").permitAll()
+ 			.antMatchers("/rest/**").permitAll()
 // 			.antMatchers("/rest/phds/**").hasAnyRole("PHDADMIN")
- 			.antMatchers("/rest/**").hasAnyRole("DIRECTOROFSTUDIES","PHDADMIN","ADMINISTRATOR","SYSADMIN","COREDATAADMIN")
+// 			.antMatchers("/rest/**").hasAnyRole("DIRECTOROFSTUDIES","PHDADMIN","ADMINISTRATOR","SYSADMIN","COREDATAADMIN")
 			.antMatchers("/**").authenticated();
  				
 // 		http

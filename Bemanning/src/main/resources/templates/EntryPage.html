@@ -2,14 +2,14 @@
 	<head>
 		<title th:text="#{display.bemanning.welcome.title}"> Startsida - Välkommen till version 3 av Bemanningsplaneraren !! </title>
 		<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
-		<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default-application.css"></link>
-		<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default.css"></link>
+		<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default-application.css"></link>
+		<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default.css"></link>
 	</head>
 	<body>
 		<div id="container">
 			<div id="content">
 				<div>
-					<h1 th:text="#{display.bemanning.welcome.header}+', ' +${user.givenName}">
+					<h1 th:text="#{display.bemanning.welcome.header}+' '+#{build.release.minor}+', ' +${user.givenName}">
 						Startsida - Välkommen till version 3 av Bemanningsplaneraren
 					</h1>
 				</div>
@@ -20,12 +20,12 @@
 					</h3>
 					<div class="trigger">
 						<p>
-							<a href="/view/ViewByPerson" onmouseover="hints.show('viewByPerson')" onmouseout="hints.hide()">Visa per person</a> 
+							<a href="view/ViewByPerson" onmouseover="hints.show('viewByPerson')" onmouseout="hints.hide()">Visa per person</a> 
 						</p>
 					</div>
 					<div class="trigger">
 						<p>
-							<a href="/view/ViewByCourse" onmouseover="hints.show('viewByCourse')" onmouseout="hints.hide()">Visa per kurs</a> 
+							<a href="view/ViewByCourse" onmouseover="hints.show('viewByCourse')" onmouseout="hints.hide()">Visa per kurs</a> 
 						</p>
 					</div>
 				</div>
@@ -40,24 +40,24 @@
 		 -->
 
 				<div id="viewPhDProgress" class="action">
-					<h3 th:text="#{view.ph.dprogress}"></h3>
+					<h3 th:text="#{view.phdprogress}"></h3>
 					<div class="trigger">
 							<p>
-								<a href="/view/ViewPhDProgress" onmouseover="hints.show('viewPhDProgress')" onmouseout="hints.hide()" th:text="#{view.ph.dprogress}">Visa doktorandernas aktivitet</a> 
+								<a href="view/ViewPhDProgress" onmouseover="hints.show('viewPhDProgress')" onmouseout="hints.hide()" th:text="#{view.ph.dprogress}">Visa doktorandernas aktivitet</a> 
 							</p>
 					</div>
 				</div>
 				<div id="viewOverviews" class="action">
 					<h3 th:text="#{view.overviews}"></h3>
-					<a href="/view/ViewCourseOverview" onmouseover="hints.show('viewCourseOverview')" onmouseout="hints.hide()" th:text="#{display.courses.overview.linktext}">Visa översikt över kurser</a> 
+					<a href="view/ViewCourseOverview" onmouseover="hints.show('viewCourseOverview')" onmouseout="hints.hide()" th:text="#{display.courses.overview.linktext}">Visa översikt över kurser</a> 
 					<div th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMINISTRATOR'',''ROLE_DIRECTOROFSTUDIES'',''ROLE_COREDATAADMIN'',''ROLE_SYSADMIN'')')}">			
-						<a href="/view/ViewStaffSummary" onmouseover="hints.show('viewStaffSummary')" onmouseout="hints.hide()" th:text="#{display.staff.overview.linktext}">Visa översikt över personal</a> 
+						<a href="view/ViewStaffSummary" onmouseover="hints.show('viewStaffSummary')" onmouseout="hints.hide()" th:text="#{display.staff.overview.linktext}">Visa översikt över personal</a> 
 					</div>
 				</div>
 				<div th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMINISTRATOR'',''ROLE_DIRECTOROFSTUDIES'',''ROLE_PHDADMIN'',''ROLE_COREDATAADMIN'',''ROLE_SYSADMIN'')')}">			
 					<div id="viewEdits" class="action">
 						<h3 th:text="#{view.edits}"></h3>
-						<a href="/Bemanning/index.html" onmouseover="hints.show('viewPhDProgress')" onmouseout="hints.hide()">Gå till redigeringsläge</a> 
+						<a href="Bemanning/index.html" onmouseover="hints.show('viewPhDProgress')" onmouseout="hints.hide()">Gå till redigeringsläge</a> 
 					</div>
 				</div>
 			</div>

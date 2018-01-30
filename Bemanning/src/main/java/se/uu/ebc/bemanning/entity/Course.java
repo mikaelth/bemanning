@@ -15,7 +15,7 @@ import  se.uu.ebc.bemanning.entity.CourseInstance;
 
 @Entity
 @Table(name = "COURSE")
-public class Course {
+public class Course  extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

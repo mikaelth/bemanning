@@ -32,7 +32,7 @@ import se.uu.ebc.bemanning.entity.Progress;
 
 @Entity
 @Table(name = "PH_D_POSITION")
-public class PhDPosition {
+public class PhDPosition  extends Auditable {
 
     @Transient
     private static Logger logger = Logger.getLogger(PhDPosition.class.getName());

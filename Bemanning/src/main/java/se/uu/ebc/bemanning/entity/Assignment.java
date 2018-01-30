@@ -15,7 +15,7 @@ import  se.uu.ebc.bemanning.entity.Assignment;
 
 @Entity
 @Table(name = "ASSIGNMENT")
-public class Assignment {
+public class Assignment extends Auditable {
 
 	private final static int LECTURE_HOUR_COST = 1285;
 

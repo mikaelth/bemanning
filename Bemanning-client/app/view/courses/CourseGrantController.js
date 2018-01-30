@@ -12,8 +12,8 @@ Ext.define('Bemaning.view.courses.CourseGrantController', {
 
         // Create a model instance
         var r = Ext.create('Bemanning.model.CourseGrant');
-		grid.getStore().insert(0, r);
-        grid.plugins[0].startEdit(0, 1);
+		var rec = grid.getStore().insert(0, r);
+        grid.plugins[0].startEdit(rec[0]);
         
     },
 

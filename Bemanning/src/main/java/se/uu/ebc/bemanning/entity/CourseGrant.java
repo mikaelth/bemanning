@@ -23,7 +23,7 @@ import se.uu.ebc.bemanning.enums.GrantType;
 
 @Entity
 @Table(name = "COURSE_GRANT")
-public class CourseGrant {
+public class CourseGrant  extends Auditable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

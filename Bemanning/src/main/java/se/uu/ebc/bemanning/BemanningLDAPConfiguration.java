@@ -17,7 +17,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Configuration
-@EnableLdapRepositories(basePackages = "se.uu.ebc.bemanning.ldap.AKKAUserRepo")
+//@EnableLdapRepositories(basePackages = "se.uu.ebc.ldap.**")
 public class BemanningLDAPConfiguration {
 
     private static Logger logger = Logger.getLogger(BemanningLDAPConfiguration.class.getName());
@@ -28,6 +28,7 @@ public class BemanningLDAPConfiguration {
         LdapContextSource ldapContextSource = new LdapContextSource();
         ldapContextSource.setUrl("ldap://ldap.katalog.uu.se:389");
 
+		logger.debug("LdapContextSource "+ReflectionToStringBuilder.toString(ldapContextSource, ToStringStyle.MULTI_LINE_STYLE));
         return ldapContextSource;
     }
 

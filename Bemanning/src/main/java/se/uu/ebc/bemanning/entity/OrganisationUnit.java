@@ -21,7 +21,7 @@ import javax.persistence.FetchType;
 
 @Entity
 @Table(name = "ORGANISATION_UNIT")
-public class OrganisationUnit {
+public class OrganisationUnit  extends Auditable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

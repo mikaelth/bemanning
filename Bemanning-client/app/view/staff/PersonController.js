@@ -50,8 +50,8 @@ Ext.define('Bemaning.view.staff.PersonController', {
 
         // Create a model instance
         var r = Ext.create('Bemanning.model.Person');
-		grid.getStore().insert(0, r);
-        grid.plugins[0].startEdit(0, 1);
+		var rec = grid.getStore().insert(0, r);
+        grid.plugins[0].startEdit(rec[0]);
         
     },
 

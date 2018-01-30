@@ -107,9 +107,9 @@ public class AssignmentViewController {
     @RequestMapping(value = "/ViewByPerson", method = RequestMethod.GET)
     public String viewByPerson(@RequestParam(value = "year", required = false) String year, Model model, Principal principal, HttpServletRequest request) {
 		try {
-			logger.debug("MTh viewByPerson, year "+ year);
-			logger.debug("MTh viewByPerson, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
-			logger.debug("MTh viewByPerson, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewByPerson, year "+ year);
+			logger.debug("viewByPerson, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewByPerson, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 
 			String thisYear = year==null ? thisYear() : year;
 			String budgetDept = staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear).getOrganisationUnit().getEconomyHolder(thisYear).getSvName();
@@ -139,7 +139,7 @@ public class AssignmentViewController {
 			return "ViewByPerson";
         } catch (Exception e) {
 			if (logger.isErrorEnabled()) {
-				logger.error("MTh viewByPerson, pesky exception "+e);
+				logger.error("viewByPerson, pesky exception "+e);
 			}
            return "{\"ERROR\":"+e.getMessage()+"\"}";        
         }
@@ -147,8 +147,8 @@ public class AssignmentViewController {
  
     @RequestMapping(value = "/ViewByPerson", method = RequestMethod.POST)
     public String viewByPersonPost(@ModelAttribute("year") String year, Model model, Principal principal, HttpServletRequest request) {
-			logger.debug("MTh viewByPerson, POST year "+ year);
-			logger.debug("MTh viewByPerson, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewByPerson, POST year "+ year);
+			logger.debug("viewByPerson, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
 
 			return viewByPerson(year,model, principal, request);
 	}
@@ -158,9 +158,9 @@ public class AssignmentViewController {
     @RequestMapping(value = "/ViewByCourse", method = RequestMethod.GET)
     public String viewByCourse(@RequestParam(value = "year", required = false) String year, Model model, Principal principal, HttpServletRequest request) {
 		try {
-			logger.debug("MTh viewByCourse, year "+ year);
-			logger.debug("MTh viewByCourse, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
-			logger.debug("MTh viewByCourse, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewByCourse, year "+ year);
+			logger.debug("viewByCourse, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewByCourse, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 
 			String thisYear = year==null ? thisYear() : year;
 			Staff staff = staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear);
@@ -178,9 +178,9 @@ public class AssignmentViewController {
 			}
 			
 
-			logger.debug("MTh viewByCourse, staff "+ReflectionToStringBuilder.toString(staff, ToStringStyle.MULTI_LINE_STYLE));
-			logger.debug("MTh viewByCourse, budgetYear "+ReflectionToStringBuilder.toString(new BudgetYear(thisYear, staffRepo.getStaffedYears()), ToStringStyle.MULTI_LINE_STYLE));
-			logger.debug("MTh viewByCourse, budgetDept "+ReflectionToStringBuilder.toString(budgetDept, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewByCourse, staff "+ReflectionToStringBuilder.toString(staff, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewByCourse, budgetYear "+ReflectionToStringBuilder.toString(new BudgetYear(thisYear, staffRepo.getStaffedYears()), ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewByCourse, budgetDept "+ReflectionToStringBuilder.toString(budgetDept, ToStringStyle.MULTI_LINE_STYLE));
 
 			model.addAttribute("courses", cis);
 			model.addAttribute("serverTime", new Date());
@@ -191,7 +191,7 @@ public class AssignmentViewController {
 			return "ViewByCourse";
         } catch (Exception e) {
 			if (logger.isErrorEnabled()) {
-				logger.error("MTh viewByCourse, pesky exception "+e);
+				logger.error("viewByCourse, pesky exception "+e);
 			}
            return "{\"ERROR\":"+e.getMessage()+"\"}";        
         }
@@ -200,8 +200,8 @@ public class AssignmentViewController {
     @RequestMapping(value = "/ViewByCourse", method = RequestMethod.POST)
     public String viewByCoursePost(@ModelAttribute("year") String year, Model model, Principal principal, HttpServletRequest request) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("MTh viewByCourse, POST year "+ year);
-				logger.debug("MTh viewByCourse, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+				logger.debug("viewByCourse, POST year "+ year);
+				logger.debug("viewByCourse, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
 			}
 			return viewByCourse(year,model, principal, request);
 	}
@@ -212,9 +212,9 @@ public class AssignmentViewController {
     @RequestMapping(value = "/ViewStaffSummary", method = RequestMethod.GET)
     public String viewStaffSummary(@RequestParam(value = "year", required = false) String year, @RequestParam(value = "ou", required = false) Long ouid, Model model, Principal principal, HttpServletRequest request) {
 		try {
-			logger.debug("MTh viewStaffSummary, year "+ year);
-			logger.debug("MTh viewStaffSummary, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
-			logger.debug("MTh viewStaffSummary, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewStaffSummary, year "+ year);
+			logger.debug("viewStaffSummary, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewStaffSummary, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 
 			String thisYear = year==null ? thisYear() : year;
 			OrganisationUnit budgetDept = ouid == null ? 
@@ -224,10 +224,10 @@ public class AssignmentViewController {
 			List<Staff> staff = staffingService.getAssignedStaff(thisYear,budgetDept);
 						
 
-			logger.debug("MTh viewStaffSummary, staff "+ReflectionToStringBuilder.toString(staff, ToStringStyle.MULTI_LINE_STYLE));
-			logger.debug("MTh viewStaffSummary, budgetYear "+ReflectionToStringBuilder.toString(new BudgetYear(thisYear, staffRepo.getStaffedYears()), ToStringStyle.MULTI_LINE_STYLE));
-			logger.debug("MTh viewStaffSummary, budgetDept "+budgetDept.getSvName());
-//			logger.debug("MTh viewStaffSummary, budgetDept "+ReflectionToStringBuilder.toString(budgetDept, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewStaffSummary, staff "+ReflectionToStringBuilder.toString(staff, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewStaffSummary, budgetYear "+ReflectionToStringBuilder.toString(new BudgetYear(thisYear, staffRepo.getStaffedYears()), ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewStaffSummary, budgetDept "+budgetDept.getSvName());
+//			logger.debug("viewStaffSummary, budgetDept "+ReflectionToStringBuilder.toString(budgetDept, ToStringStyle.MULTI_LINE_STYLE));
 
 			model.addAttribute("staff", staff);
 			model.addAttribute("serverTime", new Date());
@@ -238,16 +238,16 @@ public class AssignmentViewController {
 
 			return "ViewStaffSummary";
         } catch (Exception e) {
-			logger.error("MTh viewStaffSummary, pesky exception "+e);
+			logger.error("viewStaffSummary, pesky exception "+e);
         	return "{\"ERROR\":"+e.getMessage()+"\"}";        
         }
 	}
  
     @RequestMapping(value = "/ViewStaffSummary", method = RequestMethod.POST)
     public String viewStaffSummaryPost(@ModelAttribute("year") String year, @ModelAttribute("ou") Long ouid, Model model, Principal principal, HttpServletRequest request) {
-				logger.debug("MTh viewStaffSummary, POST year "+ year);
-				logger.debug("MTh viewStaffSummary, POST ou "+ ouid);
-				logger.debug("MTh viewStaffSummary, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+				logger.debug("viewStaffSummary, POST year "+ year);
+				logger.debug("viewStaffSummary, POST ou "+ ouid);
+				logger.debug("viewStaffSummary, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
 			return viewStaffSummary(year, ouid, model, principal, request);
 	}
 
@@ -258,8 +258,8 @@ public class AssignmentViewController {
     public String viewProgressByPhD( Model model, Principal principal, HttpServletRequest request) {
 		try {
 			if (logger.isDebugEnabled()) {
-				logger.debug("MTh viewProgressByPhD, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
-				logger.debug("MTh viewProgressByPhD, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+				logger.debug("viewProgressByPhD, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+				logger.debug("viewProgressByPhD, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 			}
 
 			model.addAttribute("phdStudents", phdService.allSorted());
@@ -269,7 +269,7 @@ public class AssignmentViewController {
 			return "ViewPhDProgress";
         } catch (Exception e) {
 			if (logger.isErrorEnabled()) {
-				logger.error("MTh viewProgressByPhD, pesky exception "+e);
+				logger.error("viewProgressByPhD, pesky exception "+e);
 			}
            return "{\"ERROR\":"+e.getMessage()+"\"}";        
         }
@@ -282,15 +282,15 @@ public class AssignmentViewController {
     @RequestMapping(value = "/ViewCourseOverview", method = RequestMethod.GET)
     public String viewCourseOverview(@RequestParam(value = "year", required = false) String year, Model model, Principal principal, HttpServletRequest request) {
 		try {
-			logger.debug("MTh viewCourseOverview, year "+ year);
-			logger.debug("MTh viewCourseOverview, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
-			logger.debug("MTh viewCourseOverview, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewCourseOverview, year "+ year);
+			logger.debug("viewCourseOverview, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewCourseOverview, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 
 			String thisYear = year==null ? thisYear() : year;
 			
 			List<CourseInstance> cis= ciRepo.findByYear(thisYear);			
 
-			logger.debug("MTh viewCourseOverview, courses "+ReflectionToStringBuilder.toString(cis, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewCourseOverview, courses "+ReflectionToStringBuilder.toString(cis, ToStringStyle.MULTI_LINE_STYLE));
 
 			model.addAttribute("courses", cis);
 			model.addAttribute("serverTime", new Date());
@@ -300,7 +300,7 @@ public class AssignmentViewController {
 			return "CoursesOverview";
         } catch (Exception e) {
 			if (logger.isErrorEnabled()) {
-				logger.error("MTh viewByCourse, pesky exception "+e);
+				logger.error("viewByCourse, pesky exception "+e);
 			}
            return "{\"ERROR\":"+e.getMessage()+"\"}";        
         }
@@ -309,8 +309,8 @@ public class AssignmentViewController {
     @RequestMapping(value = "/ViewCourseOverview", method = RequestMethod.POST)
     public String viewCourseOverviewPost(@ModelAttribute("year") String year, Model model, Principal principal, HttpServletRequest request) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("MTh viewByCourse, POST year "+ year);
-				logger.debug("MTh viewByCourse, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+				logger.debug("viewByCourse, POST year "+ year);
+				logger.debug("viewByCourse, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
 			}
 			return viewCourseOverview(year,model, principal, request);
 	}
@@ -365,7 +365,7 @@ public class AssignmentViewController {
 		try {
 			for (String role : rolesForAll) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("MTh allowUserAll, role "+role);
+					logger.debug("allowUserAll, role "+role);
 				}
 				if (request.isUserInRole(role)) {
 					granted = true;
@@ -375,7 +375,7 @@ public class AssignmentViewController {
 		} catch (Exception ex) {
  
 			if (logger.isErrorEnabled()) {
-				logger.error("MTh allowUserAll, pesky exception "+ex);
+				logger.error("allowUserAll, pesky exception "+ex);
 			}
  
 		}

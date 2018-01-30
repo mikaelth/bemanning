@@ -250,28 +250,32 @@ public class StaffVO {
 	
 	public StaffVO(Staff xe) {
 
+		try {
+			this.id = xe.getId();
 
-		this.id = xe.getId();
+			this.personId = xe.getPerson().getId();
+			this.name = xe.getPerson().getName();
+			this.formName = xe.getPerson().getFormName();
 
-		this.personId = xe.getPerson().getId();
-		this.name = xe.getPerson().getName();
-		this.formName = xe.getPerson().getFormName();
-
-		this.organisationUnitId = xe.getOrganisationUnit().getId();
-		this.ouDesignation = xe.getOrganisationUnit().getSvName();	
+			this.organisationUnitId = xe.getOrganisationUnit().getId();
+			this.ouDesignation = xe.getOrganisationUnit().getSvName();	
 		
-		this.program = xe.getProgram();
-		this.percentGU = xe.getPercentGU();
-		this.position = xe.getPosition();
-		this.hourlyCharge = xe.getHourlyCharge();
-		this.year = xe.getYear();
-		this.note = xe.getNote();
-		this.ib = xe.getIb();
+			this.program = xe.getProgram();
+			this.percentGU = xe.getPercentGU();
+			this.position = xe.getPosition();
+			this.hourlyCharge = xe.getHourlyCharge();
+			this.year = xe.getYear();
+			this.note = xe.getNote();
+			this.ib = xe.getIb();
 
-//		this.hoursGU = xe.getTotalHours();
+	//		this.hoursGU = xe.getTotalHours();
 		
-		this.ubLastYear = xe.getPreviousUb();
-		this.accumulatedHours = xe.getAccumulatedHours();
-		this.maxHourlyCharge = xe.getMaxHourlyCharge();
+			this.ubLastYear = xe.getPreviousUb();
+			this.accumulatedHours = xe.getAccumulatedHours();
+			this.maxHourlyCharge = xe.getMaxHourlyCharge();
+		} catch (Exception e) {
+			logger.error("StaffVO(s) got a pesky exception: "+ e + e.getCause());
+			e.printStackTrace();
+		}		
 	}
 }
