@@ -23,7 +23,7 @@ public interface CourseInstanceRepo extends JpaRepository<CourseInstance, Long>,
 
     public CourseInstance findById(Long id);  
 
-	@Query("SELECT ci FROM CourseInstance AS ci WHERE ci.year = ?1")
+	@Query("SELECT ci FROM CourseInstance AS ci WHERE ci.year = ?1 order by ci.course.courseGroup, ci.course.code")
 	public List<CourseInstance> findByYear(String year);    
  
 	@Query("SELECT ci FROM CourseInstance AS ci WHERE ci.year = ?1 AND ci.courseLeader = ?2 order by ci.course.courseGroup, ci.course.code")

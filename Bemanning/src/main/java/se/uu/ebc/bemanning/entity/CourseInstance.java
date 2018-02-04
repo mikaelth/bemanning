@@ -19,10 +19,19 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.log4j.Logger;
 
 @Entity
 @Table(name = "COURSE_INSTANCE")
 public class CourseInstance  extends Auditable {
+
+    @Transient
+    private static Logger logger = Logger.getLogger(CourseInstance.class.getName());
+    
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -360,17 +369,52 @@ public class CourseInstance  extends Auditable {
 
 	/* Public methods */
 	 
- 	public String getDesignation() {
-        return course.getCode() +" " + course.getSeName() + " " + extraDesignation;
-    }
-   
-   public int getTotalHours() {
+	public String getDesignation() {
+		return course.getCode() +" " + course.getSeName() + " " + extraDesignation;
+	}
+
+	public int getTotalHours() {
 		int hours = 0;
-   		for (Assignment asn : this.assignments) {
-   			hours += asn.getTotalHours();
-   		}
-   		return hours;
-   }
+		for (Assignment asn : this.assignments) {
+			hours += asn.getTotalHours();
+		}
+		return hours;
+	}
+
+	public float getTotalAssignmentCost() {
+		float cost = 0.0f;
+		for (Assignment asn : this.assignments) {
+			cost += asn.getAssignmentCost();
+		}
+		return cost;
+	}
+
+	public float getTotalAssignmentCost(OrganisationUnit ou) {
+		float cost = 0.0f;
+
+		for (Assignment asn : this.assignments) {
+			cost += (ou == asn.getAssigningDept()) ? asn.getAssignmentCost() : 0.0f;
+		}
+		return cost;
+	}
+
+	public float getTotalGrants() {
+		float income = 0.0f;
+		for (CourseGrant grant : this.courseGrants) {
+			income += (grant.getType().includeInSummary()) ? grant.getAmount() : 0.0f;
+		}
+		return income;
+	}
+
+	public float getTotalGrants(OrganisationUnit ou) {
+		float income = 0.0f;
+		for (CourseGrant grant : this.courseGrants) {
+			income += (ou == grant.getDepartment() && grant.getType().includeInSummary()) ? grant.getAmount() : 0.0f;
+		}
+		return income;
+	}
+	
+
 
 	/* Constructors */
 	

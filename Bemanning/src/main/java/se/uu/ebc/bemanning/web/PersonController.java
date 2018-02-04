@@ -23,6 +23,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import se.uu.ebc.bemanning.security.UserRepo;
 import se.uu.ebc.bemanning.repo.PersonRepo;
 import se.uu.ebc.bemanning.entity.Person;
+import se.uu.ebc.bemanning.enums.UserRoleType;
 import se.uu.ebc.bemanning.service.PeopleService;
 import se.uu.ebc.bemanning.vo.PersonVO;
 import se.uu.ebc.bemanning.vo.StaffVO;
@@ -37,8 +38,11 @@ import flexjson.transformer.DateTransformer;
 
 import java.security.Principal;
 import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import org.apache.log4j.Logger;
 
@@ -217,7 +221,7 @@ public class PersonController {
 			logger.debug("loggedInUser... "+ ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 			if (principal == null) { 
 				// Dummy for testing purposes
-     			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("currentuser").deepSerialize(new UserVO(userRepo.findUserByUsername("mikathol"))), headers, HttpStatus.OK);
+     			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("currentuser").deepSerialize(createDummyUser()), headers, HttpStatus.OK);
 			} else {
     			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("currentuser").deepSerialize(new UserVO(userRepo.findUserByUsername(principal.getName()))), headers, HttpStatus.OK);
 			}
@@ -228,6 +232,20 @@ public class PersonController {
     }
 
 
+
+	private UserVO createDummyUser() {
+		UserVO uvo = new UserVO();
+		uvo.setId(0L);
+		uvo.setUsername("anonymous");
+		uvo.setFormName("Anonymous");
+		uvo.setName("Anonymous");
+		uvo.setPrincipalDepts(new HashMap<String, String>());
+		uvo.getPrincipalDepts().put(Integer.toString((Calendar.getInstance().get(Calendar.YEAR))), "IOB");
+		uvo.setUserRoles(new HashSet<UserRoleType>());
+		uvo.getUserRoles().add(UserRoleType.Staff);
+
+		return uvo;
+	}
 
 	/* Auxilliary components */
 	

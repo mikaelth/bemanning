@@ -253,7 +253,6 @@ public class AssignmentViewController {
 
 
 
-
     @RequestMapping(value = "/ViewPhDProgress", method = RequestMethod.GET)
     public String viewProgressByPhD( Model model, Principal principal, HttpServletRequest request) {
 		try {
@@ -275,6 +274,45 @@ public class AssignmentViewController {
         }
 	}
 
+
+
+    @RequestMapping(value = "/ViewCourseEconOverview", method = RequestMethod.GET)
+    public String viewCourseEconOverview(@RequestParam(value = "year", required = false) String year, Model model, Principal principal, HttpServletRequest request) {
+		try {
+			logger.debug("viewCourseEconOverview, year "+ year);
+			logger.debug("viewCourseEconOverview, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewCourseEconOverview, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+
+			String thisYear = year==null ? thisYear() : year;
+			OrganisationUnit budgetDept = staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear).getOrganisationUnit().getEconomyHolder(thisYear);
+			
+			List<CourseInstance> cis= ciRepo.findByYear(thisYear);			
+
+			logger.debug("viewCourseEconOverview, courses "+ReflectionToStringBuilder.toString(cis, ToStringStyle.MULTI_LINE_STYLE));
+
+			model.addAttribute("courses", cis);
+			model.addAttribute("ou", budgetDept);
+			model.addAttribute("serverTime", new Date());
+			model.addAttribute("budgetYear", new BudgetYear(thisYear, staffRepo.getStaffedYears()));
+			model.addAttribute("year", thisYear);
+
+			return "CourseEconomyOverview";
+        } catch (Exception e) {
+			if (logger.isErrorEnabled()) {
+				logger.error("viewCourseEconOverview, pesky exception "+e);
+			}
+           return "{\"ERROR\":"+e.getMessage()+"\"}";        
+        }
+	}
+ 
+    @RequestMapping(value = "/ViewCourseEconOverview", method = RequestMethod.POST)
+    public String viewCourseEconOverviewPost(@ModelAttribute("year") String year, Model model, Principal principal, HttpServletRequest request) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("viewByCourse, POST year "+ year);
+				logger.debug("viewByCourse, POST model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			}
+			return viewCourseEconOverview(year,model, principal, request);
+	}
 
 
 
@@ -300,7 +338,7 @@ public class AssignmentViewController {
 			return "CoursesOverview";
         } catch (Exception e) {
 			if (logger.isErrorEnabled()) {
-				logger.error("viewByCourse, pesky exception "+e);
+				logger.error("viewCourseOverview, pesky exception "+e);
 			}
            return "{\"ERROR\":"+e.getMessage()+"\"}";        
         }

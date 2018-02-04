@@ -19,9 +19,9 @@ public enum CourseGroup {
 	PROGRAM("Programansvar");
 
 
-	private String displayName;
+	private final String displayName;
 	
-	CourseGroup(String displayName) {
+	private CourseGroup(final String displayName) {
 		this.displayName = displayName;
 	}
 	
