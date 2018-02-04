@@ -76,7 +76,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @RestController("/")
 @SpringBootApplication
 @CrossOrigin(origins = "http://localhost:1841")
-@Import({BemanningLDAPConfiguration.class, StaticResourceConfiguration.class, BemanningSecurityConfig.class})
+@Import({StaticResourceConfiguration.class, BemanningSecurityConfig.class})
 @ComponentScan(basePackages = {"se.uu.ebc.bemanning.service","se.uu.ebc.bemanning.web","se.uu.ebc.bemanning.security"})
 //public class Bemanning extends WebMvcConfigurerAdapter {		/* Testing with embedded server */
 public class Bemanning extends SpringBootServletInitializer { /* Deploying to Tomcat container */
