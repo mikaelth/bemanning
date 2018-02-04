@@ -41,9 +41,7 @@
 					<thead>
 						<tr>
 							<th th:text="#{display.staff.overview.name}" />
-<!-- 
 							<th th:text="#{display.staff.overview.email}" />
- -->
 							<th th:text="#{display.staff.overview.position}" />
 							<th th:text="#{display.staff.overview.unit}"/>
 
@@ -63,9 +61,12 @@
 					<tbody>
 						<tr th:each="teacher, iterStat: ${staff}" th:class="${iterStat.odd}? 'odd' : 'even'">
 							<td th:text="${teacher.person.name}" />
-<!-- 
-							<td th:text="${teacher.akka.email}" />
- -->
+
+							<th:block th:with="akkaEntry=${akka.doLookup(teacher.person)}">
+								<td>
+									<a th:href="'mailto:' + ${akkaEntry.get('mail')}" th:text="${akkaEntry.get('mail')}" />
+								</td>
+							</th:block>
 							<td th:text="${teacher.position}" />
 							<td th:text="${teacher.organisationUnit.svName}" />
 

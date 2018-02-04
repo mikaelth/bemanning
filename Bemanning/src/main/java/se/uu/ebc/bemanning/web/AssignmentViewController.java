@@ -43,7 +43,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.apache.log4j.Logger;
 
-import se.uu.ebc.bemanning.service.TestService;
+import se.uu.ebc.bemanning.service.AKKAService;
 import se.uu.ebc.bemanning.service.PhDService;
 import se.uu.ebc.bemanning.service.StaffingService;
 import se.uu.ebc.bemanning.repo.CourseInstanceRepo;
@@ -67,7 +67,7 @@ public class AssignmentViewController {
     private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));
 
 	@Autowired
-	TestService testService;
+	AKKAService akkaService;
 
 	@Autowired
 	CourseInstanceRepo ciRepo;
@@ -89,20 +89,7 @@ public class AssignmentViewController {
 	@Autowired
 	PhDPositionRepo phdPositionRepo;
 	
-/* 
-    @RequestMapping("/testen")
-    @ResponseBody
-    public ResponseEntity<String> allspecimen() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json; charset=utf-8");
-        try {
-    		testService.test();
-    	return new ResponseEntity<String>("{OK}", headers, HttpStatus.OK);
-          } catch (Exception e) {
-           return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-	}
- */
+
 
     @RequestMapping(value = "/ViewByPerson", method = RequestMethod.GET)
     public String viewByPerson(@RequestParam(value = "year", required = false) String year, Model model, Principal principal, HttpServletRequest request) {
@@ -229,6 +216,8 @@ public class AssignmentViewController {
 			logger.debug("viewStaffSummary, budgetDept "+budgetDept.getSvName());
 //			logger.debug("viewStaffSummary, budgetDept "+ReflectionToStringBuilder.toString(budgetDept, ToStringStyle.MULTI_LINE_STYLE));
 
+			model.addAttribute("akka", akkaService);
+			
 			model.addAttribute("staff", staff);
 			model.addAttribute("serverTime", new Date());
 			model.addAttribute("budgetYear", new BudgetYear(thisYear, staffRepo.getStaffedYears()));
@@ -330,6 +319,7 @@ public class AssignmentViewController {
 
 			logger.debug("viewCourseOverview, courses "+ReflectionToStringBuilder.toString(cis, ToStringStyle.MULTI_LINE_STYLE));
 
+			model.addAttribute("akka", akkaService);
 			model.addAttribute("courses", cis);
 			model.addAttribute("serverTime", new Date());
 			model.addAttribute("budgetYear", new BudgetYear(thisYear, staffRepo.getStaffedYears()));

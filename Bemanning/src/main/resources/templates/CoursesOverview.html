@@ -47,10 +47,8 @@
 							<th th:text="#{display.courses.overview.enddate}">Slutdatum</th>
 							<th th:text="#{display.courses.overview.courseleader}">Kursansvarig lärare</th>
 							<th th:text="#{display.courses.overview.unit}">Enhet</th>
-<!-- 
 							<th th:text="#{display.courses.overview.email}">Email</th>
 							<th th:text="#{display.courses.overview.phone}">Telefon</th>
- -->
 						</tr>
 					</thead>
 					<tbody>
@@ -60,10 +58,13 @@
 							<td th:text="${#dates.format(course.endDate,'yyyy-MM-dd')}" />
 							<td th:text="${course.courseLeader.person.name}" />
 							<td th:text="${course.courseLeader.organisationUnit.svName}" />
-<!-- 
-							<td th:text="${course.courseLeader.person.email}" />
-							<td th:text="${course.courseLeader.person.phone}" />
- -->
+							<th:block th:with="akkaEntry=${akka.doLookup(course.courseLeader.person)}">
+								<td>
+									<a th:href="'mailto:' + ${akkaEntry.get('mail')}" th:text="${akkaEntry.get('mail')}" />
+								</td>
+								<td th:text="${akkaEntry.get('telephoneNumber')}" />
+							</th:block>
+
 						</tr>
 					</tbody>
 				</table>
