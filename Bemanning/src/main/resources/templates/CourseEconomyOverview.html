@@ -1,0 +1,70 @@
+<html lang="se-SE">
+<head>
+	<title th:text="#{display.courses.economy.overview.title}"> Förslag till bemanning, per kurs </title>
+	<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
+	<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default-application.css" th:href="@{/layout/default-application.css}"></link>
+	<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default.css" th:href="@{/layout/default.css}"></link>
+</head>
+<body>
+	<div id="container">
+		<div id="returnHome" class="action">
+			<a href="../index.html" th:text="#{return.home}">Åter till startsidan</a>
+		</div>
+		
+
+		<div id="content">
+			<div>
+				<h1 th:text="#{display.courses.economy.overview.header}+' ' + ${year} + ', ' + ${ou.svName}">Preliminär fördelning av GU medel 2012, Institutionen för Organismbiologi</h1>
+			</div>
+			<div id="selectYear" class="action">
+				<h3>
+					Välj år 
+				</h3>
+				<div class="trigger">
+					<form action="#" th:action="@{/view/ViewCourseEconOverview}" th:object="${budgetYear}" method="post">
+						<select name="year">
+							<option th:each="selectYear : ${budgetYear.allYears}" th:value="${selectYear}" th:text="${selectYear}" th:selected="${ selectYear==year }">År</option>
+						</select>
+						<input type="submit" value="V&auml;lj &aring;r" id="form_submit" />
+					</form>
+				</div>
+			</div>
+			<br class="clr" />
+			<div id="coursesOverview" class="table">
+<!-- 
+				<h2 th:text="'Budgetår ' + ${year} +', ' + ${budgetDept} + ', ' + ${#dates.format(#dates.createNow(),'yyyy-MM-dd')}">
+					Budgetår 2017, Institutionen för Organismbiologi, 2017-04-02 
+				</h2>
+ -->
+				<br />
+				<table>
+					<thead>
+						<tr>
+							<th th:text="#{display.courses.economy.overview.coursegroup}">Kursgrupp</th>
+							<th th:text="#{display.courses.economy.overview.course}">Kursens namn</th>
+							<th th:text="#{display.courses.economy.overview.courseleader}">Kursledare</th>
+							<th th:text="#{display.courses.economy.overview.granttotal}">Anslag, totalt</th>
+							<th th:text="#{display.courses.economy.overview.grantdept}+', '+${ou.abbreviation}">Anslag, dept</th>
+							<th th:text="#{display.courses.economy.overview.costtotal}">Kostnader, totalt</th>
+							<th th:text="#{display.courses.economy.overview.costdept}+', '+${ou.abbreviation}">Kostnader, dept</th>
+							<th th:text="#{display.courses.economy.overview.note}">Kommentarer</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="courseinstance, iterStat: ${courses}" th:class="${iterStat.odd}? 'odd' : 'even'">
+							<td th:text="${courseinstance.course.courseGroup}" />
+							<td th:text="${courseinstance.course.code}+' '+${courseinstance.course.seName}+' '+${courseinstance.extraDesignation}" />
+							<td th:text="${courseinstance.courseLeader.person.name}" />
+							<td th:text="${#numbers.formatDecimal(courseinstance.totalGrants,1,'WHITESPACE',0,'DEFAULT')} + ' kr'" />
+							<td th:text="${#numbers.formatDecimal(courseinstance.getTotalGrants(ou),1,'WHITESPACE',0,'DEFAULT')} + ' kr'" />
+							<td th:text="${#numbers.formatDecimal(courseinstance.totalAssignmentCost,1,'WHITESPACE',0,'DEFAULT')} + ' kr'" />
+							<td th:text="${#numbers.formatDecimal(courseinstance.getTotalAssignmentCost(ou),1,'WHITESPACE',0,'DEFAULT')} + ' kr'" />
+							<td th:text="${courseinstance.note}" />
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -3,15 +3,13 @@
 		<title th:text="#{display.bemanning.welcome.title}"> Startsida - Välkommen till version 3 av Bemanningsplaneraren !! </title>
 		<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
 	<link rel="stylesheet" type="text/css" media="screen, print" href="/layout/default-application.css" th:href="@{/layout/default-application.css}"></link>
-<!-- 
 	<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default.css" th:href="@{/layout/default.css}"></link>
- -->
 	</head>
 	<body>
 		<div id="container">
 			<div id="content">
 				<div>
-					<h1 th:text="#{display.bemanning.welcome.header}+' '+#{build.release.minor}+', ' +${user.givenName}">
+					<h1 th:text="#{display.bemanning.welcome.header}+', ' +${user.givenName}">
 						Startsida - Välkommen till version 3 av Bemanningsplaneraren
 					</h1>
 				</div>
@@ -63,6 +61,10 @@
 						<h3 th:text="#{view.edits}"></h3>
 						<a href="Bemanning/index.html" th:href="@{/Bemanning/index.html}" th:text="#{edit.mode.linktext}">Gå till redigeringsläge</a> 
 					</div>
+				</div>
+				
+				<div class="footer"> 
+					<p th:text="'Bemanningsplaneraren ' + #{build.release.minor}+ ', build ' + #{build.timestamp}" />
 				</div>
 			</div>
 		</div>

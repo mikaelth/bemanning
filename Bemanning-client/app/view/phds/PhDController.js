@@ -16,6 +16,21 @@ Ext.define('Bemaning.view.phd.PhDController', {
         
     },
 
+    onSave: function()
+    {
+    	var store = this.getView().getStore().hasOwnProperty('source') ? this.getView().getStore().getSource() : this.getView().getStore(),
+    		otherStore = this.getViewModel().getStore('progress').hasOwnProperty('source') ? this.getViewModel().getStore('progress').getSource() :this.getViewModel().getStore('progress');
+    	
+        store.sync({success: function(b, o){
+        		if (o.operations['create']!= null && o.operations['create'].length) {
+        			otherStore.sync();
+        			otherStore.load();
+        		}
+        	}
+        });
+    },
+
+
    	onBeforeRender: function (grid) {
    	},
    	

@@ -131,7 +131,7 @@ public class PhDService {
 
 		String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
 		Staff s = staffService.findUserByPersonAndYear(p.getPerson(),year);
-		return new PhDPositionVO(p,s.getOrganisationUnit().getSvName());
+		return new PhDPositionVO(p, s == null ? "" : s.getOrganisationUnit().getSvName());
     
     }
 
@@ -143,7 +143,20 @@ public class PhDService {
    	
  
 	private PhDPosition toPhDPosition (PhDPositionVO pvo) throws Exception {
- 		return toPhDPosition (new PhDPosition(), pvo);
+		Progress prog = new Progress();
+		prog.setDate(pvo.getStart());
+		prog.setActivity(1.0f);
+		prog.setProjectFraction(0.9f);
+		prog.setGuFraction(0.1f);
+		prog.setRemainingMonths(48.0f);
+		
+		PhDPosition phd = toPhDPosition (new PhDPosition(), pvo);
+		phd.getProgresses().add(prog);
+		prog.setPhdPosition(phd);
+		
+//		progressRepo.save(prog);
+
+ 		return phd;
    	}
 
 	private PhDPosition toPhDPosition (PhDPosition p, PhDPositionVO pvo) throws Exception {

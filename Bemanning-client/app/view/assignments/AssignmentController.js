@@ -71,12 +71,12 @@ Ext.define('Bemaning.view.assignments.AssignmentController', {
 
 				
 					if (activeItem.itemId == 'ego-2') {
-						console.log('Set filter'); 
+//						console.log('Set filter'); 
 						this.up('grid').getStore().addFilter({id:'deptFilter', property: 'assigningDept', value:'IOB'});
 
 					} else {
 						this.up('grid').getStore().removeFilter('deptFilter');
-						console.log('Clear filter');        
+//						console.log('Clear filter');        
 					}
 
 				}

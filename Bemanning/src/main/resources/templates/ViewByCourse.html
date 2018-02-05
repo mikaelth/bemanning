@@ -3,9 +3,7 @@
 	<title th:text="#{display.course.assignments.title}"> Förslag till bemanning, per kurs </title>
 	<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
 	<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default-application.css" th:href="@{/layout/default-application.css}"></link>
-<!-- 
 	<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default.css" th:href="@{/layout/default.css}"></link>
- -->
 </head>
 <body>
 <!-- 
@@ -15,11 +13,11 @@ Logged user: <span sec:authentication="name">Bob</span>
 		<div id="returnHome" class="action">
 			<a href="../index.html" th:text="#{return.home}">Åter till startsidan</a>
 		</div>
-		<div>
-			<h1 th:text="#{display.course.assignments.title}">Förslag till bemanning, typ</h1>
-		</div>
-
 		<div id="content">
+			<div>
+				<h1 th:text="#{display.course.assignments.title}">Förslag till bemanning, typ</h1>
+			</div>
+
 			<div id="selectYear" class="action">
 				<h3>
 					Välj år 
@@ -45,7 +43,7 @@ Logged user: <span sec:authentication="name">Bob</span>
 				<p />
 					<div th:each="courseInstance: ${courses}">
 						<div th:if="${courseInstance.totalHours > 0}">
-							<h4 th:text="${courseInstance.course.code} +' ' + ${courseInstance.course.seName} + ', ' + ${courseInstance.courseLeader.person.name}" />
+							<h4 th:text="${courseInstance.designation}+ ', ' + ${courseInstance.courseLeader.person.name}" />
 								<p />
 								<hr align="center" />
 								<table>

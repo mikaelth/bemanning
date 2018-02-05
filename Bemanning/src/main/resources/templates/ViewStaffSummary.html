@@ -3,20 +3,18 @@
 	<title th:text="#{display.staff.overview.title}"> Förslag till bemanning, per kurs </title>
 	<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
 	<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default-application.css" th:href="@{/layout/default-application.css}"></link>
-<!-- 
 	<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default.css" th:href="@{/layout/default.css}"></link>
- -->
 </head>
 <body>
 	<div id="container">
 		<div id="returnHome" class="action">
 			<a href="../index.html" th:text="#{return.home}">Åter till startsidan</a>
 		</div>
-		<div>
-			<h1 th:text="#{display.staff.overview.title}+' '+${budgetDept.svName}+', '+${year}">Förslag till bemanning, typ</h1>
-		</div>
 
 		<div id="content">
+			<div>
+				<h1 th:text="#{display.staff.overview.title}+' '+${budgetDept.svName}+', '+${year}">Förslag till bemanning, typ</h1>
+			</div>
 			<div id="selectYear" class="action">
 				<h3>
 					Välj år och enhet

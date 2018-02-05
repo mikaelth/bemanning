@@ -7,16 +7,18 @@ Ext.define('Bemaning.view.phds.ProgressController', {
     onCreate: function()
     {
         var grid = this.getView(),
-        	phdId = this.getViewModel().get('currentPhD.id');
+        	phd = this.getViewModel().get('currentPhD');
         grid.plugins[0].cancelEdit();
 		
-        // Create a model instance
-        var r = Ext.create('Bemanning.model.Progress');
-        r.set('phdPositionId',phdId);
-        
-		var rec = grid.getStore().insert(0, r);
-        grid.plugins[0].startEdit(rec[0]);
-        
+
+		if(!phd.phantom) {
+			// Create a model instance
+			var r = Ext.create('Bemanning.model.Progress');
+			r.set('phdPositionId',phd.id);
+		
+			var rec = grid.getStore().insert(0, r);
+			grid.plugins[0].startEdit(rec[0]);
+ 		}       
     },
 
    	onBeforeRender: function (grid) {

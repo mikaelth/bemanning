@@ -8,16 +8,17 @@ Ext.define('Bemaning.view.ous.YoHController', {
     onCreate: function()
     {
         var grid = this.getView(),
-        	ouId = this.getViewModel().get('currentOU.id');
+        	ou = this.getViewModel().get('currentOU');
         grid.plugins[0].cancelEdit();
 		
-        // Create a model instance
-        var r = Ext.create('Bemanning.model.YoH');
-        r.set('unitId',ouId);
-        
-		var rec = grid.getStore().insert(0, r);
-        grid.plugins[0].startEdit(rec[0]);
-        
+		if(!ou.phantom) {		
+			// Create a model instance
+			var r = Ext.create('Bemanning.model.YoH');
+			r.set('unitId',ou.id);
+		
+			var rec = grid.getStore().insert(0, r);
+			grid.plugins[0].startEdit(rec[0]);
+        }
     },
 
    	onBeforeRender: function (grid) {

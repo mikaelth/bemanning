@@ -3,9 +3,7 @@
 	<title th:text="#{display.courses.overview.title}"> Förslag till bemanning, per kurs </title>
 	<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
 	<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default-application.css" th:href="@{/layout/default-application.css}"></link>
-<!-- 
 	<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default.css" th:href="@{/layout/default.css}"></link>
- -->
 </head>
 <body>
 	<div id="container">
@@ -13,11 +11,11 @@
 			<a href="../index.html" th:text="#{return.home}">Åter till startsidan</a>
 		</div>
 		
-		<div>
-			<h1 th:text="#{display.courses.overview.title}">Förslag till bemanning, typ</h1>
-		</div>
 
 		<div id="content">
+			<div>
+				<h1 th:text="#{display.courses.overview.title}">Förslag till bemanning, typ</h1>
+			</div>
 			<div id="selectYear" class="action">
 				<h3>
 					Välj år 
@@ -52,13 +50,15 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="course, iterStat: ${courses}" th:class="${iterStat.odd}? 'odd' : 'even'">
-							<td th:text="${course.course.code}+' '+${course.course.seName}" />
-							<td th:text="${#dates.format(course.startDate,'yyyy-MM-dd')}" />
-							<td th:text="${#dates.format(course.endDate,'yyyy-MM-dd')}" />
-							<td th:text="${course.courseLeader.person.name}" />
-							<td th:text="${course.courseLeader.organisationUnit.svName}" />
-							<th:block th:with="akkaEntry=${akka.doLookup(course.courseLeader.person)}">
+						<tr th:each="courseinstance, iterStat: ${courses}" th:class="${iterStat.odd}? 'odd' : 'even'">
+							<td>
+								<a target="_blank" th:href="${selmaUrl} + ${courseinstance.course.code}" th:text="${courseinstance.designation}" /> 
+							</td>
+							<td th:text="${#dates.format(courseinstance.startDate,'yyyy-MM-dd')}" />
+							<td th:text="${#dates.format(courseinstance.endDate,'yyyy-MM-dd')}" />
+							<td th:text="${courseinstance.courseLeader.person.name}" />
+							<td th:text="${courseinstance.courseLeader.organisationUnit.svName}" />
+							<th:block th:with="akkaEntry=${akka.doLookup(courseinstance.courseLeader.person)}">
 								<td>
 									<a th:href="'mailto:' + ${akkaEntry.get('mail')}" th:text="${akkaEntry.get('mail')}" />
 								</td>

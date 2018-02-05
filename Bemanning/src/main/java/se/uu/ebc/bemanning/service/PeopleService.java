@@ -24,8 +24,6 @@ import se.uu.ebc.bemanning.repo.PersonRepo;
 import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
 import se.uu.ebc.bemanning.repo.MaxCostRepo;
-import se.uu.ebc.ldap.AKKAUserRepo;
-import se.uu.ebc.ldap.AKKAUser;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.HttpHeaders;
@@ -89,7 +90,8 @@ public class AssignmentViewController {
 	@Autowired
 	PhDPositionRepo phdPositionRepo;
 	
-
+	@Value("${selma.url}")
+	String selmaUrl;
 
     @RequestMapping(value = "/ViewByPerson", method = RequestMethod.GET)
     public String viewByPerson(@RequestParam(value = "year", required = false) String year, Model model, Principal principal, HttpServletRequest request) {
@@ -319,6 +321,7 @@ public class AssignmentViewController {
 
 			logger.debug("viewCourseOverview, courses "+ReflectionToStringBuilder.toString(cis, ToStringStyle.MULTI_LINE_STYLE));
 
+			model.addAttribute("selmaUrl", selmaUrl);
 			model.addAttribute("akka", akkaService);
 			model.addAttribute("courses", cis);
 			model.addAttribute("serverTime", new Date());

@@ -7,14 +7,21 @@ Ext.define('Bemaning.view.courses.CourseGrantController', {
     
     onCreate: function()
     {
-        var grid = this.getView();
+        var grid = this.getView(),
+        	ci = this.getViewModel().get('currentCI');
+
          grid.plugins[0].cancelEdit();
 
-        // Create a model instance
-        var r = Ext.create('Bemanning.model.CourseGrant');
-		var rec = grid.getStore().insert(0, r);
-        grid.plugins[0].startEdit(rec[0]);
-        
+		if(!ci.phantom) {
+			// Create a model instance
+			var r = Ext.create('Bemanning.model.CourseGrant');
+
+			r.set('courseInstanceId',ci.id);
+
+			var rec = grid.getStore().insert(0, r);
+			grid.plugins[0].startEdit(rec[0]);
+  		}       
+       
     },
 
    	onBeforeRender: function (grid) {

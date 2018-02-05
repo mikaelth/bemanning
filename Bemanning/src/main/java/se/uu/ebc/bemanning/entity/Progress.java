@@ -66,14 +66,14 @@ public class Progress  extends Auditable {
     
     @Column(name = "TO_ECO_SYS")
     @NotNull
-    private boolean toEcoSys;
+    private boolean toEcoSys = false;
     
     @Column(name = "REMAINING_MONTHS", precision = 12)
     private Float remainingMonths;
     
     @Column(name = "TO_UP_DOK")
     @NotNull
-    private boolean toUpDok;
+    private boolean toUpDok = false;
     
     @Column(name = "NOTE", length = 255)
     private String note;

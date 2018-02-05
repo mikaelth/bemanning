@@ -19,19 +19,19 @@ Ext.define('Bemanning.view.main.ProgressList', {
 		{ text: 'Datum', dataIndex: 'date', editor: {xtype: 'datefield', format: 'Y-m-d'}, xtype:'datecolumn', format: 'Y-m-d', align: 'left', width: 100 },
 		{ text: 'Aktivitetsgrad', dataIndex: 'activity', editor: 'textfield', align: 'right', width: 120,
 			renderer: function percentRenderer(value, metadata, record) {
-				console.log(value);
+//				console.log(value);
 				return [(value * 100).toFixed(0), '%'].join('');
 			}
 		},
 		{ text: 'Andel FO', dataIndex: 'projectFraction', editor: 'textfield', align: 'right', width: 120,
 			renderer: function percentRenderer(value, metadata, record) {
-				console.log(value);
+//				console.log(value);
 				return [(value * 100).toFixed(0), '%'].join('');
 			}
 		},
  		{ text: 'Andel GU', dataIndex: 'guFraction', editor: 'textfield', align: 'right', width: 120,
  			renderer: function percentRenderer(value, metadata, record) {
-				console.log(value);
+//				console.log(value);
 				return [(value * 100).toFixed(0), '%'].join('');
 			}
 		},

@@ -11,11 +11,27 @@ Ext.define('Bemanning.view.courses.CourseModel', {
     },
     
     stores: {
+		granttype: {
+			xtype: 'store.store',
+			id: 'GrantTypeStore',
+			fields: [
+				{name: 'label', type: 'string'},
+			],	
+			proxy: {
+				 type: 'rest',
+				 url: Bemanning.data.Constants.BASE_URL.concat('granttypes'),
+				 reader: {
+					 type: 'json'
+				 }
+			 }, 
+			sorters: {property:'label', direction: 'ASC'},
+			autoLoad: true
+    			
+		},    	
 		coursegroups: {
 			xtype: 'store.store',
 			fields: [
 				{name: 'label', type: 'string'},
-//				{name: 'displayName', type: 'string'}
 			],	
 			proxy: {
 				 type: 'rest',
@@ -24,6 +40,7 @@ Ext.define('Bemanning.view.courses.CourseModel', {
 					 type: 'json'
 				 }
 			 }, 
+			sorters: {property:'label', direction: 'ASC'},
 			autoLoad: true
     			
 		},    	

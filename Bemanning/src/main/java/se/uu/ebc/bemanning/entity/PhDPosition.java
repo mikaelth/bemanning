@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -74,8 +75,8 @@ public class PhDPosition  extends Auditable {
 
     
 	@OrderBy("date ASC")
-    @OneToMany(mappedBy = "phdPosition")
-    private List<Progress> progresses;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "phdPosition")
+    private List<Progress> progresses = new ArrayList<Progress>();
     
     @Column(name = "START")
     @NotNull
@@ -623,5 +624,8 @@ public class PhDPosition  extends Auditable {
 		return remainingProjectTime( ey.getTime(), false );
 	}
 
-			    
+
+	/* Constructors */
+	
+	public PhDPosition() {	}			    
 }

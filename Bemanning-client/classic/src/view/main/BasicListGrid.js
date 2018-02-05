@@ -71,9 +71,11 @@ Ext.define('Bemanning.view.main.BasicListGrid', {
 					}
                 }
             },
+/* 
             beforeEdit: function(rowEditing, context) {
             	console.log(context);
             }
+ */
         }
 		
     }],

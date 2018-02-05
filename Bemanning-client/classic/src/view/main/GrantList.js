@@ -18,7 +18,25 @@ Ext.define('Bemanning.view.main.GrantList', {
 	
 
     columns: [
-		{ text: 'Typ', dataIndex: 'type', editor: 'textfield', align: 'left', width: 150 },
+		{ text: 'Typ', dataIndex: 'type', align: 'left', width: 150, 
+			editor: {
+				xtype: 'combobox',
+				bind: {store: '{granttype}'},
+				typeAhead: true,
+				triggerAction: 'all',
+				queryMode: 'local',
+				lastQuery: '',
+				displayField: 'label',
+				valueField: 'label',
+				listeners: {
+					// delete the previous query in the beforequery event or set
+					// combo.lastQuery = null (this will reload the store the next time it expands)
+					beforequery: function(qe){
+						delete qe.combo.lastQuery;
+					}
+				}
+			}
+		},
 		{ text: 'Betalande', dataIndex: 'debitUnitId', align: 'left', width: 150, 
 			renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
 				if (Ext.getStore('OUStore').getById(value) != undefined) {

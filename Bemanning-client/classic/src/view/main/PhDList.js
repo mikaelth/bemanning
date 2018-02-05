@@ -14,7 +14,7 @@ Ext.define('Bemanning.view.main.PhDList', {
 	features: [{ ftype: 'grouping',startCollapsed: false }],
 
     columns: [
-		{ text: 'Program', dataIndex: 'program', editor: 'textfield', align: 'left', width: 200 },
+		{ text: 'Program', dataIndex: 'program', align: 'left', width: 200 },
 		{ text: 'Person', dataIndex: 'personId', editor: 'textfield', align: 'left', flex: 1,
 		    renderer: function(value) {
 				if (Ext.getStore('PersonStore').getById(value) != undefined) {
@@ -40,7 +40,7 @@ Ext.define('Bemanning.view.main.PhDList', {
  		{ text: 'Återstående doktorandtid', dataIndex: 'currentRemainingProjectTime',  align: 'right', width: 100, renderer: Ext.util.Format.numberRenderer('0.0') },
  		{ text: 'Avklarad andel', dataIndex: 'done', align: 'right', width: 100,
 			renderer: function percentRenderer(value, metadata, record) {
-				console.log(value);
+//				console.log(value);
 				return [(value * 100).toFixed(0), '%'].join('');
 			}
 		},

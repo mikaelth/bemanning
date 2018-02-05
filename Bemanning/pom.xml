@@ -27,8 +27,8 @@
    	 	<sdn.version>4.0.3.RELEASE</sdn.version>
     	<spring-data-releasetrain.version>Gosling-RELEASE</spring-data-releasetrain.version>
 	 	<project.build.finalName>bemanning</project.build.finalName>
-<timestamp>${maven.build.timestamp}</timestamp>
-<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 	</properties>
 
 	<dependencies>
