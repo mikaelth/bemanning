@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.repository.query.Param;
 
 import se.uu.ebc.bemanning.entity.PhDPosition;
+import se.uu.ebc.bemanning.entity.Person;
 
 import java.util.Set;
 import java.util.List;
@@ -22,4 +23,6 @@ public interface PhDPositionRepo extends JpaRepository<PhDPosition, Long>, JpaSp
 
 	List<PhDPosition> findAll();
 	
+	@Query("SELECT p FROM PhDPosition AS p WHERE p.person = ?1")
+	PhDPosition findByPerson(Person p);
 }

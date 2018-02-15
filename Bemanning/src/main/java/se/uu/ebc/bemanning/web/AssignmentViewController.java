@@ -55,6 +55,7 @@ import se.uu.ebc.bemanning.security.UserRepo;
 import se.uu.ebc.bemanning.security.BemanningUser;
 import se.uu.ebc.bemanning.entity.CourseInstance;
 import se.uu.ebc.bemanning.entity.Staff;
+import se.uu.ebc.bemanning.entity.PhDPosition;
 import se.uu.ebc.bemanning.entity.OrganisationUnit;
 
 @Controller
@@ -64,7 +65,7 @@ public class AssignmentViewController {
 
     private static Logger logger = Logger.getLogger(AssignmentViewController.class.getName());
 
-    private String roleArr[] = { "ROLE_DIRECTOROFSTUDIES", "ROLE_ADMINISTRATOR", "ROLE_PHDADMIN" };
+    private String roleArr[] = { "ROLE_DIRECTOROFSTUDIES", "ROLE_ADMINISTRATOR", "ROLE_PHDADMIN", "ROLE_SYSADMIN" };
     private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));
 
 	@Autowired
@@ -88,7 +89,7 @@ public class AssignmentViewController {
 	@Autowired
 	PhDService phdService;
 	@Autowired
-	PhDPositionRepo phdPositionRepo;
+	PhDPositionRepo phdRepo;
 	
 	@Value("${selma.url}")
 	String selmaUrl;
@@ -247,13 +248,19 @@ public class AssignmentViewController {
     @RequestMapping(value = "/ViewPhDProgress", method = RequestMethod.GET)
     public String viewProgressByPhD( Model model, Principal principal, HttpServletRequest request) {
 		try {
-			if (logger.isDebugEnabled()) {
-				logger.debug("viewProgressByPhD, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
-				logger.debug("viewProgressByPhD, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewProgressByPhD, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewProgressByPhD, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+
+			if (allowUserAll(request)) {
+				model.addAttribute("phdStudents", phdService.allSorted());
+			} else {
+				List<PhDPosition> phd = new ArrayList<PhDPosition>();
+				phd.add(phdRepo.findByPerson(userRepo.findUserByUsername(principal.getName())));
+				model.addAttribute("phdStudents", phd);
 			}
 
-			model.addAttribute("phdStudents", phdService.allSorted());
-//			model.addAttribute("phdStudents", phdPositionRepo.findAll());
+//			model.addAttribute("phdStudents", phdService.allSorted());
+//			model.addAttribute("phdStudents", phdRepo.findAll());
 			model.addAttribute("serverTime", new Date());
 
 			return "ViewPhDProgress";
@@ -395,9 +402,7 @@ public class AssignmentViewController {
 		boolean granted = false;
 		try {
 			for (String role : rolesForAll) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("allowUserAll, role "+role);
-				}
+				logger.debug("allowUserAll, role "+role);
 				if (request.isUserInRole(role)) {
 					granted = true;
 					break;
@@ -405,9 +410,7 @@ public class AssignmentViewController {
 			}	
 		} catch (Exception ex) {
  
-			if (logger.isErrorEnabled()) {
-				logger.error("allowUserAll, pesky exception "+ex);
-			}
+			logger.error("allowUserAll, pesky exception "+ex);
  
 		}
 		
