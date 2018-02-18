@@ -94,6 +94,9 @@ public class AssignmentViewController {
 	@Value("${selma.url}")
 	String selmaUrl;
 
+	@Value("${timeedit.url}")
+	String teUrl;
+
     @RequestMapping(value = "/ViewByPerson", method = RequestMethod.GET)
     public String viewByPerson(@RequestParam(value = "year", required = false) String year, Model model, Principal principal, HttpServletRequest request) {
 		try {
@@ -125,6 +128,7 @@ public class AssignmentViewController {
 			model.addAttribute("budgetYear", new BudgetYear(thisYear, staffRepo.getStaffedYears()));
 			model.addAttribute("budgetDept", budgetDept);
 			model.addAttribute("year", thisYear);
+			model.addAttribute("teUrl", teUrl);
 
 			return "ViewByPerson";
         } catch (Exception e) {
@@ -254,9 +258,12 @@ public class AssignmentViewController {
 			if (allowUserAll(request)) {
 				model.addAttribute("phdStudents", phdService.allSorted());
 			} else {
-				List<PhDPosition> phd = new ArrayList<PhDPosition>();
-				phd.add(phdRepo.findByPerson(userRepo.findUserByUsername(principal.getName())));
-				model.addAttribute("phdStudents", phd);
+				List<PhDPosition> phds = new ArrayList<PhDPosition>();
+				PhDPosition phd = phdRepo.findByPerson(userRepo.findUserByUsername(principal.getName()));
+				if (phd != null) { 
+					phds.add(phd);
+				}
+				model.addAttribute("phdStudents", phds);
 			}
 
 //			model.addAttribute("phdStudents", phdService.allSorted());

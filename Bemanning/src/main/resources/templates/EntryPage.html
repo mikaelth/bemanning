@@ -49,11 +49,16 @@
 				</div>
 				<div id="viewOverviews" class="action">
 					<h3 th:text="#{view.overviews}"></h3>
-					<a href="view/ViewCourseOverview" onmouseover="hints.show('viewCourseOverview')" onmouseout="hints.hide()" th:text="#{display.courses.overview.linktext}">Visa översikt över kurser</a> 
+					<p>
+						<a href="view/ViewCourseOverview" onmouseover="hints.show('viewCourseOverview')" onmouseout="hints.hide()" th:text="#{display.courses.overview.linktext}">Visa översikt över kurser</a> 
+					</p>
 					<div th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMINISTRATOR'',''ROLE_DIRECTOROFSTUDIES'',''ROLE_COREDATAADMIN'',''ROLE_SYSADMIN'')')}">			
-						<a href="view/ViewStaffSummary" th:href="@{/view/ViewStaffSummary}" th:text="#{display.staff.overview.linktext}">Visa översikt över personal</a> 
-						<br />
-						<a href="view/ViewCourseEconOverview" th:href="@{/view/ViewCourseEconOverview}" th:text="#{display.courses.economy.overview.linktext}">Visa översikt över kursekonomi</a> 
+						<p>
+							<a href="view/ViewStaffSummary" th:href="@{/view/ViewStaffSummary}" th:text="#{display.staff.overview.linktext}">Visa översikt över personal</a> 
+						</p>
+						<p>
+							<a href="view/ViewCourseEconOverview" th:href="@{/view/ViewCourseEconOverview}" th:text="#{display.courses.economy.overview.linktext}">Visa översikt över kursekonomi</a> 
+						</p>
 					</div>
 				</div>
 				<div th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMINISTRATOR'',''ROLE_DIRECTOROFSTUDIES'',''ROLE_PHDADMIN'',''ROLE_COREDATAADMIN'',''ROLE_SYSADMIN'')')}">			

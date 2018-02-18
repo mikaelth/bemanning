@@ -52,7 +52,7 @@
 					<tbody>
 						<tr th:each="courseinstance, iterStat: ${courses}" th:class="${iterStat.odd}? 'odd' : 'even'">
 							<td>
-								<a target="_blank" th:href="${selmaUrl} + ${courseinstance.course.code}" th:text="${courseinstance.designation}" /> 
+								<a target="_blank" th:href="@{${selmaUrl}(kKod=${courseinstance.course.code})}" th:text="${courseinstance.designation}" /> 
 							</td>
 							<td th:text="${#dates.format(courseinstance.startDate,'yyyy-MM-dd')}" />
 							<td th:text="${#dates.format(courseinstance.endDate,'yyyy-MM-dd')}" />

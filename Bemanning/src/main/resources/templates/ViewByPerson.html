@@ -24,9 +24,6 @@ Logged user: <span sec:authentication="name">Bob</span>
 				</h3>
 				<div class="trigger">
 					<form action="#" th:action="@{/view/ViewByPerson}" th:object="${budgetYear}" method="post">
-<!-- 
-						<select th:field="*{year}">
- -->
 						<select name="year">
 							<option th:each="selectYear : ${budgetYear.allYears}" th:value="${selectYear}" th:text="${selectYear}" th:selected="${ selectYear==year }">År</option>
 						</select>
@@ -47,7 +44,10 @@ Logged user: <span sec:authentication="name">Bob</span>
 					<p />
 						<div th:each="teacher: ${entry.value}">
 							<div th:if="${teacher.totalHours > 0}">
-								<h4 th:text="${teacher.person.name} + ', ' + ${teacher.position} + ', ' + ${#numbers.formatInteger(teacher.percentGU*100, 1)} + '% GU'" />
+								<h4> 
+									<a target="_blank" th:href="@{${teUrl}(sid='3', object='akka.'+${teacher.person.username},type='personnel', startdate=${year}+'0101',enddate=${year}+'1231')}" th:text="${teacher.person.name}"  /> 
+									<span th:text="', ' + ${teacher.position} +', ' + ${#numbers.formatInteger(teacher.percentGU*100, 1)} + '% GU'" /> 
+								</h4>
 									<p />
 									<hr align="center" />
 									<table>
