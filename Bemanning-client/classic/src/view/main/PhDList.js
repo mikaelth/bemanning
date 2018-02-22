@@ -5,7 +5,7 @@ Ext.define('Bemanning.view.main.PhDList', {
     xtype: 'phdlist',
 	reference: 'phdList',
 
-    title: 'Organisatoriska enheter',
+    title: 'Doktorander',
 
 	controller: 'phdlist',
 

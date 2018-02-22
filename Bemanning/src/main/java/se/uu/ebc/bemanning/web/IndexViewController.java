@@ -42,6 +42,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.apache.log4j.Logger;
 
+import se.uu.ebc.bemanning.service.TEService;
 import se.uu.ebc.bemanning.service.TestService;
 import se.uu.ebc.bemanning.service.PhDService;
 import se.uu.ebc.bemanning.service.StaffingService;
@@ -64,7 +65,7 @@ public class IndexViewController {
     private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));
 
 	@Autowired
-	TestService testService;
+	TEService teService;
 
 	@Autowired
 	StaffRepo staffRepo;
@@ -91,6 +92,23 @@ public class IndexViewController {
     		return "EntryPage";
         } catch (Exception e) {
 			logger.error("indexPage, caught a pesky exception "+ e);
+			return "{\"ERROR\":"+e.getMessage()+"\"}";
+		}
+	}
+
+    @RequestMapping(value = "/tetest", method = RequestMethod.GET)
+    public String indexTEPage(Model model, Principal principal, HttpServletRequest request) {
+			logger.debug("indexTEPage, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("indexTEPage, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+ 			logger.debug("indexTEPage, user "+ReflectionToStringBuilder.toString(userRepo.findUserByUsername(principal.getName()), ToStringStyle.MULTI_LINE_STYLE));
+
+       try {
+			teService.extractPersonTE(principal.getName());
+			
+			model.addAttribute("user", userRepo.findUserByUsername(principal.getName()));
+    		return "EntryPage";
+        } catch (Exception e) {
+			logger.error("indexTEPage, caught a pesky exception "+ e);
 			return "{\"ERROR\":"+e.getMessage()+"\"}";
 		}
 	}

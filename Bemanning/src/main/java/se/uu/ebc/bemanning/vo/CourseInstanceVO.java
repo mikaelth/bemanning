@@ -178,7 +178,7 @@ public class CourseInstanceVO {
 		this.courseId = xe.getCourse().getId();
 		this.courseLeaderId = xe.getCourseLeader().getId();
 
-		this.courseName = xe.getCourse().getSeName();
+		this.courseName = xe.getCourse().getCode() + ( xe.getCourse().getCode().length() > 0 ? " " : "") + xe.getCourse().getSeName() + ((xe.getExtraDesignation() != null && xe.getExtraDesignation().length() > 0) ?  ", " + xe.getExtraDesignation() : "");
 		this.courseGroup = xe.getCourse().getCourseGroup();
 		this.courseLeaderName = xe.getCourseLeader().getPerson().getName();	
 

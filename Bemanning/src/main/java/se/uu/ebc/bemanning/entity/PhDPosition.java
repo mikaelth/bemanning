@@ -115,6 +115,11 @@ public class PhDPosition  extends Auditable {
     }
     
     public Date getStart() {
+		Date start = this.start;
+
+		if (progresses.size() > 0){
+			start = this.getProgresses().get(progresses.size()-1).getDate();
+		}
         return start;
     }
     
@@ -149,271 +154,34 @@ public class PhDPosition  extends Auditable {
 
 	/* Public methods */
 	
-	// Hack!!!
-//    public Float yearlyGU(String year) { return 0.2f; }
 
-/* 
 	public Date predictedFinishDate()
 	{
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh predictedFinishDate " );
-		}
+		logger.debug("MTh predictedFinishDate " );
 		
-		Calendar now = Calendar.getInstance();
-		String thisYear = Integer.toString((now.get(Calendar.YEAR)));
+		if (this.progresses.size() > 0) {
+			Calendar now = Calendar.getInstance();
+			String thisYear = Integer.toString((now.get(Calendar.YEAR)));
 
-		Calendar ey = Calendar.getInstance();
-		ey.set(Calendar.MONTH, Calendar.DECEMBER);
-		ey.set(Calendar.DATE, 31);
+			Calendar ey = Calendar.getInstance();
+			ey.set(Calendar.MONTH, Calendar.DECEMBER);
+			ey.set(Calendar.DATE, 31);
 	
-		Progress latestEntry = this.getProgresses().iterator().next();
-		float remainAtLatest = remainingProjectTime(latestEntry.getDate(), false);
+			Progress latestEntry = this.getProgresses().iterator().next();
+			float remainAtLatest = remainingProjectTime(latestEntry.getDate(), false);
 
-		float remainPredInDays = remainAtLatest*MONTH_IN_DAYS/(latestEntry.getActivity()*latestEntry.getProjectFraction()) ;
+			float remainPredInDays = remainAtLatest*MONTH_IN_DAYS/(latestEntry.getActivity()*latestEntry.getProjectFraction()) ;
 				
-		Calendar endDate = latestEntry.getDate();
-		endDate.add(Calendar.DAY_OF_MONTH,Math.round(remainPredInDays));
+			Calendar endDate = Calendar.getInstance();
+			endDate.setTime(latestEntry.getDate());
+			endDate.add(Calendar.DAY_OF_MONTH,Math.round(remainPredInDays));
 
-		if (logger.isDebugEnabled()) {
 			logger.debug("MTh predictedFinishDate is "+ endDate.getTime() );
-		}
 		
-		return endDate.getTime();
-	}
-	
-	public Date predictedHalfTime()
-	{
-		return predictDate(REMAIN_AT_HALF);
-	}
-
- 	public Date predicted80Percent()
-	{
-		return predictDate(REMAIN_AT_80);
-	}
-
-    public Float yearlyGU(String year)
-    {
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh yearlyGU "+year );
-		}
-		
-		float yearFactor = 1.0f;
-		Date predFinish = this.predictedFinishDate();
-		
-		Calendar periodBegin = Calendar.getInstance();
-		Calendar periodEnd = Calendar.getInstance();
-		List<Progress> slots = new ArrayList<Progress>();
-		
-		periodBegin.clear();
-		periodEnd.clear();
-		periodBegin.set( Integer.parseInt(year), 0, 1 );
-		periodEnd.set( Integer.parseInt(year)+1, 0, 1 );
-		
-		
-		if (predFinish.compareTo(periodEnd.getTime())<0 ) {
-			yearFactor = (float)(predFinish.getTime() - periodBegin.getTime().getTime())/(periodEnd.getTime().getTime()-periodBegin.getTime().getTime());
-			periodEnd.clear();
-			periodEnd.setTime( predFinish );			
-		}
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh yearlyGU, begin "+periodBegin.getTime());
-			logger.debug("MTh yearlyGU, end "+periodEnd.getTime());
-		}
-		
-		for ( Progress entry : this.getProgresses() ) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("MTh yearlyGU, entry "+ entry.getDate());
-			}
-
-			if ( entry.getDate().compareTo(periodEnd) < 0 && entry.getDate().compareTo(periodBegin)>= 0  ) {
-				slots.add(entry);
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh yearlyGU, entry fits");
-				}
-			} else if ( (slots.isEmpty() || slots.get(slots.size()-1).getDate().after(periodBegin) ) && (entry.getDate().compareTo(periodBegin) < 0) ) {
-				slots.add(entry);
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh yearlyGU, entry should be added as IB");
-				}
-			}
-		}
-		
-		if (logger.isDebugEnabled()) {
-			for (Progress ent : slots) {
-				logger.debug("MTh yearlyGU "+ ent.getDate());
-			}
-		}
-
-		Progress next = null;
-		float pGU = 0.0f;
-		for (Progress slot : slots) {
-			if (next!= null) {
-				float span = next.getDate().getTimeInMillis() - (slot.getDate().compareTo(periodBegin) > 0 ? slot.getDate().getTimeInMillis() : periodBegin.getTimeInMillis());
-				pGU+= span/(periodEnd.getTime().getTime()-periodBegin.getTime().getTime())*slot.getActivity()*slot.getGuFraction();
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh yearlyGU, diff "+ span/(24*60*60*1000) + ", "+pGU );
-				}
-			} else {
-				float span = periodEnd.getTimeInMillis() - (slot.getDate().compareTo(periodBegin) > 0 ? slot.getDate().getTimeInMillis() : periodBegin.getTimeInMillis());
-				pGU+= span/(periodEnd.getTimeInMillis()-periodBegin.getTimeInMillis())*slot.getActivity()*slot.getGuFraction();
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh yearlyGU, (first) diff "+ span/(24*60*60*1000) + ", "+pGU );
-				}
-			
-			}
-			next = slot;
-		}
-		
-        return pGU * yearFactor;
-    }
-
-	public Float remainingProjectTime (Calendar atDate, boolean ignoreSameDateEntry)
-	{
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh remainingProjectTime, date "+ atDate );
-		}
-
-		float remain = 0.0f;
-		
-		if ( this.getStart().compareTo(atDate) != 0 ) {
-			
-			List<Progress> slots = new ArrayList<Progress>();
-		
-			for ( Progress entry : this.getProgresses() ) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh remainingProjectTime, entry "+ entry.getDate());
-				}
-	
-				if ( entry.getDate().compareTo(atDate) <= 0 ) {
-					slots.add(entry);
-					if (logger.isDebugEnabled()) {
-						logger.debug("MTh remainingProjectTime, entry fits");
-					}
-					if ( entry.getRemainingMonths() != null && !(ignoreSameDateEntry && entry.getDate().compareTo(atDate) == 0) ) {
-						break;
-					}
-				}
-			}
-	
-	//		long timeSpan =  atDate.getTime() - slots.get(slots.size()-1).getDate().getTime();
-			
-			Float remainingStart = slots.size() == 0 ? REMAIN_AT_START : slots.get(slots.size()-1).getRemainingMonths();
-			
-			Progress next = null;
-			float elapsed = 0.0f;
-			float extraTime = 0.0f;
-			
-			for (Progress slot : slots) {
-				float span;
-				if (next!= null) {
-					span = next.getDate().getTimeInMillis() - slot.getDate().getTimeInMillis();
-				} else {
-					span = atDate.getTimeInMillis() - slot.getDate().getTimeInMillis();
-				
-				}
-				elapsed+= span*slot.getActivity()*slot.getProjectFraction();
-				extraTime+= slot.getAddedMonths() != null ? slot.getAddedMonths() : 0.0f;
-				
-				next = slot;
-	
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh remainingProjectTime, diff "+ span/(24*60*60*1000) + ", "+elapsed/(24*60*60*1000) );
-				}
-			}
-	
-			remain = remainingStart - elapsed/MONTH_IN_MILLS + extraTime;
-
-			if (logger.isDebugEnabled()) {
-				logger.debug("MTh remainingProjectTime is "+ remain );
-				} 
-
+			return endDate.getTime();
 		} else {
-
-				remain = REMAIN_AT_START;
+			return new Date();
 		}
-		
-		return remain;
-	}
-	
-	public Float currentRemainingProjectTime()
-	{
-		return remainingProjectTime( Calendar.getInstance(), false );
-	}
-
-	private Date predictDate (float months)
-	{
-	
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh predictedHalfTime " );
-		}
-		
-		Calendar now = Calendar.getInstance();
-		String thisYear = Integer.toString((now.get(Calendar.YEAR)));
-
-		Calendar ey = Calendar.getInstance();
-		ey.set(Calendar.MONTH, Calendar.DECEMBER);
-		ey.set(Calendar.DATE, 31);
-	
-		java.util.Iterator<Progress> entryIterator = this.getProgresses().iterator();
-		Progress entry = entryIterator.next();
-		while (entryIterator.hasNext() && months > remainingProjectTime(entry.getDate(), false) ) {
-			entry = entryIterator.next();
-		}
-		float remainAtLatest = remainingProjectTime(entry.getDate(), false);
-
-		float remainPredInDays = (remainAtLatest-months)*MONTH_IN_DAYS/(entry.getActivity()*entry.getProjectFraction()) ;
-				
-		Calendar endDate = Calendar.getInstance();
-		endDate = entry.getDate();
-		endDate.add(Calendar.DAY_OF_MONTH,Math.round(remainPredInDays));
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh predictedHalfTime is "+ endDate.getTime() );
-		}
-		
-		return endDate.getTime();	
-	
-	}
-
-	private Float endYearRemainingProjectTime()
-	{
-		Calendar ey = Calendar.getInstance();
-		ey.set(Calendar.MONTH, Calendar.DECEMBER);
-		ey.set(Calendar.DATE, 31);
-		return remainingProjectTime( ey, false );
-	}
-	
- */
-
-	public Date predictedFinishDate()
-	{
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh predictedFinishDate " );
-		}
-		
-		Calendar now = Calendar.getInstance();
-		String thisYear = Integer.toString((now.get(Calendar.YEAR)));
-
-		Calendar ey = Calendar.getInstance();
-		ey.set(Calendar.MONTH, Calendar.DECEMBER);
-		ey.set(Calendar.DATE, 31);
-	
-		Progress latestEntry = this.getProgresses().iterator().next();
-		float remainAtLatest = remainingProjectTime(latestEntry.getDate(), false);
-
-		float remainPredInDays = remainAtLatest*MONTH_IN_DAYS/(latestEntry.getActivity()*latestEntry.getProjectFraction()) ;
-				
-		Calendar endDate = Calendar.getInstance();
-		endDate.setTime(latestEntry.getDate());
-		endDate.add(Calendar.DAY_OF_MONTH,Math.round(remainPredInDays));
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh predictedFinishDate is "+ endDate.getTime() );
-		}
-		
-		return endDate.getTime();
 	}
 	
  	public Date predictedHalfTime()
@@ -428,9 +196,7 @@ public class PhDPosition  extends Auditable {
 
     public Float yearlyGU(String year)
     {
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh yearlyGU "+year );
-		}
+		logger.debug("MTh yearlyGU "+year );
 		
 		float yearFactor = 1.0f;
 		Date predFinish = this.predictedFinishDate();
@@ -451,26 +217,18 @@ public class PhDPosition  extends Auditable {
 			periodEnd.setTime( predFinish );			
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh yearlyGU, begin "+periodBegin.getTime());
-			logger.debug("MTh yearlyGU, end "+periodEnd.getTime());
-		}
+		logger.debug("MTh yearlyGU, begin "+periodBegin.getTime());
+		logger.debug("MTh yearlyGU, end "+periodEnd.getTime());
 		
 		for ( Progress entry : this.getProgresses() ) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("MTh yearlyGU, entry "+ entry.getDate());
-			}
+			logger.debug("MTh yearlyGU, entry "+ entry.getDate());
 
 			if ( entry.getDate().compareTo(periodEnd.getTime()) < 0 && entry.getDate().compareTo(periodBegin.getTime())>= 0  ) {
 				slots.add(entry);
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh yearlyGU, entry fits");
-				}
+				logger.debug("MTh yearlyGU, entry fits");
 			} else if ( (slots.isEmpty() || slots.get(slots.size()-1).getDate().after(periodBegin.getTime()) ) && (entry.getDate().compareTo(periodBegin.getTime()) < 0) ) {
 				slots.add(entry);
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh yearlyGU, entry should be added as IB");
-				}
+				logger.debug("MTh yearlyGU, entry should be added as IB");
 			}
 		}
 		
@@ -486,15 +244,11 @@ public class PhDPosition  extends Auditable {
 			if (next!= null) {
 				float span = next.getDate().getTime() - (slot.getDate().compareTo(periodBegin.getTime()) > 0 ? slot.getDate().getTime() : periodBegin.getTime().getTime());
 				pGU+= span/(periodEnd.getTime().getTime()-periodBegin.getTime().getTime())*slot.getActivity()*slot.getGuFraction();
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh yearlyGU, diff "+ span/(24*60*60*1000) + ", "+pGU );
-				}
+				logger.debug("MTh yearlyGU, diff "+ span/(24*60*60*1000) + ", "+pGU );
 			} else {
 				float span = periodEnd.getTime().getTime() - (slot.getDate().compareTo(periodBegin.getTime()) > 0 ? slot.getDate().getTime() : periodBegin.getTime().getTime());
 				pGU+= span/(periodEnd.getTime().getTime()-periodBegin.getTime().getTime())*slot.getActivity()*slot.getGuFraction();
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh yearlyGU, (first) diff "+ span/(24*60*60*1000) + ", "+pGU );
-				}
+				logger.debug("MTh yearlyGU, (first) diff "+ span/(24*60*60*1000) + ", "+pGU );
 			
 			}
 			next = slot;
@@ -506,9 +260,7 @@ public class PhDPosition  extends Auditable {
 	public Float remainingProjectTime (Date atDate, boolean ignoreSameDateEntry)
 	{
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh remainingProjectTime, date "+ atDate );
-		}
+		logger.debug("MTh remainingProjectTime, date "+ atDate );
 
 		float remain = 0.0f;
 		
@@ -517,15 +269,11 @@ public class PhDPosition  extends Auditable {
 			List<Progress> slots = new ArrayList<Progress>();
 		
 			for ( Progress entry : this.getProgresses() ) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh remainingProjectTime, entry "+ entry.getDate());
-				}
+				logger.debug("MTh remainingProjectTime, entry "+ entry.getDate());
 	
 				if ( entry.getDate().compareTo(atDate) <= 0 ) {
 					slots.add(entry);
-					if (logger.isDebugEnabled()) {
-						logger.debug("MTh remainingProjectTime, entry fits");
-					}
+					logger.debug("MTh remainingProjectTime, entry fits");
 					if ( entry.getRemainingMonths() != null && !(ignoreSameDateEntry && entry.getDate().compareTo(atDate) == 0) ) {
 						break;
 					}
@@ -534,7 +282,12 @@ public class PhDPosition  extends Auditable {
 	
 	//		long timeSpan =  atDate.getTime() - slots.get(slots.size()-1).getDate().getTime();
 			
-			Float remainingStart = slots.size() == 0 ? REMAIN_AT_START : slots.get(slots.size()-1).getRemainingMonths();
+			Float remainingStart = slots.size() == 0 ? 
+				REMAIN_AT_START : 
+				(slots.get(slots.size()-1).getRemainingMonths() == null ? 
+					REMAIN_AT_START : 
+					slots.get(slots.size()-1).getRemainingMonths() )
+			;
 			
 			Progress next = null;
 			float elapsed = 0.0f;
@@ -553,16 +306,12 @@ public class PhDPosition  extends Auditable {
 				
 				next = slot;
 	
-				if (logger.isDebugEnabled()) {
-					logger.debug("MTh remainingProjectTime, diff "+ span/(24*60*60*1000) + ", "+elapsed/(24*60*60*1000) );
-				}
+				logger.debug("MTh remainingProjectTime, diff "+ span/(24*60*60*1000) + ", "+elapsed/(24*60*60*1000) );
 			}
 	
 			remain = remainingStart - elapsed/MONTH_IN_MILLS + extraTime;
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("MTh remainingProjectTime is "+ remain );
-				} 
+			logger.debug("MTh remainingProjectTime is "+ remain );
 
 		} else {
 
@@ -583,36 +332,36 @@ public class PhDPosition  extends Auditable {
 	private Date predictDate (float months)
 	{
 	
-		if (logger.isDebugEnabled()) {
-			logger.debug("MTh predictedHalfTime " );
-		}
+		logger.debug("MTh predictedHalfTime " );
+
 		
-		Calendar now = Calendar.getInstance();
-		String thisYear = Integer.toString((now.get(Calendar.YEAR)));
+		if (this.progresses.size()>0) {
+			Calendar now = Calendar.getInstance();
+			String thisYear = Integer.toString((now.get(Calendar.YEAR)));
 
-		Calendar ey = Calendar.getInstance();
-		ey.set(Calendar.MONTH, Calendar.DECEMBER);
-		ey.set(Calendar.DATE, 31);
+			Calendar ey = Calendar.getInstance();
+			ey.set(Calendar.MONTH, Calendar.DECEMBER);
+			ey.set(Calendar.DATE, 31);
 	
-		java.util.Iterator<Progress> entryIterator = this.getProgresses().iterator();
-		Progress entry = entryIterator.next();
-		while (entryIterator.hasNext() && months > remainingProjectTime(entry.getDate(), false) ) {
-			entry = entryIterator.next();
-		}
-		float remainAtLatest = remainingProjectTime(entry.getDate(), false);
+			java.util.Iterator<Progress> entryIterator = this.getProgresses().iterator();
+			Progress entry = entryIterator.next();
+			while (entryIterator.hasNext() && months > remainingProjectTime(entry.getDate(), false) ) {
+				entry = entryIterator.next();
+			}
+			float remainAtLatest = remainingProjectTime(entry.getDate(), false);
 
-		float remainPredInDays = (remainAtLatest-months)*MONTH_IN_DAYS/(entry.getActivity()*entry.getProjectFraction()) ;
+			float remainPredInDays = (remainAtLatest-months)*MONTH_IN_DAYS/(entry.getActivity()*entry.getProjectFraction()) ;
 				
-		Calendar endDate = Calendar.getInstance();
-		endDate.setTime(entry.getDate());
-		endDate.add(Calendar.DAY_OF_MONTH,Math.round(remainPredInDays));
+			Calendar endDate = Calendar.getInstance();
+			endDate.setTime(entry.getDate());
+			endDate.add(Calendar.DAY_OF_MONTH,Math.round(remainPredInDays));
 
-		if (logger.isDebugEnabled()) {
 			logger.debug("MTh predictedHalfTime is "+ endDate.getTime() );
-		}
 		
-		return endDate.getTime();	
-	
+			return endDate.getTime();	
+		} else {
+			return new Date();
+		}
 	}
 
  
