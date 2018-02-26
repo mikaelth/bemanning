@@ -18,9 +18,16 @@ import se.uu.ebc.bemanning.security.UserRepo;
 import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.CourseInstanceRepo;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import org.apache.log4j.Logger;
+
 
 @Service
 public class StaffingService {
+
+    private static Logger logger = Logger.getLogger(StaffingService.class.getName());
 
 /* 
 	@Autowired
@@ -34,6 +41,9 @@ public class StaffingService {
 	CourseInstanceRepo ciRepo;
 
 	public List<CourseInstance> getRelevantCourseAssignments(String dept, String year, String[] ous) throws Exception {
+
+		logger.debug("getRelevantCourseAssignments, dept " + dept + ", year " + year );
+		logger.debug("getRelevantCourseAssignments, ous "+ReflectionToStringBuilder.toString(ous, ToStringStyle.MULTI_LINE_STYLE));			
 
 //		return new ArrayList<CourseInstance>();
 		return ciRepo.loadInvolvedCourses(ous, dept, year);

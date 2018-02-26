@@ -160,10 +160,12 @@ public class AssignmentViewController {
 			Staff staff = staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear);
 			String budgetDept = staff.getOrganisationUnit().getEconomyHolder(thisYear).getSvName();
 			
+			logger.debug("viewByCourse, thisYear "+ thisYear);
+
 			List<CourseInstance> cis;
 			if (allowUserAll(request)) {
 				if (budgetDept != null) {
-					cis = staffingService.getRelevantCourseAssignments(budgetDept,thisYear,staff.getOrganisationUnit().getExpandedOuAbbreviations(thisYear));
+					cis = staffingService.getRelevantCourseAssignments(budgetDept,thisYear,staff.getOrganisationUnit().getEconomyHolder(thisYear).getExpandedOuAbbreviations(thisYear));
  				} else {
  					cis = staffingService.getCourseAssignments(thisYear);
  				}
@@ -171,7 +173,11 @@ public class AssignmentViewController {
 				cis = staffingService.getCourseAssignments(thisYear, staff);
 			}
 			
-
+			for (CourseInstance ci : cis) {
+				logger.debug("course "+ci.getCourse().getCode() + " " + ci.getCourse().getSeName());
+//				logger.debug("viewByCourse, ci "+ReflectionToStringBuilder.toString(ci, ToStringStyle.MULTI_LINE_STYLE));			
+			}
+			logger.debug("viewByCourse, ous "+ReflectionToStringBuilder.toString(staff.getOrganisationUnit().getEconomyHolder(thisYear).getExpandedOuAbbreviations(thisYear), ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("viewByCourse, staff "+ReflectionToStringBuilder.toString(staff, ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("viewByCourse, budgetYear "+ReflectionToStringBuilder.toString(new BudgetYear(thisYear, staffRepo.getStaffedYears()), ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("viewByCourse, budgetDept "+ReflectionToStringBuilder.toString(budgetDept, ToStringStyle.MULTI_LINE_STYLE));
@@ -397,7 +403,7 @@ public class AssignmentViewController {
 			allYears.add("2016");
 			allYears.add("2015");
 		}
-		BudgetYear (String Year, List<String> allYears) {
+		BudgetYear (String year, List<String> allYears) {
 			this.allYears = allYears;
 			this.year=year;
 		}
