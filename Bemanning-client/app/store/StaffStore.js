@@ -5,7 +5,8 @@ Ext.define('Bemanning.store.StaffStore', {
 	model: 'Bemanning.model.Staff',
 //	sorters: {property:'familyName', direction: 'ASC'},
 //	groupField: 'organisationUnitId',
-    autoLoad: true
+//    autoLoad: true
+    autoLoad: false
 });
 
 //Ext.create('PorTableClient.store.UserStore').load();

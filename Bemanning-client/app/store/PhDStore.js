@@ -4,7 +4,8 @@ Ext.define('Bemanning.store.PhDStore', {
     alias: 'store.phds',
 	model: 'Bemanning.model.PhDPosition',
 //	sorters: {property:'familyName', direction: 'ASC'},
-    autoLoad: true
+//    autoLoad: true
+    autoLoad: false
 });
 
 //Ext.create('PorTableClient.store.UserStore').load();

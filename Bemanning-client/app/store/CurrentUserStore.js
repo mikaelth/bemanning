@@ -4,6 +4,7 @@ Ext.define('Bemanning.store.CurrentUserStore', {
 	alias: 'store.cUser',
 	model: 'Bemanning.model.User',
 //	autoLoad: true
+	autoLoad: false
 });
 
 //Ext.create('PorTableClient.store.UserStore').load();

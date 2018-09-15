@@ -3,5 +3,6 @@ Ext.define('Bemanning.store.YoHStore', {
     requires: ['Ext.data.proxy.Rest', 'Ext.data.reader.Json'],
     alias: 'store.yoh',
 	model: 'Bemanning.model.YoH',
-    autoLoad: true
+//    autoLoad: true
+    autoLoad: false
 });

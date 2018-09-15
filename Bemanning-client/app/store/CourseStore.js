@@ -5,7 +5,8 @@ Ext.define('Bemanning.store.CourseStore', {
 	model: 'Bemanning.model.Course',
 	sorters: {property:'code', direction: 'ASC'},
 	groupField: 'courseGroup',
-    autoLoad: true
+//    autoLoad: true
+    autoLoad: false
 });
 
 //Ext.create('PorTableClient.store.UserStore').load();

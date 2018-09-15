@@ -4,7 +4,8 @@ Ext.define('Bemanning.store.ProgressStore', {
     alias: 'store.progress',
 	model: 'Bemanning.model.Progress',
 //	sorters: {property:'familyName', direction: 'ASC'},
-    autoLoad: true
+//    autoLoad: true
+    autoLoad: false
 });
 
 //Ext.create('PorTableClient.store.UserStore').load();

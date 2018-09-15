@@ -3,7 +3,8 @@ Ext.define('Bemanning.store.GrantStore', {
     requires: ['Ext.data.proxy.Rest', 'Ext.data.reader.Json'],
     alias: 'store.grants',
 	model: 'Bemanning.model.CourseGrant',
-    autoLoad: true
+//    autoLoad: true
+    autoLoad: false
 });
 
 //Ext.create('PorTableClient.store.UserStore').load();

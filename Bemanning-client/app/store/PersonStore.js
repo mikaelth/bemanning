@@ -4,7 +4,8 @@ Ext.define('Bemanning.store.PersonStore', {
     alias: 'store.people',
 	model: 'Bemanning.model.Person',
 	sorters: {property:'familyName', direction: 'ASC'},
-    autoLoad: true
+//    autoLoad: true
+    autoLoad: false
 });
 
 //Ext.create('PorTableClient.store.UserStore').load();
