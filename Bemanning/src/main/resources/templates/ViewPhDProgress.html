@@ -30,6 +30,13 @@ Logged user: <span sec:authentication="name">Bob</span>
 -->
 						<span th:text="#{view.phdposition.timeUnit}+', '+#{view.phdposition.calcEndDate}"></span>
 						<span th:text="${#dates.format(phdStudent.predictedFinishDate(),'yyyy-MM-dd')}"></span>
+
+						<br />
+						<span th:text="#{view.phdposition.ISPdate}"></span>
+						<span th:text="${#dates.format(ispdate,'yyyy-MM-dd')} + ': '"></span>
+						<span th:text="${#numbers.formatDecimal(phdStudent.usedISPDate(ispdate),1,1)}"></span>
+						<span th:text="#{view.phdposition.timeUnit}"></span>
+
 						<br />
 						(50%: <span th:text="${#dates.format(phdStudent.predictedHalfTime(),'yyyy-MM-dd')}"/>, 80%: <span th:text="${#dates.format(phdStudent.predicted80Percent(),'yyyy-MM-dd')}" />)
 					</h5>
@@ -65,7 +72,7 @@ Logged user: <span sec:authentication="name">Bob</span>
 							<td th:text="${#numbers.formatDecimal( progress.calcRemainMonths(),1,1 )}" />
 							<td th:text="${progress.remainingMonths}" />
 							<td th:text="${progress.addedMonths}" />
-							<td> </td>
+							<td th:text="${progress.note}" />
 						</tr>
 					</table>
 					<br />

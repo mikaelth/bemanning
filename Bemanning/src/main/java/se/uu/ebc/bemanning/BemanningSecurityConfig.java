@@ -123,11 +123,13 @@ System.out.println("serviceProperties() " + serviceProperties.getService());
 
 		
  		http.authorizeRequests()
- 			.antMatchers("/index.html").authenticated()
+ 			.antMatchers("/index.*").authenticated()
  			.antMatchers("/loginredirect.html").authenticated()
+			.antMatchers("/InREST.html").authenticated()
+			.antMatchers("/login/**").permitAll()
+ 			.antMatchers("/Bemanning/index.html").authenticated()
  			.antMatchers("/Bemanning/**").permitAll()
- 			.antMatchers("/rest/**").permitAll()
-// 			.antMatchers("/rest/**").hasAnyRole("DIRECTOROFSTUDIES","PHDADMIN","ADMINISTRATOR","SYSADMIN","COREDATAADMIN")
+ 			.antMatchers("/rest/**").authenticated()
 			.antMatchers("/**").authenticated();
  				
 // 		http

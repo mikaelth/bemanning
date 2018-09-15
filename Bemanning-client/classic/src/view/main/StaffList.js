@@ -109,7 +109,7 @@ Ext.define('Bemanning.view.main.StaffList', {
 		{ text: 'IB timmar', dataIndex: 'ib', editor: 'textfield', align: 'left', flex: 1 },
 		{ text: 'UB föregående år', dataIndex: 'ubLastYear', align: 'left', flex: 1 },
 		{ text: 'Accumulerade timmar', dataIndex: 'accumulatedHours', align: 'left', flex: 1 },
-		{ text: 'Kommentar', dataIndex: 'note', editor: 'textfield', align: 'left', flex: 2 }
+		{ text: 'Kommentar', dataIndex: 'note', editor: 'textfield', filter: 'string', align: 'left', flex: 2 }
 
 	],
 

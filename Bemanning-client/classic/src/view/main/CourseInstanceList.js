@@ -46,7 +46,7 @@ Ext.define('Bemanning.view.main.CourseInstanceList', {
  */
 			}
 		},
-		{ text: 'Extra benämning', dataIndex: 'extraDesignation', editor: 'textfield', align: 'left', flex: 1 },
+		{ text: 'Extra benämning', dataIndex: 'extraDesignation', editor: 'textfield', filter: 'string', align: 'left', flex: 1 },
 		{ text: 'Kursledare', dataIndex: 'courseLeaderId', editor: 'textfield', align: 'left', width: 200,
          	renderer: function(value) {
 				if (Ext.getStore('StaffStore').getById(value) != undefined) {
@@ -75,10 +75,10 @@ Ext.define('Bemanning.view.main.CourseInstanceList', {
  */
 			}
 		},
-		{ text: 'Start', dataIndex: 'startDate', editor: {xtype: 'datefield', format: 'Y-m-d'}, xtype:'datecolumn', format: 'Y-m-d', align: 'left', width: 100 },
-		{ text: 'Slut', dataIndex: 'endDate', editor: {xtype: 'datefield', format: 'Y-m-d'}, xtype:'datecolumn', format: 'Y-m-d', align: 'left', width: 100 },
+		{ text: 'Start', dataIndex: 'startDate', editor: {xtype: 'datefield', format: 'Y-m-d'}, xtype:'datecolumn', format: 'Y-m-d', filter: 'date', align: 'left', width: 100 },
+		{ text: 'Slut', dataIndex: 'endDate', editor: {xtype: 'datefield', format: 'Y-m-d'}, xtype:'datecolumn', format: 'Y-m-d', filter: 'date', align: 'left', width: 100 },
 		{ text: 'Studentantal', dataIndex: 'numberOfStudents', editor: 'numberfield', align: 'left', width: 80 },
-		{ text: 'Kommentarer', dataIndex: 'note', editor: 'textfield', align: 'left', flex: 3 }
+		{ text: 'Kommentarer', dataIndex: 'note', editor: 'textfield', filter: 'string', align: 'left', flex: 3 }
 
 	],
 

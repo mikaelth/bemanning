@@ -1,6 +1,9 @@
 package se.uu.ebc.bemanning.entity;
 
 import java.util.Set;
+import java.util.Date;
+import java.util.stream.Collectors;
+
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
 import  se.uu.ebc.bemanning.entity.Assignment;
@@ -262,13 +265,33 @@ public class Staff extends Auditable {
         
         if (assignments != null) {
 			for (Assignment theAssignment : assignments) {
-				theSum+= theAssignment.getTotalHours(getPosition());
+				theSum+= theAssignment.getTotalHours();
+			logger.debug(theAssignment.getCourseInstance().getCourse().getSeName()+", "+theAssignment.getTotalHours());	
 			}
         }
-		
+//		logger.debug("totalHours " + theSum + ", and stream " + getTotalHours(new Date()));	
 		return theSum;
       
     }
+
+	public float getTotalHours(Date atDate) {
+	
+        try {
+			if (assignments != null) {
+				Double hours = assignments.stream()
+					.filter(a -> a.getCourseInstance().getEndDate().before(atDate) )
+.filter(a -> {logger.debug(a.getCourseInstance().getCourse().getSeName()+", "+a.getTotalHours()); return true;	} )
+					.collect(Collectors.summingDouble(a -> a.getTotalHours()));
+
+				return hours.floatValue();
+			} else {
+				return 0.0f;
+			}
+		} catch (Exception e) {
+			logger.error("Caught a pesky exception " + e +", " + e.getCause());	
+			return 0.0f;
+		}
+	}
 
     public float getUb()
     {

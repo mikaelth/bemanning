@@ -13,7 +13,8 @@ Ext.define('Bemanning.view.main.YoHList', {
 		xtype: 'toolbar',
 		items: [
 		 			{
-						text: 'Reload all',
+//						text: 'Reload all',
+						text: 'Hämta alla',
 						reference: 'btnReload',
 						disabled: false,
 						 listeners: {
@@ -21,24 +22,24 @@ Ext.define('Bemanning.view.main.YoHList', {
 						}
 					}, 
 					'->', {
-						text: 'Remove',
+//						text: 'Remove',
+						text: 'Tag bort post',
 						reference: 'btnRemove',
-//						disabled: true,
-//						bind:{disabled: '{((current.ou == null) || (current.ou.id != current.yoh.unitId))}'},
-//						bind:{disabled: '{current.yoh == null}'},
 						bind:{disabled: '{current.ou.id != current.yoh.unitId}'},
 						 listeners: {
 							click: 'onRemove'
 						}
 					}, {
-						text: 'Create',
+//						text: 'Create',
+						text: 'Ny post',
 						reference: 'btnCreate',
 						bind:{disabled: '{current.ou == null}'},
 						listeners: {
 							click: 'onCreate'
 						}
 					}, {
-						text: 'Save',
+//						text: 'Save',
+						text: 'Spara till db',
 						reference: 'btnSave',
 						listeners: {
 							click: 'onSave'

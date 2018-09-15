@@ -14,6 +14,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
+import java.util.stream.Collectors;
+
+import java.time.Year;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -68,6 +72,12 @@ public class AssignmentViewController {
     private String roleArr[] = { "ROLE_DIRECTOROFSTUDIES", "ROLE_ADMINISTRATOR", "ROLE_PHDADMIN", "ROLE_SYSADMIN" };
     private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));
 
+ 	private final static int ISP_MONTH = Calendar.OCTOBER;
+ 	private final static int ISP_DAY = 31;
+
+//	private final static int ISP_MONTH = 6 - 1;
+//	private final static int ISP_DAY = 30;
+	
 	@Autowired
 	AKKAService akkaService;
 
@@ -256,13 +266,21 @@ public class AssignmentViewController {
 
 
     @RequestMapping(value = "/ViewPhDProgress", method = RequestMethod.GET)
-    public String viewProgressByPhD( Model model, Principal principal, HttpServletRequest request) {
+    public String viewProgressByPhD(@RequestParam(value = "includedstudents", required = false, defaultValue = "active") String included, Model model, Principal principal, HttpServletRequest request) {
 		try {
 			logger.debug("viewProgressByPhD, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("viewProgressByPhD, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+			logger.debug("viewProgressByPhD, october "+ Calendar.OCTOBER);
 
 			if (allowUserAll(request)) {
-				model.addAttribute("phdStudents", phdService.allSorted());
+				if (included.equals("all")){
+					model.addAttribute("phdStudents", phdService.allSorted());
+				} else {
+					model.addAttribute("phdStudents", phdService.allSorted().stream()
+						.filter(phd -> !phd.getInactive())
+						.filter(phd -> phd.getDissertation() == null)
+						.collect(Collectors.toList()) );
+				}
 			} else {
 				List<PhDPosition> phds = new ArrayList<PhDPosition>();
 				PhDPosition phd = phdRepo.findByPerson(userRepo.findUserByUsername(principal.getName()));
@@ -275,7 +293,7 @@ public class AssignmentViewController {
 //			model.addAttribute("phdStudents", phdService.allSorted());
 //			model.addAttribute("phdStudents", phdRepo.findAll());
 			model.addAttribute("serverTime", new Date());
-
+			model.addAttribute("ispdate",new GregorianCalendar(Year.now().getValue(),ISP_MONTH,ISP_DAY));
 			return "ViewPhDProgress";
         } catch (Exception e) {
 			if (logger.isErrorEnabled()) {

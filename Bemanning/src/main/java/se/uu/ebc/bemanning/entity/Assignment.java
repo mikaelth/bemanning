@@ -13,9 +13,13 @@ import javax.persistence.ManyToOne;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 import  se.uu.ebc.bemanning.entity.Assignment;
 
+import org.apache.log4j.Logger;
+
 @Entity
 @Table(name = "ASSIGNMENT")
 public class Assignment extends Auditable {
+
+    private static Logger logger = Logger.getLogger(Assignment.class.getName());
 
 	private final static int LECTURE_HOUR_COST = 1285;
 
@@ -197,6 +201,8 @@ public class Assignment extends Auditable {
     public float getTotalHours(EmploymentType employment)
     {
 
+// 		logger.debug(hoursAdmin + ", " + hoursDevelopment + ", " + hoursSeminar + ", " + hoursExcursion +", " + hoursPractical+", "+ hoursLecture);	
+// 		logger.debug(hoursAdmin + ", " + hoursDevelopment + ", " + hoursSeminar + ", " + hoursExcursion*EXCURSION_FACTOR +", " + hoursPractical*PRACTICAL_FACTOR+", "+ (employment.compareTo(EmploymentType.Doktorand) == 0 ? hoursLecture*STUDENT_LECTURE_FACTOR : hoursLecture*PORFESSOR_LECTURE_FACTOR));	
 
         return 
         	hoursAdmin +

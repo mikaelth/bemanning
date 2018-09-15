@@ -3,10 +3,13 @@ package  se.uu.ebc.bemanning.entity;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 import java.util.Collections;
 import java.util.Comparator;
+import java.time.Duration;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,6 +33,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import se.uu.ebc.bemanning.entity.PhDPosition;
 import se.uu.ebc.bemanning.entity.Progress;
+import se.uu.ebc.bemanning.enums.EmploymentType;
 
 @Entity
 @Table(name = "PH_D_POSITION")
@@ -41,6 +45,7 @@ public class PhDPosition  extends Auditable {
 	private static final float MONTH_IN_MILLS = 24*60*60*1000*(365.0f/12.0f);
 	private static final float HOUR_IN_MILLS = 60*60*1000.0f;
 	private static final float MONTH_IN_DAYS = (365.0f/12.0f);
+	private static final float DAY_IN_HOURS = (1700.0f/365.0f);
 	private static final float REMAIN_AT_START = 48.0f;
 	private static final float REMAIN_AT_HALF = 24.0f;
 	private static final float REMAIN_AT_80 = 0.2f*48.0f;
@@ -63,16 +68,6 @@ public class PhDPosition  extends Auditable {
     @JoinColumn(name = "PERSON_FK")
 	private Person person;
 
-	public Person getPerson()
-	{
-		return this.person;
-	}
-
-	public void setPerson(Person person)
-	{
-		this.person = person;
-	}
-
     
 	@OrderBy("date ASC")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "phdPosition")
@@ -94,7 +89,20 @@ public class PhDPosition  extends Auditable {
     
     @Column(name = "INACTIVE")
     private boolean inactive;
-    
+
+
+	/* Setters and getters */
+	    
+	public Person getPerson()
+	{
+		return this.person;
+	}
+
+	public void setPerson(Person person)
+	{
+		this.person = person;
+	}
+
     public List<Progress> getProgresses() {
 
 		Collections.sort(progresses, new Comparator<Progress>() {
@@ -154,6 +162,37 @@ public class PhDPosition  extends Auditable {
 
 	/* Public methods */
 	
+	public Float usedISPDate(Calendar ispDate) {
+		String workingYear = String.valueOf( ispDate.get(Calendar.YEAR) );
+		
+		float remainTime = remainingProjectTime( ispDate.getTime(), false );
+		float usedTime = remainTime < 0.0f ? REMAIN_AT_START : REMAIN_AT_START - remainTime;
+
+		float percentGU = this.periodGU(workingYear, ispDate);
+
+		int days = (int) Duration.between(new GregorianCalendar(ispDate.get(Calendar.YEAR),0,1).toInstant(), ispDate.toInstant()).toDays();
+
+		int daysPlannedGU = Math.round( days * percentGU);
+		int daysWorkedGU = 0;
+
+		List<Staff> positionYear = this.person.getStaff().stream()
+			.filter(s -> s.getYear().equals(workingYear))
+			.filter(s -> s.getPosition() == EmploymentType.Doktorand)
+			.collect(Collectors.toList());
+
+		if (positionYear.size() == 1) {
+			Staff s = positionYear.get(0);
+			daysWorkedGU = Math.round((s.getTotalHours(ispDate.getTime()) + s.getIb())/DAY_IN_HOURS);
+			usedTime -= (daysWorkedGU - daysPlannedGU)/MONTH_IN_DAYS;
+		} else {
+			logger.error("Number of Staff positions incorrect for " + this.person.getName() );
+		}
+		
+		logger.debug(this.person.getName() + " planned " + daysPlannedGU + ", days worked " +  daysWorkedGU + ", used time " + usedTime);
+
+		return usedTime;
+
+	}
 
 	public Date predictedFinishDate()
 	{
@@ -194,7 +233,12 @@ public class PhDPosition  extends Auditable {
 		return predictDate(REMAIN_AT_80);
 	}
 
-    public Float yearlyGU(String year)
+    public Float yearlyGU(String year) {
+    	return periodGU(year, new GregorianCalendar(Integer.parseInt(year)+1,0,1));
+    }
+
+
+	private Float periodGU(String year, Calendar atDate)
     {
 		logger.debug("MTh yearlyGU "+year );
 		
@@ -208,7 +252,7 @@ public class PhDPosition  extends Auditable {
 		periodBegin.clear();
 		periodEnd.clear();
 		periodBegin.set( Integer.parseInt(year), 0, 1 );
-		periodEnd.set( Integer.parseInt(year)+1, 0, 1 );
+		periodEnd = (Calendar)atDate.clone();
 		
 		
 		if (predFinish.compareTo(periodEnd.getTime())<0 ) {
@@ -368,6 +412,15 @@ public class PhDPosition  extends Auditable {
 	private Float endYearRemainingProjectTime()
 	{
 		Calendar ey = Calendar.getInstance();
+		ey.set(Calendar.MONTH, Calendar.DECEMBER);
+		ey.set(Calendar.DATE, 31);
+		return remainingProjectTime( ey.getTime(), false );
+	}
+
+	private Float endPrevYearRemainTime()
+	{
+		Calendar ey = Calendar.getInstance();
+		ey.set(Calendar.YEAR, ey.get(Calendar.YEAR) - 1);
 		ey.set(Calendar.MONTH, Calendar.DECEMBER);
 		ey.set(Calendar.DATE, 31);
 		return remainingProjectTime( ey.getTime(), false );

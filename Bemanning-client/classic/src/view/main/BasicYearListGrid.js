@@ -15,7 +15,8 @@ Ext.define('Bemanning.view.main.BasicYearListGrid', {
 		xtype: 'toolbar',
 		items: [
 		 			{
-						text: 'Reload all',
+//						text: 'Reload all',
+						text: 'Hämta alla',
 						reference: 'btnReload',
 						disabled: false,
 						 listeners: {
@@ -32,6 +33,8 @@ Ext.define('Bemanning.view.main.BasicYearListGrid', {
 						triggerAction: 'all',
 						queryMode: 'local',
 						lastQuery: '',
+						fieldLabel: 'Välj år',
+						labelWidth: 50,
 						displayField: 'label',
 						valueField: 'label',
 						listeners: {
@@ -41,21 +44,24 @@ Ext.define('Bemanning.view.main.BasicYearListGrid', {
 						}
 					},
 					'->', {
-						text: 'Remove',
+//						text: 'Remove',
+						text: 'Tag bort post',
 						reference: 'btnRemove',
 						disabled: true,
 						 listeners: {
 							click: 'onRemove'
 						}
 					}, {
-						text: 'Create',
+//						text: 'Create',
+						text: 'Ny post',
 						reference: 'btnCreate',
 						disabled: true,
 						listeners: {
 							click: 'onCreate'
 						}
 					}, {
-						text: 'Save',
+//						text: 'Save',
+						text: 'Spara till db',
 						reference: 'btnSave',
 						listeners: {
 							click: 'onSave'
@@ -63,6 +69,12 @@ Ext.define('Bemanning.view.main.BasicYearListGrid', {
 					}
 
 			]
-	}]
+	}],
+	
+/* 
+	constructor: function() {
+		console.log('Initing BasicListGrid' + this);
+	}
+ */
 });
 

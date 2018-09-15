@@ -100,7 +100,7 @@ Ext.define('Bemanning.view.main.AssignmentList', {
 		{ text: 'Laboration', dataIndex: 'hoursPractical', editor: 'textfield', summaryType: 'sum',align: 'left', width: 100 },
 		{ text: 'Exkursion', dataIndex: 'hoursExcursion', editor: 'textfield', summaryType: 'sum',align: 'left', width: 100 },
 		{ text: 'Handledning', dataIndex: 'hoursSeminar', editor: 'textfield', summaryType: 'sum',align: 'left', width: 100 },
-		{ text: 'Kommentar', dataIndex: 'note', editor: 'textfield', align: 'left', flex: 2 }
+		{ text: 'Kommentar', dataIndex: 'note', editor: 'textfield', filter: 'string', align: 'left', flex: 2 }
 
 	],
 

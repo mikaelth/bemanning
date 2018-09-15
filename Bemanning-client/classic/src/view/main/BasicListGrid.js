@@ -23,7 +23,8 @@ Ext.define('Bemanning.view.main.BasicListGrid', {
 		xtype: 'toolbar',
 		items: [
 		 			{
-						text: 'Reload all',
+//						text: 'Reload all',
+						text: 'Hämta alla',
 						reference: 'btnReload',
 						disabled: false,
 						 listeners: {
@@ -31,20 +32,23 @@ Ext.define('Bemanning.view.main.BasicListGrid', {
 						}
 					}, 
 					'->', {
-						text: 'Remove',
+//						text: 'Remove',
+						text: 'Tag bort post',
 						reference: 'btnRemove',
 						disabled: true,
 						 listeners: {
 							click: 'onRemove'
 						}
 					}, {
-						text: 'Create',
+//						text: 'Create',
+						text: 'Ny post',
 						reference: 'btnCreate',
 						listeners: {
 							click: 'onCreate'
 						}
 					}, {
-						text: 'Save',
+//						text: 'Save',
+						text: 'Spara till db',
 						reference: 'btnSave',
 						listeners: {
 							click: 'onSave'
@@ -77,8 +81,9 @@ Ext.define('Bemanning.view.main.BasicListGrid', {
             }
  */
         }
-		
-    }],
+    },
+    'gridfilters'	
+    ],
 	
 	listeners: {
      	selectionchange: 'onSelectionChange',

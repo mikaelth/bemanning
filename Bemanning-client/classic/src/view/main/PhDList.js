@@ -34,8 +34,8 @@ Ext.define('Bemanning.view.main.PhDList', {
 			    valueField: 'id'
 			}
 		},
-		{ text: 'Antagningsdatum', dataIndex: 'start', editor: {xtype: 'datefield', format: 'Y-m-d'}, xtype:'datecolumn', format: 'Y-m-d', align: 'left', width: 100},
- 		{ text: 'Disputationsdatum', dataIndex: 'dissertation', editor: {xtype: 'datefield', format: 'Y-m-d'}, xtype:'datecolumn', format: 'Y-m-d', align: 'left', width: 100 },
+		{ text: 'Antagningsdatum', dataIndex: 'start', editor: {xtype: 'datefield', format: 'Y-m-d'}, xtype:'datecolumn', format: 'Y-m-d', filter: 'date', align: 'left', width: 100},
+ 		{ text: 'Disputationsdatum', dataIndex: 'dissertation', editor: {xtype: 'datefield', format: 'Y-m-d'}, xtype:'datecolumn', format: 'Y-m-d', filter: 'date', align: 'left', width: 100 },
  		{ text: 'Beräknat slutdatum', dataIndex: 'predictedFinishDate', /* editor: {xtype: 'datefield', format: 'Y-m-d'}, */ xtype:'datecolumn', format: 'Y-m-d', align: 'left', width: 100 },
  		{ text: 'Återstående doktorandtid', dataIndex: 'currentRemainingProjectTime',  align: 'right', width: 100, renderer: Ext.util.Format.numberRenderer('0.0') },
  		{ text: 'Avklarad andel', dataIndex: 'done', align: 'right', width: 100,
@@ -45,7 +45,7 @@ Ext.define('Bemanning.view.main.PhDList', {
 			}
 		},
 		{ xtype: 'checkcolumn', text: 'Inaktiv', dataIndex: 'inactive', editor: 'checkboxfield', editable: true, align: 'center', width: 70},
-		{ text: 'Kommentar', dataIndex: 'note', editor: 'textfield', align: 'left', flex: 2 }
+		{ text: 'Kommentar', dataIndex: 'note', editor: 'textfield', filter: 'string', align: 'left', flex: 2 }
 
 	],
 
