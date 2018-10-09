@@ -117,7 +117,8 @@ public class PhDController {
     }
 
 
-	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
+//	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
+	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
 	@RequestMapping(value = "/phdpositions/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public ResponseEntity<String> deletePhDPosition(@PathVariable("id") Long id) {
 		HttpHeaders headers = new HttpHeaders();

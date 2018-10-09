@@ -18,6 +18,9 @@ public class CourseInstanceVO {
 	private Long courseId;
 	private Long courseLeaderId;
 
+	private Long primaryExaminerId;
+	private Long secondaryExaminerId;
+
 	private String courseName;
 	private String courseLeaderName;
 	private String courseGroup;
@@ -125,6 +128,27 @@ public class CourseInstanceVO {
 	}
 
 
+	public Long getPrimaryExaminerId()
+	{
+		return this.primaryExaminerId;
+	}
+
+	public void setPrimaryExaminerId(Long primaryExaminerId)
+	{
+		this.primaryExaminerId = primaryExaminerId;
+	}
+
+	public Long getSecondaryExaminerId()
+	{
+		return this.secondaryExaminerId;
+	}
+
+	public void setSecondaryExaminerId(Long secondaryExaminerId)
+	{
+		this.secondaryExaminerId = secondaryExaminerId;
+	}
+
+
 
 	public String getCourseName()
 	{
@@ -177,6 +201,8 @@ public class CourseInstanceVO {
 
 		this.courseId = xe.getCourse().getId();
 		this.courseLeaderId = xe.getCourseLeader().getId();
+		this.primaryExaminerId = xe.getPrimaryExaminer() == null ? null : xe.getPrimaryExaminer().getId();
+		this.secondaryExaminerId = xe.getSecondaryExaminer() == null ? null : xe.getSecondaryExaminer().getId();
 
 		this.courseName = xe.getCourse().getCode() + ( xe.getCourse().getCode().length() > 0 ? " " : "") + xe.getCourse().getSeName() + ((xe.getExtraDesignation() != null && xe.getExtraDesignation().length() > 0) ?  ", " + xe.getExtraDesignation() : "");
 		this.courseGroup = xe.getCourse().getCourseGroup();

@@ -26,6 +26,8 @@ Ext.define('Bemanning.model.CourseInstance', {
 		{name: 'numberOfStudents', type: 'int'},
 		{name: 'courseId', type: 'int'},
 		{name: 'courseLeaderId', type: 'int'},
+		{name: 'primaryExaminerId', type: 'int'},
+		{name: 'secondaryExaminerId', type: 'int'},
 		{name: 'courseName', type: 'string'},
 		{name: 'courseLeaderName', type: 'string'},
 		{name: 'courseGroup', type: 'string'}

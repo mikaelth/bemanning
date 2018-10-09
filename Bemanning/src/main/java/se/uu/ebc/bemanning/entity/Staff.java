@@ -109,6 +109,12 @@ public class Staff extends Auditable {
     
  */
     
+    @OneToMany(mappedBy = "primaryExaminer")
+    private Set<CourseInstance> primExamCourses;
+
+    @OneToMany(mappedBy = "secondaryExaminer")
+    private Set<CourseInstance> secExamCourses;
+    
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OLD_ID")
@@ -248,7 +254,28 @@ public class Staff extends Auditable {
 		this.organisationUnit = organisationUnit;
 	}
 
-   
+	public Set<CourseInstance> getPrimExamCourses()
+    {
+    	return this.primExamCourses;
+    }
+
+    public void setPrimExamCourses(Set<CourseInstance> primExamCourses)
+    {
+    	this.primExamCourses = primExamCourses;
+    }
+
+
+    public Set<CourseInstance> getSecExamCourses()
+    {
+    	return this.secExamCourses;
+    }
+
+    public void setSecExamCourses(Set<CourseInstance> secExamCourses)
+    {
+    	this.secExamCourses = secExamCourses;
+    }
+
+  
     
     
     /* Public methods */

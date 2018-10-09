@@ -161,8 +161,13 @@ public class CourseService {
 
 			ci.setCourse(courseRepo.findById(cVO.getCourseId()));
 			ci.setCourseLeader(staffRepo.findById(cVO.getCourseLeaderId()));
-
-
+	
+			if (cVO.getPrimaryExaminerId() != 0 || cVO.getPrimaryExaminerId() != null) {
+				ci.setPrimaryExaminer(staffRepo.findById(cVO.getPrimaryExaminerId()));
+			}
+			if (cVO.getSecondaryExaminerId() != 0 || cVO.getSecondaryExaminerId() != null) {
+				ci.setSecondaryExaminer(staffRepo.findById(cVO.getSecondaryExaminerId()));
+			}
 
 
 		} catch (Exception e) {

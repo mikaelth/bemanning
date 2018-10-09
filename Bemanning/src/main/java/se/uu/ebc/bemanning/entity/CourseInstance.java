@@ -166,6 +166,15 @@ public class CourseInstance  extends Auditable {
     private Long oldId;
  
  
+	@ManyToOne
+    @JoinColumn(name = "PRIM_EXAM_FK")
+	private Staff primaryExaminer;
+
+	@ManyToOne
+    @JoinColumn(name = "SEC_EXAM_FK")
+	private Staff secondaryExaminer;
+
+ 
  	/* Setters and getters */   
     public Set<Assignment> getAssignments() {
         return assignments;
@@ -366,6 +375,29 @@ public class CourseInstance  extends Auditable {
     public void setOldId(Long oldId) {
         this.oldId = oldId;
     }
+
+	public Staff getPrimaryExaminer()
+	{
+		return this.primaryExaminer;
+	}
+
+	public void setPrimaryExaminer(Staff primaryExaminer)
+	{
+		this.primaryExaminer = primaryExaminer;
+	}
+
+	public Staff getSecondaryExaminer()
+	{
+		return this.secondaryExaminer;
+	}
+
+	public void setSecondaryExaminer(Staff secondaryExaminer)
+	{
+		this.secondaryExaminer = secondaryExaminer;
+	}
+
+
+
 
 	/* Public methods */
 	 
