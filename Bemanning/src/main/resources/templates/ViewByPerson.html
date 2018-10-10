@@ -48,6 +48,20 @@ Logged user: <span sec:authentication="name">Bob</span>
 									<a target="_blank" th:href="@{${teUrl}(sid='3', object='akka.'+${teacher.person.username},type='personnel', startdate=${year}+'0101',enddate=${year}+'1231')}" th:text="${teacher.person.name}"  /> 
 									<span th:text="', ' + ${teacher.position} +', ' + ${#numbers.formatInteger(teacher.percentGU*100, 1)} + '% GU'" /> 
 								</h4>
+								<p th:if="${teacher.primExamCourses != null} AND ${teacher.primExamCourses.size() != 0}"> 
+									<span th:text="#{display.examiner.primary} + ': '" />
+									<span th:each="ci,iterStat: ${teacher.primExamCourses}">
+										<th:block th:text="${ci.course.code} + ' ' + ${ci.course.seName}" />
+										<th:block th:text="', '" th:unless="${iterStat.last}" />
+									</span>
+								</p>
+								<p th:if="${teacher.secExamCourses != null} AND ${teacher.secExamCourses.size() != 0}"> 
+									<span th:text="#{display.examiner.secondary} + ': '" />
+									<span th:each="ci,iterStat: ${teacher.secExamCourses}">
+										<th:block th:text="${ci.course.code} + ' ' + ${ci.course.seName} + ' '" />
+										<th:block th:text="', '" th:unless="${iterStat.last}" />
+									</span>
+								</p>
 									<p />
 									<hr align="center" />
 									<table>

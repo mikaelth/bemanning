@@ -44,11 +44,11 @@ Logged user: <span sec:authentication="name">Bob</span>
 					<div th:each="courseInstance: ${courses}">
 						<div th:if="${courseInstance.totalHours > 0}">
 							<h4 th:text="${courseInstance.designation}+ ', ' + ${courseInstance.courseLeader.person.name}" />
-							<h5> 
-								<th:block th:text="${courseInstance.primaryExaminer != null} ? 'Huvudexaminator: ' + ${courseInstance.primaryExaminer.person.name}:''" />
+							<p> 
+								<th:block th:text="${courseInstance.primaryExaminer != null} ? #{display.examiner.primary} + ': ' + ${courseInstance.primaryExaminer.person.name}:''" />
 								<th:block th:text="${courseInstance.primaryExaminer != null} AND ${courseInstance.secondaryExaminer != null} ? ', ': ''" />
-								<th:block th:text="${courseInstance.secondaryExaminer != null} ? 'Biexaminator: ' + ${courseInstance.secondaryExaminer.person.name}:''" />
-							</h5>
+								<th:block th:text="${courseInstance.secondaryExaminer != null} ? #{display.examiner.secondary} + ': ' + ${courseInstance.secondaryExaminer.person.name}:''" />
+							</p>
 								<p />
 								<hr align="center" />
 								<table>
