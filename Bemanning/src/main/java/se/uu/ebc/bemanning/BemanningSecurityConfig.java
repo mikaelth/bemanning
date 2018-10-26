@@ -52,7 +52,6 @@ public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
         serviceProperties.setService(baseUrl + "/login/cas");
         serviceProperties.setSendRenew(false);
 		log.debug("serviceProperties() " + serviceProperties);
-System.out.println("serviceProperties() " + serviceProperties.getService());
         return serviceProperties;
     }
 
@@ -70,7 +69,8 @@ System.out.println("serviceProperties() " + serviceProperties.getService());
 
     @Bean
     public Cas20ServiceTicketValidator cas20ServiceTicketValidator() {
-        return new Cas20ServiceTicketValidator("https://cas.weblogin.uu.se/cas");
+//        return new Cas20ServiceTicketValidator("https://cas.weblogin.uu.se/cas");
+        return new Cas20ServiceTicketValidator("https://weblogin.uu.se/idp/profile/cas");
     }
 
     @Bean
@@ -85,7 +85,8 @@ System.out.println("serviceProperties() " + serviceProperties.getService());
     @Bean
     public CasAuthenticationEntryPoint casAuthenticationEntryPoint() {
         CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
-        casAuthenticationEntryPoint.setLoginUrl("https://cas.weblogin.uu.se/cas/login");
+//        casAuthenticationEntryPoint.setLoginUrl("https://cas.weblogin.uu.se/cas/login");
+        casAuthenticationEntryPoint.setLoginUrl("https://weblogin.uu.se/idp/profile/cas/login");
         casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
         return casAuthenticationEntryPoint;
     }

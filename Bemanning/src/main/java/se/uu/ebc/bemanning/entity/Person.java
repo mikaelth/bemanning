@@ -7,19 +7,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.ElementCollection;
-import javax.persistence.CollectionTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
 
 import javax.validation.constraints.NotNull;
 
@@ -91,6 +93,12 @@ public class Person  extends Auditable {
 	@Enumerated(EnumType.STRING)
 	private Set<UserRoleType> userRoles = new HashSet<UserRoleType>();
  
+    @OneToMany(mappedBy = "primaryExaminer")
+    private Set<Course> primExamCourses;
+
+    @OneToMany(mappedBy = "secondaryExaminer")
+    private Set<Course> secExamCourses;
+    
     
  
 	/* Constructors */
@@ -187,6 +195,28 @@ public class Person  extends Auditable {
     public void setUserRoles(Set<UserRoleType> userRoles) {
         this.userRoles = userRoles;
     }
+
+	public Set<Course> getPrimExamCourses()
+    {
+    	return this.primExamCourses;
+    }
+
+    public void setPrimExamCourses(Set<Course> primExamCourses)
+    {
+    	this.primExamCourses = primExamCourses;
+    }
+
+
+    public Set<Course> getSecExamCourses()
+    {
+    	return this.secExamCourses;
+    }
+
+    public void setSecExamCourses(Set<Course> secExamCourses)
+    {
+    	this.secExamCourses = secExamCourses;
+    }
+
     
     /* Public methods */
 

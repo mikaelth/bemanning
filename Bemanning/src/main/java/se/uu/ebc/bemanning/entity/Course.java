@@ -1,11 +1,15 @@
 package  se.uu.ebc.bemanning.entity;
 
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -76,6 +80,13 @@ public class Course  extends Auditable {
     @Column(name = "EFFORT_SEMINAR")
     private Integer effortSeminar = 0;
     
+	@ManyToOne
+    @JoinColumn(name = "PRIM_EXAM_FK")
+	private Person primaryExaminer;
+
+	@ManyToOne
+    @JoinColumn(name = "SEC_EXAM_FK")
+	private Person secondaryExaminer;
 
 
 	/* Setters and getters */
@@ -191,5 +202,25 @@ public class Course  extends Auditable {
     public void setCredits(Float credits) {
         this.credits = credits;
     }
+
+	public Person getPrimaryExaminer()
+	{
+		return this.primaryExaminer;
+	}
+
+	public void setPrimaryExaminer(Person primaryExaminer)
+	{
+		this.primaryExaminer = primaryExaminer;
+	}
+
+	public Person getSecondaryExaminer()
+	{
+		return this.secondaryExaminer;
+	}
+
+	public void setSecondaryExaminer(Person secondaryExaminer)
+	{
+		this.secondaryExaminer = secondaryExaminer;
+	}
     
 }
