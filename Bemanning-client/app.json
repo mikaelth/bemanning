@@ -2,7 +2,7 @@
     /**
      * The application's namespace.
      */
-    "name": "Bemanning",
+    "name": "Luntan",
     
     /**
      * The version of the application.
@@ -21,8 +21,9 @@
      * application resides (the same folder in which this file is located).
      */
     "classpath": [
-        "app",
-        "${toolkit.name}/src"
+		"app",
+        "${toolkit.name}/src",
+		"_config/${build.environment}"
     ],
 
     /**

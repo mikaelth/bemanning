@@ -38,7 +38,7 @@ Logged user: <span sec:authentication="name">Bob</span>
 						<span th:text="#{view.phdposition.timeUnit}"></span>
 
 						<br />
-						(50%: <span th:text="${#dates.format(phdStudent.predictedHalfTime(),'yyyy-MM-dd')}"/>, 80%: <span th:text="${#dates.format(phdStudent.predicted80Percent(),'yyyy-MM-dd')}" />)
+						(50%: <span th:text="${#dates.format(phdStudent.predictedHalfTime(),'yyyy-MM-dd')}"/>, 75%: <span th:text="${#dates.format(phdStudent.predicted75Percent(),'yyyy-MM-dd'), 80%: <span th:text="${#dates.format(phdStudent.predicted80Percent(),'yyyy-MM-dd')}" />)
 					</h5>
 					<p />
 					<hr align="center" />

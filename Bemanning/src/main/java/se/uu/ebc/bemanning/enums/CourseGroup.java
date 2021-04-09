@@ -5,6 +5,7 @@ public enum CourseGroup {
 	BASE("Baskurser"),
 	ADVANCED("Påbyggnadskurser"),
 	KNO("KNO-kurser"),
+	CROSS("Tvärvetenskapliga kurser"),
 	SUMMER("Sommarkurser"),
 	ENGINEER("Ingenjörskurser"),
 	MISC("Övrigt"),
@@ -16,6 +17,7 @@ public enum CourseGroup {
 	GOTLAND("Gotlandskurser"),
 	ENVIRIONMENT("Miljövetenskap"),
 	LIBART("Liberal Arts"),
+	LLL("Livslångt lärande"),
 	PROGRAM("Programansvar");
 
 

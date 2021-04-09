@@ -49,6 +49,7 @@ public class PhDPosition  extends Auditable {
 	private static final float REMAIN_AT_START = 48.0f;
 	private static final float REMAIN_AT_HALF = 24.0f;
 	private static final float REMAIN_AT_80 = 0.2f*48.0f;
+	private static final float REMAIN_AT_75 = 0.25f*48.0f;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -231,6 +232,11 @@ public class PhDPosition  extends Auditable {
 	public Date predicted80Percent()
 	{
 		return predictDate(REMAIN_AT_80);
+	}
+
+	public Date predicted75Percent()
+	{
+		return predictDate(REMAIN_AT_75);
 	}
 
     public Float yearlyGU(String year) {

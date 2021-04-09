@@ -27,7 +27,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import se.uu.ebc.bemanning.security.BemanningUserService;
 import se.uu.ebc.bemanning.security.SecurityService;
 import se.uu.ebc.bemanning.security.RESTAuthenticationEntryPoint;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @EnableAutoConfiguration
@@ -35,10 +37,13 @@ import se.uu.ebc.bemanning.security.RESTAuthenticationEntryPoint;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	static Logger log = Logger.getLogger(BemanningSecurityConfig.class.getName());
+//	static Logger log = Logger.getLogger(BemanningSecurityConfig.class.getName());
 
 	@Value("${bemanning.base.url}")
 	String baseUrl;
+
+	@Value("${bemanning.environment.dev}")
+	boolean devEnv = false;
 
 	@Bean
     public AuthenticationUserDetailsService authenticationUserDetailsService() {
@@ -111,30 +116,24 @@ public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
 
  		http.csrf().disable();
 
-// 		http.authorizeRequests()
-// 			.antMatchers("/index.*").authenticated()
-// 			.antMatchers("/document.*").authenticated()
-// 			.antMatchers("/login/**").permitAll()
-// 			.antMatchers("/PorTableClient/**").permitAll()
-// 			.antMatchers("/*").permitAll()
-// 			.antMatchers("/**").authenticated();
-
-//			.antMatchers("/rest/**").authenticated();
  
+		if (devEnv) {
+			http
+				.authorizeRequests().antMatchers("/**").permitAll();
+		} else {
 
 		
- 		http.authorizeRequests()
- 			.antMatchers("/index.*").authenticated()
- 			.antMatchers("/loginredirect.html").authenticated()
-			.antMatchers("/InREST.html").authenticated()
-			.antMatchers("/login/**").permitAll()
- 			.antMatchers("/Bemanning/index.html").authenticated()
- 			.antMatchers("/Bemanning/**").permitAll()
- 			.antMatchers("/rest/**").authenticated()
-			.antMatchers("/**").authenticated();
+			http.authorizeRequests()
+				.antMatchers("/index.*").authenticated()
+				.antMatchers("/loginredirect.html").authenticated()
+				.antMatchers("/InREST.html").authenticated()
+				.antMatchers("/login/**").permitAll()
+				.antMatchers("/Bemanning/index.html").authenticated()
+				.antMatchers("/Bemanning/**").permitAll()
+				.antMatchers("/rest/**").authenticated()
+				.antMatchers("/**").authenticated();
+		}
  				
-// 		http
-// 			.authorizeRequests().antMatchers("/**").permitAll();
 
  			
         http
