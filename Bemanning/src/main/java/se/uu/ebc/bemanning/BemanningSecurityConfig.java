@@ -27,9 +27,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import se.uu.ebc.bemanning.security.BemanningUserService;
 import se.uu.ebc.bemanning.security.SecurityService;
 import se.uu.ebc.bemanning.security.RESTAuthenticationEntryPoint;
+/* 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+ */
 @Configuration
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @EnableAutoConfiguration
@@ -37,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
 
-//	static Logger log = Logger.getLogger(BemanningSecurityConfig.class.getName());
+	static Logger log = Logger.getLogger(BemanningSecurityConfig.class.getName());
 
 	@Value("${bemanning.base.url}")
 	String baseUrl;
