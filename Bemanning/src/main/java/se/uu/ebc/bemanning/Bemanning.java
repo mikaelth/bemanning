@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 
 import org.springframework.stereotype.Controller;
 
@@ -66,19 +67,19 @@ import se.uu.ebc.bemanning.security.AuditorAwareImpl;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+@EnableLdapRepositories(basePackages = "se.uu.ebc.ldap")
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef="auditorProvider")
 @EnableScheduling
 @EnableAutoConfiguration
-@Configuration
-@EnableWebMvc //Disable this and file upload will not work; enable and static will not work.
+//@Configuration
+//@EnableWebMvc //Disable this and file upload will not work; enable and static will not work.
 @RestController("/")
 @SpringBootApplication
 @CrossOrigin(origins = "http://localhost:1841")
-@Import({StaticResourceConfiguration.class, BemanningSecurityConfig.class})
+@Import({StaticResourceConfiguration.class, BemanningSecurityConfig.class, BemanningMethodSecurityConfig.class})
 @ComponentScan(basePackages = {"se.uu.ebc.bemanning.service","se.uu.ebc.bemanning.web","se.uu.ebc.bemanning.security"})
-//public class Bemanning extends WebMvcConfigurerAdapter {		/* Testing with embedded server */
 public class Bemanning extends SpringBootServletInitializer { /* Deploying to Tomcat container */
 
     private static Logger logger = Logger.getLogger(Bemanning.class.getName());

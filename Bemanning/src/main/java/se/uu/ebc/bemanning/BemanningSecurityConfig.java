@@ -36,7 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @EnableAutoConfiguration
 @EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	static Logger log = Logger.getLogger(BemanningSecurityConfig.class.getName());
@@ -46,6 +45,9 @@ public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Value("${bemanning.environment.dev}")
 	boolean devEnv = false;
+
+	@Value("${bemanning.environment.dev.cas.on}")
+	boolean casOn = true;
 
 	@Bean
     public AuthenticationUserDetailsService authenticationUserDetailsService() {
@@ -92,7 +94,6 @@ public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CasAuthenticationEntryPoint casAuthenticationEntryPoint() {
         CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
-//        casAuthenticationEntryPoint.setLoginUrl("https://cas.weblogin.uu.se/cas/login");
         casAuthenticationEntryPoint.setLoginUrl("https://weblogin.uu.se/idp/profile/cas/login");
         casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
         return casAuthenticationEntryPoint;
@@ -119,12 +120,10 @@ public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
  		http.csrf().disable();
 
  
-		if (devEnv) {
+		if (!casOn) {
 			http
 				.authorizeRequests().antMatchers("/**").permitAll();
 		} else {
-
-		
 			http.authorizeRequests()
 				.antMatchers("/index.*").authenticated()
 				.antMatchers("/loginredirect.html").authenticated()
@@ -143,7 +142,6 @@ public class BemanningSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(restcasAuthenticationEntryPoint());
     }
  
-//    @Override
     @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		log.debug("configureGloabal() " + auth);
