@@ -26,6 +26,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.log4j.Logger;
 
@@ -36,7 +37,7 @@ import se.uu.ebc.bemanning.entity.Progress;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 
 @Entity
-@Table(name = "PH_D_POSITION")
+@Table(name = "PH_D_POSITION", uniqueConstraints= @UniqueConstraint(columnNames={"PERSON_FK"}))
 public class PhDPosition  extends Auditable {
 
     @Transient
