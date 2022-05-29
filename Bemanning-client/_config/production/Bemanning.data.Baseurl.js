@@ -4,6 +4,6 @@ Ext.define("Bemanning.data.Baseurl", {
 /* 
 		URL_BASE:  "https://bemanning.ebc.uu.se/bemanning/",	
  */
-		URL_BASE:  "@bemanning.baseurl@"
+		URL_BASE:  "@bemanning.baseurl@/"
 
  });
