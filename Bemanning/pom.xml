@@ -230,6 +230,19 @@
 	<build>
 		<plugins>
 			<plugin>
+			  <artifactId>maven-resources-plugin</artifactId>
+			   <configuration>
+				<nonFilteredFileExtensions>
+					<nonFilteredFileExtension>eot</nonFilteredFileExtension>
+					<nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+					<nonFilteredFileExtension>woff</nonFilteredFileExtension>
+					<nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+					<nonFilteredFileExtension>otf</nonFilteredFileExtension>
+				</nonFilteredFileExtensions>
+			  </configuration>
+			</plugin>
+
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 
