@@ -1,5 +1,5 @@
 package se.uu.ebc.bemanning.web;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
- 
+
 import se.uu.ebc.bemanning.service.CourseService;
+import se.uu.ebc.bemanning.service.LuntanService;
 import se.uu.ebc.bemanning.vo.CourseVO;
 import se.uu.ebc.bemanning.vo.CourseInstanceVO;
 import se.uu.ebc.bemanning.vo.CourseGrantVO;
@@ -50,8 +51,11 @@ public class CourseController {
 	@Autowired
 	CourseService courseService;
 
+	@Autowired
+	LuntanService luntanService;
+
 	/* Courses */
-		
+
     @RequestMapping(value="/courses", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<String> allCourses() {
@@ -62,9 +66,9 @@ public class CourseController {
 		} catch (Exception e) {
 			return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-  	
+
     }
- 
+
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @RequestMapping(value="/courses/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateCourse(@RequestBody String json, @PathVariable("id") Long id) {
@@ -74,7 +78,7 @@ public class CourseController {
 			CourseVO cVO = new JSONDeserializer<CourseVO>().use(null, CourseVO.class).deserialize(json);
 			cVO.setId(id);
 			cVO = courseService.saveCourse(cVO);
-			
+
  			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("courses").deepSerialize(cVO);
 			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
@@ -84,7 +88,7 @@ public class CourseController {
         }
     }
 
- 
+
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @RequestMapping(value="/courses", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createCourse(@RequestBody String json, UriComponentsBuilder uriBuilder) {
@@ -123,7 +127,7 @@ public class CourseController {
 
 
 	/* CourseInstances */
-		
+
     @RequestMapping(value="/cis", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<String> allCourseInstances() {
@@ -134,9 +138,9 @@ public class CourseController {
 		} catch (Exception e) {
 			return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-  	
+
     }
- 
+
 	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/cis/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateCourseInstance(@RequestBody String json, @PathVariable("id") Long id) {
@@ -146,7 +150,7 @@ public class CourseController {
 			CourseInstanceVO ciVO = new JSONDeserializer<CourseInstanceVO>().use(null, CourseInstanceVO.class).use(Date.class, new DateNullTransformer("yyyy-MM-dd") ).deserialize(json);
 			ciVO.setId(id);
 			ciVO = courseService.saveCourseInstance(ciVO);
-			
+
  			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("cis").transform(new DateNullTransformer("yyyy-MM-dd"), "startDate").transform(new DateNullTransformer("yyyy-MM-dd"), "endDate").serialize(ciVO);
 			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
@@ -156,7 +160,7 @@ public class CourseController {
         }
     }
 
- 
+
 	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/cis", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createCourseInstance(@RequestBody String json, UriComponentsBuilder uriBuilder) {
@@ -194,7 +198,7 @@ public class CourseController {
 
 
 	/* CourseGrants */
-		
+
     @RequestMapping(value="/cgs", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<String> allCourseGrants() {
@@ -207,9 +211,9 @@ public class CourseController {
 			logger.error("allCourseGrants got a pesky exception: "+ e + e.getCause());
 			return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-  	
+
     }
- 
+
 	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/cgs/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public ResponseEntity<String> updateCourseGrant(@RequestBody String json, @PathVariable("id") Long id) {
@@ -220,7 +224,7 @@ public class CourseController {
 			logger.debug("updateCourseGrant, cgVO "+ReflectionToStringBuilder.toString(cgVO, ToStringStyle.MULTI_LINE_STYLE));
 			cgVO.setId(id);
 			cgVO = courseService.saveCourseGrant(cgVO);
-			
+
  			String restResponse = new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("cgs").transform(new DateNullTransformer("yyyy-MM-dd"), "setDate").serialize(cgVO);
 			restResponse = new StringBuilder(restResponse).insert(1, "success: true,").toString();
 
@@ -230,7 +234,7 @@ public class CourseController {
         }
     }
 
- 
+
 	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @RequestMapping(value="/cgs", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<String> createCourseGrant(@RequestBody String json, UriComponentsBuilder uriBuilder) {
@@ -264,5 +268,20 @@ public class CourseController {
             return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-	
-} 
+
+
+    @RequestMapping(value="/test-cgd", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> yearlyCGDs() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json; charset=utf-8");
+        try {
+ 			return new ResponseEntity<String>(new JSONSerializer().prettyPrint(true).exclude("*.class").rootName("cgd").transform(new DateNullTransformer("yyyy-MM-dd"), "setDate").deepSerialize(luntanService.getLuntanCGD(2022)), headers, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("yearlyCGDs got a pesky exception: "+ e + e.getCause());
+			return new ResponseEntity<String>("{\"ERROR\":"+e.getMessage()+"\"}", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+}
