@@ -42,8 +42,16 @@ Ext.define('Bemanning.view.main.BasicYearListGrid', {
 								this.lookupReferenceHolder().lookupReference('btnCreate').enable();
 							}
 						}
-					},
-					'->', {
+					},{
+						text: 'Skriv ut',
+						reference: 'btnPrint',
+						disabled: false,
+						handler: function() {
+							Ext.ux.grid.Printer.printAutomatically = false;
+							Ext.ux.grid.Printer.closeAutomaticallyAfterPrint = false;
+							Ext.ux.grid.Printer.print(this.up('grid'));   
+						}
+					}, '->', {
 //						text: 'Remove',
 						text: 'Tag bort post',
 						reference: 'btnRemove',
