@@ -36,8 +36,16 @@ public class AKKAService {
 	@Value("${akka.url}")
 	String akkaUrl;
 
-
+	/* Fulhack */
 	public Map<String, String> doLookup(Person p) {
+		HashMap<String,String> ldapSessionMap = new HashMap<String, String>();
+		ldapSessionMap.put("mail", "");
+		ldapSessionMap.put("telephoneNumber", "");
+		
+		return ldapSessionMap;
+	}
+
+	public Map<String, String> doLookupDisabled(Person p) {
 
 		HashMap<String,String> ldapSessionMap = new HashMap<String, String>();
 		
