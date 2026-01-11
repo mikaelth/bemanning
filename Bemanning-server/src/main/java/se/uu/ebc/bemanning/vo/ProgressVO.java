@@ -26,7 +26,4 @@ public class ProgressVO {
     private String note;
     private Float addedMonths;
 
-
-
-
 }

@@ -2,9 +2,7 @@ package se.uu.ebc.bemanning.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +14,6 @@ import java.time.Year;
 import jakarta.annotation.PostConstruct;
 
 import se.uu.ebc.bemanning.entity.Staff;
-import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.entity.Progress;
 import se.uu.ebc.bemanning.entity.PhDPosition;
 import se.uu.ebc.bemanning.repo.PhDPositionRepo;
@@ -122,12 +119,9 @@ public class PhDService {
 
 	public List<PhDPositionVO> getAllPhDPositions() throws ResourceNotFoundException {
 		List<PhDPositionVO> pVOs = new ArrayList<PhDPositionVO>();
-//		phdToVOMapper.addMapping(PhDPosition::currentRemainingProjectTime, PhDPositionVO::setCurrentRemainingProjectTime);
 
 
-//		try {	
  			String year = String.valueOf(Year.now().getValue());
-// 			String year = "2025";  /* Hack to test for bug */
  			
 			log.debug("getAllPhDPositions year: "+year);
 
@@ -142,18 +136,12 @@ public class PhDService {
  				pVOs.add(pVO);
  			}
          	return pVOs;        	        
-//         } catch (Exception e) {
-// 			log.error("getAllPhDPositions got a pesky exception: "+ e + e.getCause());
-// 
-// 			return null;
-// 			
-//         }
+
     }
 
 	public PhDPositionVO getPhDById (Long id) {
 		log.debug("getById()");
 		PhDPosition p = phdPositionRepo.findById(id).get();
-//		phdToVOMapper.addMapping(PhDPosition::currentRemainingProjectTime, PhDPositionVO::setCurrentRemainingProjectTime);
 		log.debug(p.toString());
 		return mapper.map(p, PhDPositionVO.class);
 	}   
@@ -174,9 +162,7 @@ public class PhDService {
     public synchronized void deletePhDPosition(Long pID) throws IllegalArgumentException, OptimisticLockingFailureException {
 		phdPositionRepo.deleteById(pID);
     }
-
-   	
- 
+   	 
 	private PhDPosition toPhDPosition (PhDPositionVO pvo) throws Exception {
 		return toPhDPosition (new PhDPosition(),pvo);
    	}
@@ -190,19 +176,14 @@ public class PhDService {
 	
 	/* Progresses */
 
-	public List<ProgressVO> getAllProgress() throws Exception {
+	public List<ProgressVO> getAllProgress() throws ResourceNotFoundException  {
 		List<ProgressVO> pVO = new ArrayList<ProgressVO>();
-		try {	
-			for (Progress p : progressRepo.findAll()) {
- 				pVO.add(progressModelMapper.map(p, ProgressVO.class));
- 			}
-         	return pVO;        	        
-        } catch (Exception e) {
-			log.error("getAllProgress got a pesky exception: "+ e + e.getCause());
+		for (Progress p : progressRepo.findAll()) {
+ 			pVO.add(progressModelMapper.map(p, ProgressVO.class));
+ 		}
+        return pVO;        	        
 
-			return null;
 			
-        }
     }
    
     
@@ -213,11 +194,9 @@ public class PhDService {
     
     }
 
-    public synchronized void deleteProgress(Long pID) throws Exception {
+    public synchronized void deleteProgress(Long pID) throws IllegalArgumentException, OptimisticLockingFailureException {
 		progressRepo.deleteById(pID);
-    }
-
-   	
+    }	
  
 	private Progress toProgress (ProgressVO pvo) throws Exception {
  		return toProgress (new Progress(), pvo);
