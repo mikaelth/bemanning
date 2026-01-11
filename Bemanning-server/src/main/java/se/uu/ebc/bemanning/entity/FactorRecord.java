@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
  */
 @Embeddable
-public record TemplateRecord (
+public record FactorRecord (
 
 	@Positive(message = "Factor should be positive")
 	float EXCURSION_FACTOR,

@@ -9,7 +9,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Embedded;
+
+import java.util.Set;
 
 import se.uu.ebc.bemanning.enums.EmploymentType;
 
@@ -55,18 +58,9 @@ public class CourseStaffing extends Auditable {
     private OrganisationUnit assigningDept;
 
  
-    @ManyToOne
-	@JoinColumn(name = "PLAN_FK")
-	private Assignment plan;
-	
-    @ManyToOne
-	@JoinColumn(name = "TE_FK")
-	private Assignment timeEdit;
-	
-    @ManyToOne
-	@JoinColumn(name = "OUTCOME_FK")
-	private Assignment outcome;
-	
+    @OneToMany(mappedBy = "courseStaffing")
+    private Set<Assignment> assignments;
+		
     
     @Column(name = "NOTE", length = 255)
     private String note;

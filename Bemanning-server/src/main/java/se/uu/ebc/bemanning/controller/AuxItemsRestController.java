@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "http://localhost:1841", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class AuxItemsRestController {
 
+/* REST for some auxilliary VOs */
 
 	@Autowired
 	StaffRepo staffRepo;

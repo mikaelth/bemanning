@@ -9,6 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 
 import se.uu.ebc.bemanning.enums.EmploymentType;
 
@@ -20,11 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 //@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
 @Slf4j
-public class Assignment extends Auditable {
+@DiscriminatorColumn(name="ASSIGNMENT_KIND", discriminatorType = DiscriminatorType.STRING)
+//@DiscriminatorValue("1")
+public abstract class Assignment extends Auditable {
 
 	private final static int LECTURE_HOUR_COST = 1285;
 
@@ -37,6 +42,12 @@ public class Assignment extends Auditable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Long id;
+
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "COURSE_STAFFING_FK")
+    private CourseStaffing courseStaffing;
+
 
 /* 
 

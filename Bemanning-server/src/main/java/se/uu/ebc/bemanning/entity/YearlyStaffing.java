@@ -43,7 +43,7 @@ public class YearlyStaffing extends Auditable {
 
 
 	@Embedded
-	private TemplateRecord teachingFactors;
+	private FactorRecord teachingFactors;
     
 	
 
