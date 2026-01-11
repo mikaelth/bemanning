@@ -1,0 +1,88 @@
+package se.uu.ebc.bemanning;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import org.springframework.context.annotation.Bean;
+
+import org.springframework.web.client.RestClient;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
+
+import org.springframework.core.env.Environment;
+
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
+
+
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@EnableLdapRepositories(basePackages = "se.uu.ebc.ldap")
+//@PropertySource("classpath:application.properties")
+// @EnableTransactionManagement
+// @EnableJpaAuditing(auditorAwareRef="auditorProvider")
+// @EnableScheduling
+// @EnableAutoConfiguration
+// @RestController("/")
+// @CrossOrigin(origins = "http://localhost:1841")
+// @Import({StaticResourceConfiguration.class, LuntanSecurityConfig.class, LuntanMethodSecurityConfig.class})
+// @ComponentScan(basePackages = {"se.uu.ebc.bemanning.service","se.uu.ebc.bemanning.controller","se.uu.ebc.bemanning.security"})
+@SpringBootApplication
+public class Bemanning /* extends SpringBootServletInitializer { Deploying to Tomcat container */ {
+	
+	@Value("${luntan.rest.base.url}")
+	String luntanBaseUrl;
+
+    @Autowired
+    private Environment env;
+
+	@Bean
+	public RestClient luntanCIRestClient() {
+		RestClient luntanRestClient = RestClient.create(luntanBaseUrl+"cis/");
+
+		return luntanRestClient;
+	}
+
+	@Bean
+	public LdapContextSource contextSource() {
+		LdapContextSource contextSource = new LdapContextSource();
+		
+		contextSource.setUrl(env.getRequiredProperty("ldap.urls"));
+
+		contextSource.setBase(
+		  env.getRequiredProperty("ldap.partitionSuffix"));
+
+		contextSource.setUserDn(
+		  env.getRequiredProperty("ldap.principal"));
+		contextSource.setPassword(
+		  env.getRequiredProperty("ldap.password"));
+		
+		return contextSource;
+	}
+
+    @Bean
+    public LdapTemplate ldapTemplate() {
+        return new LdapTemplate(contextSource());
+    }
+
+
+	public static void main(String[] args) {
+		SpringApplication.run(Bemanning.class, args);
+	}
+
+
+	@RequestMapping("/")
+	public RedirectView directToIndex()
+	{
+    	RedirectView redirectView = new RedirectView();
+    	redirectView.setUrl("index.html");
+    	return redirectView;
+	}
+
+}
