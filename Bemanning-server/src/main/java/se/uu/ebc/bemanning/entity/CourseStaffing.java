@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Embedded;
 
 import java.util.Set;
@@ -36,7 +37,7 @@ public class CourseStaffing extends Auditable {
     private static final float PRACTICAL_FACTOR = 2.0f;
     private static final float PORFESSOR_LECTURE_FACTOR = 4.0f;
     private static final float STUDENT_LECTURE_FACTOR = 8.0f;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
@@ -57,27 +58,32 @@ public class CourseStaffing extends Auditable {
     @JoinColumn(name = "DEPARTMENT_FK")
     private OrganisationUnit assigningDept;
 
- 
-    @OneToMany(mappedBy = "courseStaffing")
-    private Set<Assignment> assignments;
-		
-    
+    @OneToOne(mappedBy = "courseStaffing")
+    private AssignmentPlan plan;
+
+    @OneToOne(mappedBy = "courseStaffing")
+    private AssignmentTE te;
+
+    @OneToOne(mappedBy = "courseStaffing")
+    private AssignmentOutcome outcome;
+
+
     @Column(name = "NOTE", length = 255)
     private String note;
-    
+
     /* Public methods */
-    
-/* 
+
+/*
     public float getAssignmentCost()
     {
         float cost = 0.0f;
-    
+
 		if (getStaff().getPosition() == EmploymentType.Timarvoderad) {
 			cost = LECTURE_HOUR_COST * this.getPlainTeachingHours();
 		} else {
 			cost = getStaff().getHourlyCost() * this.getTotalHours(getStaff().getPosition());
 		}
-		
+
 		return cost;
 
     }
@@ -90,11 +96,11 @@ public class CourseStaffing extends Auditable {
     public float getTotalHours(EmploymentType employment)
     {
 
-// 		logger.debug(hoursAdmin + ", " + hoursDevelopment + ", " + hoursSeminar + ", " + hoursExcursion +", " + hoursPractical+", "+ hoursLecture);	
-// 		logger.debug(hoursAdmin + ", " + hoursDevelopment + ", " + hoursSeminar + ", " + hoursExcursion*EXCURSION_FACTOR +", " + hoursPractical*PRACTICAL_FACTOR+", "+ (employment.compareTo(EmploymentType.Doktorand) == 0 ? hoursLecture*STUDENT_LECTURE_FACTOR : hoursLecture*PORFESSOR_LECTURE_FACTOR));	
+// 		logger.debug(hoursAdmin + ", " + hoursDevelopment + ", " + hoursSeminar + ", " + hoursExcursion +", " + hoursPractical+", "+ hoursLecture);
+// 		logger.debug(hoursAdmin + ", " + hoursDevelopment + ", " + hoursSeminar + ", " + hoursExcursion*EXCURSION_FACTOR +", " + hoursPractical*PRACTICAL_FACTOR+", "+ (employment.compareTo(EmploymentType.Doktorand) == 0 ? hoursLecture*STUDENT_LECTURE_FACTOR : hoursLecture*PORFESSOR_LECTURE_FACTOR));
 
 		try {
-			return 
+			return
 				hoursAdmin +
 				hoursDevelopment +
 				hoursSeminar +
@@ -102,8 +108,8 @@ public class CourseStaffing extends Auditable {
 				hoursPractical*PRACTICAL_FACTOR +
 				(employment.compareTo(EmploymentType.Doktorand) == 0 ? hoursLecture*STUDENT_LECTURE_FACTOR : hoursLecture*PORFESSOR_LECTURE_FACTOR);
 			} catch (Exception e) {
-				log.error("getTotalHours caught a pesky exception " + e +", " + e.getCause());	
-				return 0.0f;		
+				log.error("getTotalHours caught a pesky exception " + e +", " + e.getCause());
+				return 0.0f;
 			}
     }
 
@@ -111,7 +117,7 @@ public class CourseStaffing extends Auditable {
     {
 
 
-        return 
+        return
         	hoursSeminar +
          	hoursExcursion +
 			hoursPractical +

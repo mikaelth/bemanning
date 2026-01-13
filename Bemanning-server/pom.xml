@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>se.uu.ebc</groupId>
 	<artifactId>bemanning</artifactId>
-	<version>4.0.1-SNAPSHOT</version>
+	<version>5.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>bemanning</name>
 	<description>Start av ny BP</description>
@@ -56,9 +56,9 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
-		<dependency> 
-    		<groupId>org.springframework.boot</groupId> 
-    		<artifactId>spring-boot-starter-validation</artifactId> 
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
@@ -118,11 +118,13 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.11.0</version>
 		</dependency>
+<!--
 		<dependency>
 			<groupId>se.uu.ebc.common</groupId>
 			<artifactId>Luntan-bemanning-common</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+ -->
 
 		<dependency>
 		  <groupId>org.modelmapper.extensions</groupId>
