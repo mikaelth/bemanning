@@ -12,13 +12,15 @@ import org.modelmapper.MappingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
+import java.io.IOException;
+
 import lombok.extern.slf4j.Slf4j;
 
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-/* 
+/*
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e) {
@@ -39,7 +41,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<String> handleIOIssueFound(ResourceNotFoundException ex) {
+		log.debug("IOException caught " + ex);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+   @ExceptionHandler({
     		ConfigurationException.class, MappingException.class, UnsupportedOperationException.class,
     		ClassCastException.class, NullPointerException.class, OptimisticLockingFailureException.class
     	})

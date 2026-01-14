@@ -57,7 +57,7 @@ public class IndexViewController {
 
 
     private String roleArr[] = { "ROLE_DIRECTOROFSTUDIES", "ROLE_ADMINISTRATOR", "ROLE_PHDADMIN" };
-    private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));
+    private Set<String> rolesForAll = new HashSet<String>(Arrays.asList(roleArr));
 
 	@Autowired
 	UserRepo userRepo;
