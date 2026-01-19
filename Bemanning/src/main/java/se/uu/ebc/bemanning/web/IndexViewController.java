@@ -42,7 +42,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.apache.log4j.Logger;
 
-import se.uu.ebc.bemanning.service.TEService;
+// import se.uu.ebc.bemanning.service.TEService;
 import se.uu.ebc.bemanning.service.TestService;
 import se.uu.ebc.bemanning.service.PhDService;
 import se.uu.ebc.bemanning.service.StaffingService;
@@ -64,8 +64,10 @@ public class IndexViewController {
     private String roleArr[] = { "ROLE_DIRECTOROFSTUDIES", "ROLE_ADMINISTRATOR", "ROLE_PHDADMIN" };
     private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));
 
+/* 
 	@Autowired
 	TEService teService;
+ */
 
 	@Autowired
 	StaffRepo staffRepo;
@@ -100,6 +102,7 @@ public class IndexViewController {
 		}
 	}
 
+/* 
     @RequestMapping(value = "/tetest", method = RequestMethod.GET)
     public String indexTEPage(Model model, Principal principal, HttpServletRequest request) {
 			logger.debug("indexTEPage, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
@@ -116,6 +119,7 @@ public class IndexViewController {
 			return "{\"ERROR\":"+e.getMessage()+"\"}";
 		}
 	}
+ */
 
 
 	public class DummyUser {

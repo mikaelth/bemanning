@@ -22,7 +22,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.SearchResult;
-import javax.naming.ldap.InitialLdapContext;
+// import javax.naming.ldap.InitialLdapContext;
 
 import org.apache.log4j.Logger;
 
@@ -44,7 +44,7 @@ public class AKKAService {
 		
 		return ldapSessionMap;
 	}
-
+/*
 	public Map<String, String> doLookupDisabled(Person p) {
 
 		HashMap<String,String> ldapSessionMap = new HashMap<String, String>();
@@ -56,7 +56,7 @@ public class AKKAService {
 		env.put(Context.PROVIDER_URL,
 			akkaUrl);
 
-/*
+
 		env.put(Context.PROVIDER_URL,
 			"ldap://ldap.katalog.uu.se:389");
 
@@ -67,7 +67,7 @@ public class AKKAService {
 		env.put(Context.SECURITY_PRINCIPAL,
 			"uid=mikathol,dc=user,dc=uu,dc=se");
 		env.put(Context.SECURITY_CREDENTIALS, "XXXX");
-*/
+
 		
 		try {
 
@@ -120,7 +120,7 @@ public class AKKAService {
 		}
 
 	}
-	
+*/	
 /* 
 	public String getEmail ()
 	{

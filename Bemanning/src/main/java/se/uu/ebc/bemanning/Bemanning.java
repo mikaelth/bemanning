@@ -27,7 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
+//import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 
 import org.springframework.stereotype.Controller;
 
@@ -67,7 +67,7 @@ import se.uu.ebc.bemanning.security.AuditorAwareImpl;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@EnableLdapRepositories(basePackages = "se.uu.ebc.ldap")
+//@EnableLdapRepositories(basePackages = "se.uu.ebc.ldap")
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef="auditorProvider")

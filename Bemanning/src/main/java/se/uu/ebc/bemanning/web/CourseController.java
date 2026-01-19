@@ -21,7 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import se.uu.ebc.bemanning.service.CourseService;
-import se.uu.ebc.bemanning.service.LuntanService;
+//import se.uu.ebc.bemanning.service.LuntanService;
 import se.uu.ebc.bemanning.vo.CourseVO;
 import se.uu.ebc.bemanning.vo.CourseInstanceVO;
 import se.uu.ebc.bemanning.vo.CourseGrantVO;
@@ -51,8 +51,10 @@ public class CourseController {
 	@Autowired
 	CourseService courseService;
 
+/* 
 	@Autowired
 	LuntanService luntanService;
+ */
 
 	/* Courses */
 
@@ -270,6 +272,7 @@ public class CourseController {
     }
 
 
+/* 
     @RequestMapping(value="/test-cgd", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<String> yearlyCGDs() {
@@ -283,5 +286,6 @@ public class CourseController {
         }
 
     }
+ */
 
 }

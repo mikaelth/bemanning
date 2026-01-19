@@ -269,7 +269,7 @@ public class AssignmentViewController {
     public String viewProgressByPhD(@RequestParam(value = "includedstudents", required = false, defaultValue = "active") String included, Model model, Principal principal, HttpServletRequest request) {
 		try {
 			logger.debug("viewProgressByPhD, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
-			logger.debug("viewProgressByPhD, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
+//			logger.debug("viewProgressByPhD, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("viewProgressByPhD, october "+ Calendar.OCTOBER);
 
 			if (allowUserAll(request)) {
