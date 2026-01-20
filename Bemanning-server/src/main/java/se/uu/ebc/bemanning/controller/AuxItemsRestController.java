@@ -1,5 +1,5 @@
 package se.uu.ebc.bemanning.controller;
- 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,10 +37,10 @@ public class AuxItemsRestController {
 
 	@Autowired
 	StaffRepo staffRepo;
-	
+
 	@GetMapping("/years")
     public ResponseEntity usedYears() {
-    	List theList = new ArrayList<Map<String, String>>();
+    	List<Map<String, String>> theList = new ArrayList<Map<String, String>>();
     	for (String s : staffRepo.getStaffedYears()) {
 			java.util.Map<String,String> vMap = new java.util.HashMap<String, String>();
 			vMap.put("label", s.toString());
@@ -52,7 +52,7 @@ public class AuxItemsRestController {
 
 	@GetMapping("/userroletypes")
     public ResponseEntity userRoleTypes() {
-    	List theList = new ArrayList<Map<String, UserRoleType>>();
+    	List<Map<String, UserRoleType>> theList = new ArrayList<Map<String, UserRoleType>>();
     	for (UserRoleType s : UserRoleType.values()) {
 			java.util.Map<String,UserRoleType> vMap = new java.util.HashMap<String, UserRoleType>();
 			vMap.put("label", s);
@@ -63,7 +63,7 @@ public class AuxItemsRestController {
 
 	@GetMapping("/employmenttypes")
     public ResponseEntity employmentType() {
-    	List theList = new ArrayList<Map<String, EmploymentType>>();
+    	List<Map<String, EmploymentType>> theList = new ArrayList<Map<String, EmploymentType>>();
     	for (EmploymentType s : EmploymentType.values()) {
 			java.util.Map<String,EmploymentType> vMap = new java.util.HashMap<String, EmploymentType>();
 			vMap.put("label", s);
@@ -74,7 +74,7 @@ public class AuxItemsRestController {
 
 	@GetMapping("/granttypes")
     public ResponseEntity grantType() {
-    	List theList = new ArrayList<Map<String, GrantType>>();
+    	List<Map<String, GrantType>> theList = new ArrayList<Map<String, GrantType>>();
     	for (GrantType s : GrantType.values()) {
 			java.util.Map<String,GrantType> vMap = new java.util.HashMap<String, GrantType>();
 			vMap.put("label", s);
@@ -82,10 +82,10 @@ public class AuxItemsRestController {
     	}
     	return ResponseEntity.ok(theList);
     }
-	
+
 	@GetMapping("/coursegroups")
     public ResponseEntity courseGroup() {
-    	List theList = new ArrayList<Map<String, String>>();
+    	List<Map<String, String>> theList = new ArrayList<Map<String, String>>();
     	for (CourseGroup s : CourseGroup.values()) {
 			java.util.Map<String,String> vMap = new java.util.HashMap<String, String>();
 			vMap.put("label", s.toString());
@@ -94,4 +94,4 @@ public class AuxItemsRestController {
     	return ResponseEntity.ok(theList);
     }
 
-} 
+}
