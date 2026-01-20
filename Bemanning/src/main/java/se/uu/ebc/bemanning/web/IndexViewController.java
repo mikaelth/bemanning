@@ -62,19 +62,19 @@ public class IndexViewController {
     private static Logger logger = Logger.getLogger(IndexViewController.class.getName());
 
     private String roleArr[] = { "ROLE_DIRECTOROFSTUDIES", "ROLE_ADMINISTRATOR", "ROLE_PHDADMIN" };
-    private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));
+    private Set<String> rolesForAll = new HashSet<String>(Arrays.asList(roleArr));
 
-/* 
+/*
 	@Autowired
 	TEService teService;
  */
 
 	@Autowired
 	StaffRepo staffRepo;
-	
+
 	@Autowired
 	StaffingService staffingService;
-	
+
 	@Autowired
 	UserRepo userRepo;
 
@@ -82,7 +82,7 @@ public class IndexViewController {
 	PhDService phdService;
 	@Autowired
 	PhDPositionRepo phdPositionRepo;
-	
+
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String indexPage(Model model, Principal principal, HttpServletRequest request) {
 			logger.debug("indexPage, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
@@ -92,7 +92,7 @@ public class IndexViewController {
        try {
 			if (principal == null) {
 				model.addAttribute("user", new DummyUser());
-			} else {			
+			} else {
 				model.addAttribute("user", userRepo.findUserByUsername(principal.getName()));
 			}
     		return "EntryPage";
@@ -102,7 +102,7 @@ public class IndexViewController {
 		}
 	}
 
-/* 
+/*
     @RequestMapping(value = "/tetest", method = RequestMethod.GET)
     public String indexTEPage(Model model, Principal principal, HttpServletRequest request) {
 			logger.debug("indexTEPage, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
@@ -111,7 +111,7 @@ public class IndexViewController {
 
        try {
 			teService.extractPersonTE(principal.getName());
-			
+
 			model.addAttribute("user", userRepo.findUserByUsername(principal.getName()));
     		return "EntryPage";
         } catch (Exception e) {
@@ -126,5 +126,5 @@ public class IndexViewController {
 		public String getGivenName() {
 			return "Anonymous";
 		}
-	}	
+	}
 }

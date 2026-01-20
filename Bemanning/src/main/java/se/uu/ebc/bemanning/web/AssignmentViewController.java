@@ -70,37 +70,37 @@ public class AssignmentViewController {
     private static Logger logger = Logger.getLogger(AssignmentViewController.class.getName());
 
     private String roleArr[] = { "ROLE_DIRECTOROFSTUDIES", "ROLE_ADMINISTRATOR", "ROLE_PHDADMIN", "ROLE_SYSADMIN" };
-    private Set<String> rolesForAll = new HashSet(Arrays.asList(roleArr));
+    private Set<String> rolesForAll = new HashSet<String>(Arrays.asList(roleArr));
 
  	private final static int ISP_MONTH = Calendar.OCTOBER;
  	private final static int ISP_DAY = 31;
 
 //	private final static int ISP_MONTH = 6 - 1;
 //	private final static int ISP_DAY = 30;
-	
+
 	@Autowired
 	AKKAService akkaService;
 
 	@Autowired
 	CourseInstanceRepo ciRepo;
-	
+
 	@Autowired
 	StaffRepo staffRepo;
-	
+
 	@Autowired
 	StaffingService staffingService;
-	
+
 	@Autowired
 	UserRepo userRepo;
 
 	@Autowired
 	OrganisationUnitRepo ouRepo;
-	
+
 	@Autowired
 	PhDService phdService;
 	@Autowired
 	PhDPositionRepo phdRepo;
-	
+
 	@Value("${selma.url}")
 	String selmaUrl;
 
@@ -145,10 +145,10 @@ public class AssignmentViewController {
 			if (logger.isErrorEnabled()) {
 				logger.error("viewByPerson, pesky exception "+e);
 			}
-           return "{\"ERROR\":"+e.getMessage()+"\"}";        
+           return "{\"ERROR\":"+e.getMessage()+"\"}";
         }
 	}
- 
+
     @RequestMapping(value = "/ViewByPerson", method = RequestMethod.POST)
     public String viewByPersonPost(@ModelAttribute("year") String year, Model model, Principal principal, HttpServletRequest request) {
 			logger.debug("viewByPerson, POST year "+ year);
@@ -169,7 +169,7 @@ public class AssignmentViewController {
 			String thisYear = year==null ? thisYear() : year;
 			Staff staff = staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear);
 			String budgetDept = staff.getOrganisationUnit().getEconomyHolder(thisYear).getSvName();
-			
+
 			logger.debug("viewByCourse, thisYear "+ thisYear);
 
 			List<CourseInstance> cis;
@@ -182,10 +182,10 @@ public class AssignmentViewController {
 			} else {
 				cis = staffingService.getCourseAssignments(thisYear, staff);
 			}
-			
+
 			for (CourseInstance ci : cis) {
 				logger.debug("course "+ci.getCourse().getCode() + " " + ci.getCourse().getSeName());
-//				logger.debug("viewByCourse, ci "+ReflectionToStringBuilder.toString(ci, ToStringStyle.MULTI_LINE_STYLE));			
+//				logger.debug("viewByCourse, ci "+ReflectionToStringBuilder.toString(ci, ToStringStyle.MULTI_LINE_STYLE));
 			}
 			logger.debug("viewByCourse, ous "+ReflectionToStringBuilder.toString(staff.getOrganisationUnit().getEconomyHolder(thisYear).getExpandedOuAbbreviations(thisYear), ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("viewByCourse, staff "+ReflectionToStringBuilder.toString(staff, ToStringStyle.MULTI_LINE_STYLE));
@@ -203,10 +203,10 @@ public class AssignmentViewController {
 			if (logger.isErrorEnabled()) {
 				logger.error("viewByCourse, pesky exception "+e);
 			}
-           return "{\"ERROR\":"+e.getMessage()+"\"}";        
+           return "{\"ERROR\":"+e.getMessage()+"\"}";
         }
 	}
- 
+
     @RequestMapping(value = "/ViewByCourse", method = RequestMethod.POST)
     public String viewByCoursePost(@ModelAttribute("year") String year, Model model, Principal principal, HttpServletRequest request) {
 			if (logger.isDebugEnabled()) {
@@ -227,12 +227,12 @@ public class AssignmentViewController {
 			logger.debug("viewStaffSummary, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 
 			String thisYear = year==null ? thisYear() : year;
-			OrganisationUnit budgetDept = ouid == null ? 
+			OrganisationUnit budgetDept = ouid == null ?
 				staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear).getOrganisationUnit().getEconomyHolder(thisYear) :
 				ouRepo.findById(ouid);
 
 			List<Staff> staff = staffingService.getAssignedStaff(thisYear,budgetDept);
-						
+
 
 			logger.debug("viewStaffSummary, staff "+ReflectionToStringBuilder.toString(staff, ToStringStyle.MULTI_LINE_STYLE));
 			logger.debug("viewStaffSummary, budgetYear "+ReflectionToStringBuilder.toString(new BudgetYear(thisYear, staffRepo.getStaffedYears()), ToStringStyle.MULTI_LINE_STYLE));
@@ -240,7 +240,7 @@ public class AssignmentViewController {
 //			logger.debug("viewStaffSummary, budgetDept "+ReflectionToStringBuilder.toString(budgetDept, ToStringStyle.MULTI_LINE_STYLE));
 
 			model.addAttribute("akka", akkaService);
-			
+
 			model.addAttribute("staff", staff);
 			model.addAttribute("serverTime", new Date());
 			model.addAttribute("budgetYear", new BudgetYear(thisYear, staffRepo.getStaffedYears()));
@@ -251,10 +251,10 @@ public class AssignmentViewController {
 			return "ViewStaffSummary";
         } catch (Exception e) {
 			logger.error("viewStaffSummary, pesky exception "+e);
-        	return "{\"ERROR\":"+e.getMessage()+"\"}";        
+        	return "{\"ERROR\":"+e.getMessage()+"\"}";
         }
 	}
- 
+
     @RequestMapping(value = "/ViewStaffSummary", method = RequestMethod.POST)
     public String viewStaffSummaryPost(@ModelAttribute("year") String year, @ModelAttribute("ou") Long ouid, Model model, Principal principal, HttpServletRequest request) {
 				logger.debug("viewStaffSummary, POST year "+ year);
@@ -284,7 +284,7 @@ public class AssignmentViewController {
 			} else {
 				List<PhDPosition> phds = new ArrayList<PhDPosition>();
 				PhDPosition phd = phdRepo.findByPerson(userRepo.findUserByUsername(principal.getName()));
-				if (phd != null) { 
+				if (phd != null) {
 					phds.add(phd);
 				}
 				model.addAttribute("phdStudents", phds);
@@ -299,7 +299,7 @@ public class AssignmentViewController {
 			if (logger.isErrorEnabled()) {
 				logger.error("viewProgressByPhD, pesky exception "+e);
 			}
-           return "{\"ERROR\":"+e.getMessage()+"\"}";        
+           return "{\"ERROR\":"+e.getMessage()+"\"}";
         }
 	}
 
@@ -314,8 +314,8 @@ public class AssignmentViewController {
 
 			String thisYear = year==null ? thisYear() : year;
 			OrganisationUnit budgetDept = staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear).getOrganisationUnit().getEconomyHolder(thisYear);
-			
-			List<CourseInstance> cis= ciRepo.findByYear(thisYear);			
+
+			List<CourseInstance> cis= ciRepo.findByYear(thisYear);
 
 			logger.debug("viewCourseEconOverview, courses "+ReflectionToStringBuilder.toString(cis, ToStringStyle.MULTI_LINE_STYLE));
 
@@ -330,10 +330,10 @@ public class AssignmentViewController {
 			if (logger.isErrorEnabled()) {
 				logger.error("viewCourseEconOverview, pesky exception "+e);
 			}
-           return "{\"ERROR\":"+e.getMessage()+"\"}";        
+           return "{\"ERROR\":"+e.getMessage()+"\"}";
         }
 	}
- 
+
     @RequestMapping(value = "/ViewCourseEconOverview", method = RequestMethod.POST)
     public String viewCourseEconOverviewPost(@ModelAttribute("year") String year, Model model, Principal principal, HttpServletRequest request) {
 			if (logger.isDebugEnabled()) {
@@ -354,8 +354,8 @@ public class AssignmentViewController {
 			logger.debug("viewCourseOverview, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
 
 			String thisYear = year==null ? thisYear() : year;
-			
-			List<CourseInstance> cis= ciRepo.findByYear(thisYear);			
+
+			List<CourseInstance> cis= ciRepo.findByYear(thisYear);
 
 			logger.debug("viewCourseOverview, courses "+ReflectionToStringBuilder.toString(cis, ToStringStyle.MULTI_LINE_STYLE));
 
@@ -371,10 +371,10 @@ public class AssignmentViewController {
 			if (logger.isErrorEnabled()) {
 				logger.error("viewCourseOverview, pesky exception "+e);
 			}
-           return "{\"ERROR\":"+e.getMessage()+"\"}";        
+           return "{\"ERROR\":"+e.getMessage()+"\"}";
         }
 	}
- 
+
     @RequestMapping(value = "/ViewCourseOverview", method = RequestMethod.POST)
     public String viewCourseOverviewPost(@ModelAttribute("year") String year, Model model, Principal principal, HttpServletRequest request) {
 			if (logger.isDebugEnabled()) {
@@ -414,7 +414,7 @@ public class AssignmentViewController {
 			this.year = year;
 		}
 
-		
+
 		BudgetYear () {
 			allYears = new ArrayList<String>();
 			allYears.add("2017");
@@ -426,8 +426,8 @@ public class AssignmentViewController {
 			this.year=year;
 		}
 	}
-	
-	
+
+
 	private boolean allowUserAll (HttpServletRequest request) throws Exception
 	{
 		boolean granted = false;
@@ -438,15 +438,15 @@ public class AssignmentViewController {
 					granted = true;
 					break;
 				}
-			}	
+			}
 		} catch (Exception ex) {
- 
+
 			logger.error("allowUserAll, pesky exception "+ex);
- 
+
 		}
-		
+
 		return granted;
-		
+
 	}
 
 	private String thisYear() {
@@ -456,5 +456,5 @@ public class AssignmentViewController {
 
 
 
-	
+
 }
