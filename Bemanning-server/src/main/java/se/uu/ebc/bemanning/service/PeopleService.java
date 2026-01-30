@@ -2,21 +2,17 @@ package se.uu.ebc.bemanning.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.dao.OptimisticLockingFailureException;
 
-import java.util.Map;
+
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.time.Instant;
-import java.time.Duration;
+
 
 import se.uu.ebc.bemanning.vo.PersonVO;
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.repo.PersonRepo;
+import se.uu.ebc.bemanning.security.UserRepo;
 /* 
 import se.uu.ebc.bemanning.vo.StaffVO;
 import se.uu.ebc.bemanning.entity.Staff;
@@ -45,6 +41,9 @@ public class PeopleService {
 
 	@Autowired
 	private PersonRepo personRepo;
+
+	@Autowired
+	private UserRepo userRepo;
 
 	private ModelMapper modelMapper = new ModelMapper();
 /* 
@@ -113,9 +112,7 @@ public class PeopleService {
 		personRepo.deleteById(pID);
 		return;
     }
-
-   	
- 				
+	
 	/* Staff */
 
 /* 

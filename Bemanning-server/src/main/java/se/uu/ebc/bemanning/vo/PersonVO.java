@@ -18,19 +18,22 @@ public class PersonVO {
 
     private Long id;
     private Set<UserRoleType> userRoles;
+   
     @NotBlank(message = "Given name is mandatory")
     private String givenName;
+   
     @NotBlank(message = "Family name is mandatory")
     private String familyName;
+   
     @NotBlank
-    private Boolean familyFirst;
+    private boolean familyFirst;
 
     private String note;    
 
     @NotBlank(message = "username is mandatory")
     private String username;
 
-    private Boolean isActive;
+    private boolean isActive;
 	private String formName;
 	private String name;
 	

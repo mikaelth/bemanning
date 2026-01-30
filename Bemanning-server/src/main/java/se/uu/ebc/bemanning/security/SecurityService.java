@@ -1,6 +1,7 @@
 package se.uu.ebc.bemanning.security;
 
 import org.springframework.stereotype.Service;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +19,12 @@ import java.util.ArrayList;
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.enums.UserRoleType;
 import se.uu.ebc.bemanning.security.UserRepo;
+import se.uu.ebc.bemanning.vo.PersonVO;
+import se.uu.ebc.bemanning.vo.UserVO;
 import se.uu.ebc.bemanning.security.SecurityServiceException;
 import se.uu.ebc.bemanning.security.BemanningUserService;
+
+import org.modelmapper.ModelMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +36,7 @@ public class SecurityService implements BemanningUserService {
     @Autowired
     UserRepo userRepo;
 
+	private ModelMapper modelMapper = new ModelMapper();
 
 	private final boolean ENABLED = true;
 	private final boolean ACCOUNT_NON_EXPIRED = true;
@@ -96,6 +102,12 @@ public class SecurityService implements BemanningUserService {
 
     }
 
+
+   	public UserVO getByUserName(String username) {
+		Person p = userRepo.findUserByUsername(username);
+		return modelMapper.map(p, UserVO.class);
+	}
+ 			
     @Override
     public UserDetails loadUserDetails(Authentication token) 
     	throws UsernameNotFoundException 

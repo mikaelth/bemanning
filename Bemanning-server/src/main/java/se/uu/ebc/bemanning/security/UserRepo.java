@@ -1,6 +1,5 @@
 package se.uu.ebc.bemanning.security;
 
-import jakarta.persistence.TypedQuery;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

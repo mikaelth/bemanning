@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.extern.slf4j.Slf4j;
 
 import se.uu.ebc.bemanning.repo.PersonRepo;
-import se.uu.ebc.bemanning.security.UserRepo;
-import se.uu.ebc.bemanning.entity.Person;
+import se.uu.ebc.bemanning.security.SecurityService;
 import se.uu.ebc.bemanning.enums.UserRoleType;
 import se.uu.ebc.bemanning.service.PeopleService;
 import se.uu.ebc.bemanning.vo.PersonVO;
@@ -46,7 +44,7 @@ public class PersonRestController {
 
 
 	@Autowired
-	PersonRepo personRepo;
+	SecurityService securityService;
 
 	@Autowired
 	PeopleService peopleService;
@@ -56,10 +54,11 @@ public class PersonRestController {
 	private record CreatePersonStatus (Boolean sucess, PersonVO people) {}
 	private record People (List<PersonVO> people) {};
 
+
 	/* Persons */
 
     @GetMapping(value="/people")
-    public ResponseEntity getAllEntities() {
+    public ResponseEntity<People> getAllEntities() {
 		return ResponseEntity.ok(new People (peopleService.getAllPersons() ));
     }
 
@@ -70,14 +69,14 @@ public class PersonRestController {
 
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @PostMapping(value="/people")
-	public ResponseEntity createEntity(@Valid @RequestBody PersonVO pVO) throws Exception {
+	public ResponseEntity<CreatePersonStatus> createEntity(@Valid @RequestBody PersonVO pVO) throws Exception {
 		PersonVO npVO = peopleService.savePerson(pVO);
 		return ResponseEntity.ok(new CreatePersonStatus(true,npVO));
 	}
 
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @PutMapping(value="/people/{id}")
-    public ResponseEntity updateEntity(@Valid @RequestBody PersonVO pVO, @PathVariable Long id) throws Exception {
+    public ResponseEntity<CreatePersonStatus> updateEntity(@Valid @RequestBody PersonVO pVO, @PathVariable Long id) throws Exception {
 		if (pVO.getId().equals(id)) {
 			PersonVO npVO = peopleService.savePerson(pVO);
 			return ResponseEntity.ok(new CreatePersonStatus(true,npVO));
@@ -89,7 +88,7 @@ public class PersonRestController {
 
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
 	@DeleteMapping(value = "/people/{id}")
-	public ResponseEntity deleteEntity(@PathVariable Long id) {
+	public ResponseEntity<DeleteStatus> deleteEntity(@PathVariable Long id) {
 		peopleService.deletePerson(id);
 		return ResponseEntity.ok(new DeleteStatus(true,id));
     }
@@ -98,17 +97,14 @@ public class PersonRestController {
 	/* Curren user REST service */
 
 
-	@Autowired
-	UserRepo userRepo;
-
 	@GetMapping(value="/currentuser")
-    public ResponseEntity loggedInUser(Principal principal) throws Exception {
+    public ResponseEntity<UserVO> loggedInUser(Principal principal) throws Exception {
 			log.debug("loggedInUser... "+ principal);
 			if (principal == null) {
 				// Dummy for testing purposes
      			return ResponseEntity.ok(createDummyUser());
 			} else {
-    			return ResponseEntity.ok(userRepo.findUserByUsername(principal.getName()));
+    			return ResponseEntity.ok(securityService.getByUserName(principal.getName()));
 			}
 
     }

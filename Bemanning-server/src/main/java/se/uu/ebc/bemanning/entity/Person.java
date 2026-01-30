@@ -56,7 +56,6 @@ public class Person extends Auditable {
     private String familyName;
     
     @Column(name = "FAMILY_FIRST")
-    @NotNull
     private boolean familyFirst;
     
     @Column(name = "NOTE", length = 255)
@@ -67,7 +66,7 @@ public class Person extends Auditable {
     private String username;
     
     @Column(name = "IS_ACTIVE")
-    private Boolean isActive;
+    private boolean isActive;
 
  
 	@ElementCollection(targetClass = UserRoleType.class)
@@ -77,20 +76,10 @@ public class Person extends Auditable {
 	@Enumerated(EnumType.STRING)
 	private Set<UserRoleType> userRoles = new HashSet<UserRoleType>();
  
-/* 
-    @OneToMany(mappedBy = "primaryExaminer")
-    private Set<Course> primExamCourses;
-
-    @OneToMany(mappedBy = "secondaryExaminer")
-    private Set<Course> secExamCourses;
-    
-    
- */
  
 	/* Constructors */
 	
 	public Person() {
-//		userRoles = new HashSet<UserRole>();
 		staff = new HashSet<Staff>();
 		userRoles.add(UserRoleType.Staff);
 	}
@@ -116,14 +105,5 @@ public class Person extends Auditable {
 		return ( (this.getPhDPosition() != null) && (this.getPhDPosition().getProgresses().size()>0) );	
 	}
   
-/* 
-  	public Set<UserRole> getRoles() {
-  		return this.roles;
-  	}
-  	
-  	public void setRoles( Set<UserRole> roles) {
-  		this.roles = roles;
-  	}
 
-  */
 }
