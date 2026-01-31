@@ -44,7 +44,7 @@ public abstract class Assignment extends Auditable {
     private Long id;
 
     @ManyToOne
-    @NotNull
+//    @NotNull
     @JoinColumn(name = "COURSE_STAFFING_FK")
     private CourseStaffing courseStaffing;
 

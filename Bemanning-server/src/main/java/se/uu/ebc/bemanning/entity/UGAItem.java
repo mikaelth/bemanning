@@ -1,49 +1,48 @@
 package se.uu.ebc.bemanning.entity;
 
 import java.util.Set;
-import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import se.uu.ebc.bemanning.enums.EmploymentType;
-
 @Entity
+@Table(name = "COURSE")
 @Getter
 @Setter
 //@Builder(toBuilder = true)
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
-@DiscriminatorValue("AKKA")
 @Slf4j
-public class AkkaStaff extends Staff {
+@DiscriminatorColumn(name="UGA_KIND", discriminatorType = DiscriminatorType.STRING)
+public abstract class UGAItem extends Auditable {
 
-    @Column(name = "EMPLOYEENUMBER", length = 255, unique = true)
-	private String employeeNumber;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
+    private Long id;  
     
-    /* Public methods */
+    @Column(name = "SE_NAME", length = 255)
+//    @NotNull
+    private String seName;
     
+    @Column(name = "EN_NAME", length = 255)
+    private String enName;
+     
+    @Column(name = "NOTE", length = 255)
+    private String note;
     
 }

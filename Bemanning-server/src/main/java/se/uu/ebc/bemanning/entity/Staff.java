@@ -41,8 +41,6 @@ import se.uu.ebc.bemanning.enums.EmploymentType;
 @Slf4j
 public abstract class Staff extends Auditable {
 
- //   private static Logger logger = LoggerFactory.getLogger(Staff.class);
-
     private final static int YEARLY_HOURS = 1700;
 	private final static int LECTURE_HOUR_COST = 1285;
     
@@ -97,7 +95,6 @@ public abstract class Staff extends Auditable {
     @Column(name = "UB", precision = 12)
     private Float ub;
     
- */
     
     @OneToMany(mappedBy = "primaryExaminer")
     private Set<CourseInstance> primExamCourses;
@@ -105,6 +102,7 @@ public abstract class Staff extends Auditable {
     @OneToMany(mappedBy = "secondaryExaminer")
     private Set<CourseInstance> secExamCourses;
     
+ */
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OLD_ID")

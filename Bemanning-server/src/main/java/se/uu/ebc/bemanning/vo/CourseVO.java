@@ -21,8 +21,6 @@ public class CourseVO {
     
     private String courseGroup;
     
-    private String period;
-
     private String note;
     
     private Float credits;
@@ -42,16 +40,5 @@ public class CourseVO {
  */
     
     
-
-	public CourseVO(Course c) {
-		this.id = c.getId();
-		this.code = c.getCode();
-		this.seName = c.getSeName();
-		this.enName = c.getEnName();
-		this.courseGroup = c.getCourseGroup();
-		this.period = c.getPeriod();
-		this.note = c.getNote();
-		this.credits = c.getCredits();
-	}
     
 }
