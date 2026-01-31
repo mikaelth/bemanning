@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.regex.Pattern;
+
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,8 @@ public class OrgHierarchyService {
     public List<OrgHierarchy> getOUs() throws IOException {
         log.debug("In OrgHierarchy");
 
-        final String url = "https://www.uu.se/kontakt-och-organisation/organisation?query=TB";
+        final String url = "https://www.uu.se/kontakt-och-organisation/organisation?query=";
+		String unitPattern = ".*query=([\\d\\w]+)";
 
 /*
 
@@ -68,8 +71,9 @@ public class OrgHierarchyService {
     }
  */
 
+
        // Fetch the HTML document
-        Document doc = Jsoup.connect(url)
+        Document doc = Jsoup.connect(url+"TB")
                              .userAgent("Mozilla/5.0")
                              .timeout(10 * 1000)
                              .get();
@@ -82,6 +86,17 @@ public class OrgHierarchyService {
 		Elements linkItems = doc.select("a[href*=/kontakt-och-organisation/organisation]");
 			for (Element el : linkItems) {
 				log.debug( el.attr("href").toString()) ;
+				String unit = el.attr("href").toString().replaceAll(unitPattern, "$1");
+				log.debug("Unit: " + unit);
+   			 	Document docx = Jsoup.connect(url+unit)
+                             .userAgent("Mozilla/5.0")
+                             .timeout(10 * 1000)
+                             .get();
+				Elements listItemsAgain = docx.select("ul > li > a");
+       			for (Element li : listItemsAgain) {
+            		String text = li.text().trim();
+					log.debug(text);
+				}			
 			}
 
         log.debug(listItems.toString());

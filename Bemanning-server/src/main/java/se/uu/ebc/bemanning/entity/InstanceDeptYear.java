@@ -1,14 +1,11 @@
 package se.uu.ebc.bemanning.entity;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Table;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -17,7 +14,7 @@ import jakarta.persistence.MapsId;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import se.uu.ebc.bemanning.enums.EmploymentType;
+//import se.uu.ebc.bemanning.enums.EmploymentType;
 
 @Entity
 @Table(name = "CI_DEPT_YEAR")

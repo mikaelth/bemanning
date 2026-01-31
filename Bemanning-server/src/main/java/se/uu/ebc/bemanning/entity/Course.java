@@ -35,7 +35,7 @@ public class Course extends Auditable {
     @OneToMany(mappedBy = "course")
     private Set<CourseInstance> courseInstances;
     
-    @Column(name = "CODE", length = 255)
+    @Column(name = "CODE", length = 255, unique = true)
     private String code;
     
     @Column(name = "SE_NAME", length = 255)
@@ -48,15 +48,18 @@ public class Course extends Auditable {
     @Column(name = "COURSE_GROUP", length = 255)
     private String courseGroup;
     
+/* 
     @Column(name = "PERIOD", length = 255)
-    private String period;
-    
+    private String period; 
+ */
+ 
     @Column(name = "NOTE", length = 255)
     private String note;
     
     @Column(name = "CREDITS", precision = 12)
     private Float credits;
-    
+
+/*     
     @Column(name = "EFFORT_ADMIN")
     private Integer effortAdmin = 0;
     
@@ -75,7 +78,7 @@ public class Course extends Auditable {
     @Column(name = "EFFORT_SEMINAR")
     private Integer effortSeminar = 0;
     
-/* 
+
 	@ManyToOne
     @JoinColumn(name = "PRIM_EXAM_FK")
 	private Person primaryExaminer;
