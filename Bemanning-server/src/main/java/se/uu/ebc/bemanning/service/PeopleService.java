@@ -10,10 +10,11 @@ import java.util.ArrayList;
 
 
 import se.uu.ebc.bemanning.vo.PersonVO;
+import se.uu.ebc.bemanning.vo.UserVO;
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.repo.PersonRepo;
-import se.uu.ebc.bemanning.security.UserRepo;
 /* 
+import se.uu.ebc.bemanning.security.UserRepo;
 import se.uu.ebc.bemanning.vo.StaffVO;
 import se.uu.ebc.bemanning.entity.Staff;
 import se.uu.ebc.bemanning.entity.MaxCost;
@@ -42,11 +43,11 @@ public class PeopleService {
 	@Autowired
 	private PersonRepo personRepo;
 
+	private ModelMapper modelMapper = new ModelMapper();
+/* 
 	@Autowired
 	private UserRepo userRepo;
 
-	private ModelMapper modelMapper = new ModelMapper();
-/* 
 	@Autowired
 	private StaffRepo staffRepo;
 
@@ -91,7 +92,7 @@ public class PeopleService {
 		Person p = personRepo.findById(id).get();
 		return modelMapper.map(p, PersonVO.class);
 	}   
-	
+		
 	public PersonVO savePerson(PersonVO pvo) throws Exception {
     	Person p = pvo.getId() == null ? toPerson(pvo) : toPerson(personRepo.findById(pvo.getId()).get(), pvo);
     	personRepo.save(p);

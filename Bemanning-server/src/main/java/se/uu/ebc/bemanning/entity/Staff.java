@@ -20,6 +20,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +37,9 @@ import se.uu.ebc.bemanning.enums.EmploymentType;
 @NoArgsConstructor
 @AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
+@DiscriminatorColumn(name="STAFF_KIND", discriminatorType = DiscriminatorType.STRING)
 @Slf4j
-public class Staff extends Auditable {
+public abstract class Staff extends Auditable {
 
  //   private static Logger logger = LoggerFactory.getLogger(Staff.class);
 

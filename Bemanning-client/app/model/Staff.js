@@ -19,6 +19,7 @@ Ext.define('Bemanning.model.Staff', {
     fields: [
 		{name: 'id', type: 'int'},
 		{name: 'personId', type: 'int'},
+		{name: 'staffKind', type: 'string'},
 		{name: 'organisationUnitId', type: 'int'},
 		{name: 'program', type: 'string'},
 		{name: 'percentGU', type: 'float'},

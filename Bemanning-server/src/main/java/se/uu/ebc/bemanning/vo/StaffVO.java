@@ -1,6 +1,7 @@
 package se.uu.ebc.bemanning.vo;
 
 import se.uu.ebc.bemanning.enums.EmploymentType;
+import se.uu.ebc.bemanning.enums.StaffKind;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,8 +36,6 @@ public class StaffVO {
 	private String formName;
 	private String ouDesignation;
 
-
-	
-
+	private StaffKind staffKind;
 
 }

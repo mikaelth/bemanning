@@ -55,7 +55,7 @@ public class PersonRestController {
 	private record People (List<PersonVO> people) {};
 
 
-	/* Persons */
+	/* Persons */	
 
     @GetMapping(value="/people")
     public ResponseEntity<People> getAllEntities() {
@@ -117,14 +117,13 @@ public class PersonRestController {
 		depts.put(Integer.toString (Year.now().getValue()) , "IOB");
 
 		UserVO uvo = UserVO.builder()
-		.id(0L)
-		.username("anonymous")
-		.formName("Anonymous")
-		.name("Anonymous")
-		.userRoles(roles)
-		.principalDepts( depts )
-		.build();
-
+			.id(0L)
+			.username("anonymous")
+			.formName("Anonymous")
+			.name("Anonymous")
+			.userRoles(roles)
+			.principalDepts( depts )
+			.build();
 		return uvo;
 	}
 

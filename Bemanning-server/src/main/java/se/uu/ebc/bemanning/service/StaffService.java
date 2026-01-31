@@ -24,11 +24,14 @@ import se.uu.ebc.bemanning.vo.StaffVO;
 
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.entity.Staff;
+import se.uu.ebc.bemanning.entity.AkkaStaff;
+import se.uu.ebc.bemanning.entity.ExternalStaff;
 import se.uu.ebc.bemanning.entity.MaxCost;
 import se.uu.ebc.bemanning.entity.OrganisationUnit;
 
 import se.uu.ebc.bemanning.enums.UserRoleType;
 import se.uu.ebc.bemanning.enums.EmploymentType;
+import se.uu.ebc.bemanning.enums.StaffKind;
 
 import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
@@ -99,7 +102,11 @@ public class StaffService {
     }
 
 	private Staff toStaff (StaffVO svo) throws Exception {
- 		return toStaff (new Staff(), svo);
+		return switch (svo.getStaffKind()) {
+ 			case StaffKind.AKKA -> toStaff (new AkkaStaff(), svo);
+ 			case StaffKind.EXTERNAL -> toStaff (new ExternalStaff(), svo);
+ 			default -> throw new IllegalArgumentException ("No such staff kind");
+ 		};
    	}
 
 	private Staff toStaff (Staff s, StaffVO svo) throws Exception {

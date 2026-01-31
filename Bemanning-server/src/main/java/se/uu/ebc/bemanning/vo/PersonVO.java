@@ -25,7 +25,6 @@ public class PersonVO {
     @NotBlank(message = "Family name is mandatory")
     private String familyName;
    
-    @NotBlank
     private boolean familyFirst;
 
     private String note;    

@@ -1,11 +1,12 @@
 package se.uu.ebc.bemanning.controller;
 
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.dao.OptimisticLockingFailureException;
-
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 
@@ -58,7 +59,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
     		IllegalArgumentException.class,
-            MethodArgumentTypeMismatchException.class
+            MethodArgumentTypeMismatchException.class,
+            HttpMessageNotReadableException.class
     	})
     public ResponseEntity<String> handleBadRequestExceptions(Exception ex) {
 		log.debug("Bad request exception caught " + ex);
