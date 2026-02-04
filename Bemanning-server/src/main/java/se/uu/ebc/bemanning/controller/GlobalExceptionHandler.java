@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,40 +22,44 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-/*
 
-    @ExceptionHandler(Exception.class)
-    public String handleException(Exception e) {
-        if (e instanceof ArithmeticException) {
-            return "params error";
-        }
-        if (e instanceof Exception) {
-            return "Internal server exception";
-        }
-        return null;
-    }
-
- */
-
+	private record ErrorResponse (int statusCode, String message, LocalDateTime timeStamp) {};
+	
+	
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
 		log.debug("ResourceNotFoundException caught " + ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.NOT_FOUND.value(), 
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IOException.class)
-    public ResponseEntity<String> handleIOIssueFound(ResourceNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleIOIssueFound(ResourceNotFoundException ex) {
 		log.debug("IOException caught " + ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+       return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
    @ExceptionHandler({
     		ConfigurationException.class, MappingException.class, UnsupportedOperationException.class,
     		ClassCastException.class, NullPointerException.class, OptimisticLockingFailureException.class
     	})
-    public ResponseEntity<String> handleInternalExceptions(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleInternalExceptions(Exception ex) {
 		log.debug("Internal error exception caught " + ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+     return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({
@@ -62,15 +67,25 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class
     	})
-    public ResponseEntity<String> handleBadRequestExceptions(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleBadRequestExceptions(Exception ex) {
 		log.debug("Bad request exception caught " + ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(), 
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
 		log.debug("General exception caught " + ex);
-        return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

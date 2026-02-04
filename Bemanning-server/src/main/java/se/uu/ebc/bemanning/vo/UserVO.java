@@ -21,7 +21,11 @@ public class UserVO {
     private String username;
   	private String formName;
 	private String name;
+	private Map<String, String> principalDepts;
+	private Set<UserRoleType> userRoles;
+
+/* 
 	private Map<String, String> principalDepts = new HashMap<String, String>();
 	private Set<UserRoleType> userRoles = new HashSet<UserRoleType>();
-
+ */
 }

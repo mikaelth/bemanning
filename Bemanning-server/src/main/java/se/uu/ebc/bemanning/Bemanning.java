@@ -17,6 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
+import org.springframework.web.service.registry.ImportHttpServices;
 
 
 
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 // @Import({StaticResourceConfiguration.class, LuntanSecurityConfig.class, LuntanMethodSecurityConfig.class})
 // @ComponentScan(basePackages = {"se.uu.ebc.bemanning.service","se.uu.ebc.bemanning.controller","se.uu.ebc.bemanning.security"})
 @SpringBootApplication
+//@ImportHttpServices(basePackages = "se.uu.ebc.bemanning.controller")
 public class Bemanning /* extends SpringBootServletInitializer { Deploying to Tomcat container */ {
 	
 	@Value("${luntan.rest.base.url}")

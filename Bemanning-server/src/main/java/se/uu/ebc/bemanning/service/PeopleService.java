@@ -40,8 +40,13 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 public class PeopleService {
 
 
-	@Autowired
-	private PersonRepo personRepo;
+//	@Autowired
+	private final PersonRepo personRepo;
+    // Spring automatically injects this dependency!
+    public PeopleService(PersonRepo personRepo) {
+        this.personRepo = personRepo;
+    }
+
 
 	private ModelMapper modelMapper = new ModelMapper();
 /* 

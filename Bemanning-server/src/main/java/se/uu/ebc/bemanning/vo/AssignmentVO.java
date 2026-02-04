@@ -1,7 +1,5 @@
 package se.uu.ebc.bemanning.vo;
 
-import se.uu.ebc.bemanning.entity.Assignment;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

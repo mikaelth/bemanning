@@ -1,7 +1,6 @@
 package se.uu.ebc.bemanning.security;
 
 import org.springframework.stereotype.Service;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,19 +9,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 
 import java.util.List;
 import java.util.ArrayList;
 
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.enums.UserRoleType;
-import se.uu.ebc.bemanning.security.UserRepo;
-import se.uu.ebc.bemanning.vo.PersonVO;
-import se.uu.ebc.bemanning.vo.UserVO;
 import se.uu.ebc.bemanning.security.SecurityServiceException;
-import se.uu.ebc.bemanning.security.BemanningUserService;
+import se.uu.ebc.bemanning.security.UserRepo;
+import se.uu.ebc.bemanning.vo.UserVO;
 
 import org.modelmapper.ModelMapper;
 
@@ -109,7 +105,7 @@ public class SecurityService implements BemanningUserService {
 	}
  			
     @Override
-    public UserDetails loadUserDetails(Authentication token) 
+    public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) 
     	throws UsernameNotFoundException 
     {
 		log.debug("MTh loadUserDetails, got token "+token);

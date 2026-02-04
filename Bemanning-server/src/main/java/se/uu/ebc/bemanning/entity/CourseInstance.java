@@ -14,6 +14,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 //@Builder(toBuilder = true)
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
 @Slf4j
-public class CourseInstance  extends Auditable {
+//@Table(uniqueConstraints = { @UniqueConstraint(name = "UniqueCodeAndExtra", columnNames = { "course", "extraDesignation" }) })
+@DiscriminatorColumn(name="TEACHING_KIND", discriminatorType = DiscriminatorType.STRING)
+public abstract class CourseInstance extends Auditable {
     
     
     @Id

@@ -2,7 +2,6 @@ package se.uu.ebc.bemanning.controller;
 
 import java.security.Principal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
 
-import se.uu.ebc.bemanning.repo.PersonRepo;
+
 import se.uu.ebc.bemanning.security.SecurityService;
 import se.uu.ebc.bemanning.enums.UserRoleType;
 import se.uu.ebc.bemanning.service.PeopleService;
@@ -43,12 +42,15 @@ import jakarta.validation.Valid;
 public class PersonRestController {
 
 
-	@Autowired
-	SecurityService securityService;
 
-	@Autowired
-	PeopleService peopleService;
+    // Spring automatically injects this dependency!
+	private final SecurityService securityService;
+	private final PeopleService peopleService;
 
+	public PersonRestController(SecurityService securityService, PeopleService peopleService) {
+		this.securityService = securityService;
+		this.peopleService = peopleService;
+	}
 
 	private record DeleteStatus (Boolean sucess, Long id) {}
 	private record CreatePersonStatus (Boolean sucess, PersonVO people) {}
