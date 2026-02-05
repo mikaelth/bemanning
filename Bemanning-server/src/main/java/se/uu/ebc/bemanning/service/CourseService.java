@@ -76,9 +76,10 @@ public class CourseService {
 	/* Course instances */
 	
     public List<CourseInstanceVO> getCourseInstances() {
-        Map<String,List<CourseInstanceVO>> courseInstances = luntanCIRestClient.get()
-        .retrieve()
-        .body(new ParameterizedTypeReference<>() {});
+        Map<String,List<CourseInstanceVO>> courseInstances = luntanCIRestClient
+        	.get()
+        	.retrieve()
+        	.body(new ParameterizedTypeReference<>() {});
 
        return courseInstances.get("cis");
 
