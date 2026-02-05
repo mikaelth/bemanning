@@ -12,9 +12,8 @@ import java.util.Comparator;
 import java.time.Year;
 
 import jakarta.annotation.PostConstruct;
-
-import se.uu.ebc.bemanning.entity.Staff;
 import se.uu.ebc.bemanning.entity.Progress;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.entity.PhDPosition;
 import se.uu.ebc.bemanning.repo.PhDPositionRepo;
 import se.uu.ebc.bemanning.repo.ProgressRepo;

@@ -1,7 +1,12 @@
-package se.uu.ebc.bemanning.entity;
+package se.uu.ebc.bemanning.entity.courseinstance;
 
+import java.time.LocalDateTime;
+import java.util.Set;
 import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,10 +15,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
-
-import se.uu.ebc.bemanning.enums.EmploymentType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 //@Builder(toBuilder = true)
-@NoArgsConstructor
-//@AllArgsConstructor
+//@NoArgsConstructor
+@AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
 @Slf4j
-@DiscriminatorValue("TE")
-public class AssignmentTE extends Assignment {
+//@Table(uniqueConstraints = { @UniqueConstraint(name = "UniqueCodeAndExtra", columnNames = { "course", "extraDesignation" }) })
+@DiscriminatorValue("COTEACHING")
+public class CoTeachingInstance  extends CourseInstance {
     
-
-    
-    
-    /* Public methods */
-    
-
+  
 }

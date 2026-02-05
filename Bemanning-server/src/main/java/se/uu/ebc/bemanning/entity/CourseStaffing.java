@@ -15,6 +15,11 @@ import jakarta.persistence.Embedded;
 
 import java.util.Set;
 
+import se.uu.ebc.bemanning.entity.assignment.AssignmentOutcome;
+import se.uu.ebc.bemanning.entity.assignment.AssignmentPlan;
+import se.uu.ebc.bemanning.entity.assignment.AssignmentTE;
+import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 
 import lombok.*;

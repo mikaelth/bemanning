@@ -43,10 +43,9 @@ import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.PhDPositionRepo;
 import se.uu.ebc.bemanning.security.UserRepo;
 import se.uu.ebc.bemanning.security.BemanningUser;
-import se.uu.ebc.bemanning.entity.CourseInstance;
-import se.uu.ebc.bemanning.entity.Staff;
 import se.uu.ebc.bemanning.entity.OrganisationUnit;
-
+import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.service.TestService;
 
 @Slf4j

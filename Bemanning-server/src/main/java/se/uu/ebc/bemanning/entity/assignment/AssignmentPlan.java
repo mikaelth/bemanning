@@ -1,18 +1,18 @@
-package se.uu.ebc.bemanning.entity;
-
-import java.util.Set;
+package se.uu.ebc.bemanning.entity.assignment;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import se.uu.ebc.bemanning.enums.EmploymentType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -21,16 +21,17 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 //@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
-@DiscriminatorValue("OTHER")
 @Slf4j
-public class DeptUGA extends UGAItem {
+@DiscriminatorValue("PLAN")
+public class AssignmentPlan extends Assignment {
+    
 
     
-    @OneToMany(mappedBy = "course")
-    private Set<CourseInstance> courseInstances;
     
+    /* Public methods */
     
+
 }

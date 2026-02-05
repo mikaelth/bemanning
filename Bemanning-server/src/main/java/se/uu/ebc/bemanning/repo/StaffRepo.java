@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.repository.query.Param;
 
 import se.uu.ebc.bemanning.entity.Person;
-import se.uu.ebc.bemanning.entity.Staff;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.entity.OrganisationUnit;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 

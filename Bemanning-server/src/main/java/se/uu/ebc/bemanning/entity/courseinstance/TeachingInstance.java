@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.entity;
+package se.uu.ebc.bemanning.entity.courseinstance;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -16,7 +16,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.DiscriminatorValue;
 
-import se.uu.ebc.bemanning.entity.CourseInstance;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

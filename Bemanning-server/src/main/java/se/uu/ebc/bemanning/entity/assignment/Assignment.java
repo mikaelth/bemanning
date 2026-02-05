@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.entity;
+package se.uu.ebc.bemanning.entity.assignment;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +14,10 @@ import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 
 import se.uu.ebc.bemanning.enums.EmploymentType;
+import se.uu.ebc.bemanning.entity.Auditable;
+import se.uu.ebc.bemanning.entity.CourseStaffing;
+import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

@@ -14,7 +14,7 @@ import java.util.Map;
 
 import se.uu.ebc.luntan.vo.CourseInstanceVO;
 
-import se.uu.ebc.bemanning.entity.Course;
+import se.uu.ebc.bemanning.entity.course.Course;
 import se.uu.ebc.bemanning.vo.CourseVO;
 import se.uu.ebc.bemanning.repo.CourseRepo;
 

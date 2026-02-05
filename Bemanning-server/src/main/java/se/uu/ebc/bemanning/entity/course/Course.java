@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.entity;
+package se.uu.ebc.bemanning.entity.course;
 
 import java.util.Set;
 
@@ -13,6 +13,22 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.DiscriminatorValue;
+
+import se.uu.ebc.bemanning.entity.Auditable;
+import se.uu.ebc.bemanning.entity.CourseGrant;
+import se.uu.ebc.bemanning.entity.CourseStaffing;
+import se.uu.ebc.bemanning.entity.FactorRecord;
+import se.uu.ebc.bemanning.entity.InstanceDeptYear;
+import se.uu.ebc.bemanning.entity.MaxCost;
+import se.uu.ebc.bemanning.entity.OrganisationUnit;
+import se.uu.ebc.bemanning.entity.Person;
+import se.uu.ebc.bemanning.entity.PhDPosition;
+import se.uu.ebc.bemanning.entity.Progress;
+import se.uu.ebc.bemanning.entity.YearlyStaffing;
+import se.uu.ebc.bemanning.entity.YearsOfHierarchy;
+
+import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

@@ -23,9 +23,9 @@ import se.uu.ebc.bemanning.repo.PersonRepo;
 import se.uu.ebc.bemanning.vo.StaffVO;
 
 import se.uu.ebc.bemanning.entity.Person;
-import se.uu.ebc.bemanning.entity.Staff;
-import se.uu.ebc.bemanning.entity.AkkaStaff;
-import se.uu.ebc.bemanning.entity.ExternalStaff;
+import se.uu.ebc.bemanning.entity.staff.AkkaStaff;
+import se.uu.ebc.bemanning.entity.staff.ExternalStaff;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.entity.MaxCost;
 import se.uu.ebc.bemanning.entity.OrganisationUnit;
 

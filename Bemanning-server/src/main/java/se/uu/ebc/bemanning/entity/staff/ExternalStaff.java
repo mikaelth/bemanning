@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.entity;
+package se.uu.ebc.bemanning.entity.staff;
 
 import java.util.Set;
 import java.time.LocalDateTime;
@@ -26,7 +26,6 @@ import jakarta.persistence.DiscriminatorType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-
 import se.uu.ebc.bemanning.enums.EmploymentType;
 
 @Entity

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.repository.query.Param;
 
-import se.uu.ebc.bemanning.entity.Assignment;
+import se.uu.ebc.bemanning.entity.assignment.Assignment;
 
 import java.util.Set;
 import java.util.List;

@@ -13,6 +13,7 @@ import jakarta.persistence.MapsId;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 
 //import se.uu.ebc.bemanning.enums.EmploymentType;
 

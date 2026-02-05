@@ -30,7 +30,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-
+import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 
 @Entity

@@ -18,6 +18,7 @@ import jakarta.persistence.FetchType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 
 @Entity
 @Table(name = "ORGANISATION_UNIT")
