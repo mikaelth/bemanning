@@ -39,8 +39,8 @@ public class SecurityService implements BemanningUserService {
 	private final boolean CREDENTIALS_NON_EXPIRED = true;
 	private final boolean ACCOUNT_NON_LOCKED = true;
 	private final String ROLE_PREFIX = "ROLE_";
-	
-	
+
+
     /**
      * @see se.uu.ebc.bemanning.security.SecurityService#loadUserByUsername(String)
      */
@@ -63,7 +63,7 @@ public class SecurityService implements BemanningUserService {
 			Person localUser = userRepo.findUserByUsername(username);
 
 			log.debug("loadUserByUsername, localUser: "+ localUser);
-	
+
 			log.debug("MTh handleLoadUserByUsername, got user "+localUser);
 
 			if (localUser == null) {
@@ -71,8 +71,8 @@ public class SecurityService implements BemanningUserService {
 			}
 
 			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
- 
-/* 
+
+/*
 			for (UserRole userRole : localUser.getUserRoles()) {
 				authorities.add( new SimpleGrantedAuthority(ROLE_PREFIX + userRole.getRole().toString().toUpperCase()) );
 				if (logger.isDebugEnabled()) {
@@ -80,14 +80,20 @@ public class SecurityService implements BemanningUserService {
 				}
 			}
  */
- 
+
 			for (UserRoleType userRole : localUser.getUserRoles()) {
 				authorities.add( new SimpleGrantedAuthority(ROLE_PREFIX + userRole.toString().toUpperCase()) );
 				log.debug("MTh loadUserByUsername, role "+userRole);
 			}
- 
+
+			/* Add role COURSELEADER dynamically if person has been assigned as course leader */
+			if ( localUser.getStaff().stream().filter(s -> s.isCourseLeader()).count() > 0) {
+				authorities.add( new SimpleGrantedAuthority(ROLE_PREFIX + UserRoleType.CourseCoordinator.toString().toUpperCase()) );
+			}
+
 //			authorities.add( new SimpleGrantedAuthority("ROLE_USER") );
-			
+
+
 			return new User(localUser.getUsername(), "token", ENABLED, ACCOUNT_NON_EXPIRED, CREDENTIALS_NON_EXPIRED, ACCOUNT_NON_LOCKED, authorities);
 		} catch (Throwable th)
         {
@@ -103,10 +109,10 @@ public class SecurityService implements BemanningUserService {
 		Person p = userRepo.findUserByUsername(username);
 		return modelMapper.map(p, UserVO.class);
 	}
- 			
+
     @Override
-    public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) 
-    	throws UsernameNotFoundException 
+    public UserDetails loadUserDetails(CasAssertionAuthenticationToken token)
+    	throws UsernameNotFoundException
     {
 		log.debug("MTh loadUserDetails, got token "+token);
 		log.debug("MTh loadUserDetails, got principal "+(String)token.getPrincipal());
