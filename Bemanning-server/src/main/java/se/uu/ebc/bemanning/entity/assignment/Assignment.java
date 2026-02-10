@@ -15,7 +15,6 @@ import jakarta.persistence.DiscriminatorType;
 
 import se.uu.ebc.bemanning.enums.EmploymentType;
 import se.uu.ebc.bemanning.entity.Auditable;
-import se.uu.ebc.bemanning.entity.CourseStaffing;
 import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 

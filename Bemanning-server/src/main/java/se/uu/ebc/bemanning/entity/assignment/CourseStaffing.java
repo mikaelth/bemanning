@@ -1,6 +1,8 @@
-package se.uu.ebc.bemanning.entity;
+package se.uu.ebc.bemanning.entity.assignment;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,9 +17,9 @@ import jakarta.persistence.Embedded;
 
 import java.util.Set;
 
-import se.uu.ebc.bemanning.entity.assignment.AssignmentOutcome;
-import se.uu.ebc.bemanning.entity.assignment.AssignmentPlan;
-import se.uu.ebc.bemanning.entity.assignment.AssignmentTE;
+import jakarta.persistence.DiscriminatorColumn;
+import se.uu.ebc.bemanning.entity.Auditable;
+import se.uu.ebc.bemanning.entity.OrganisationUnit;
 import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.EmploymentType;
@@ -33,8 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
+@DiscriminatorColumn(name="STAFFING_KIND", discriminatorType = DiscriminatorType.STRING)
 @Slf4j
-public class CourseStaffing extends Auditable {
+public abstract class CourseStaffing extends Auditable {
 
 	private final static int LECTURE_HOUR_COST = 1285;
 
@@ -48,6 +51,14 @@ public class CourseStaffing extends Auditable {
     @Column(name = "ID")
     private Long id;
 
+    @Column(name = "NOTE", length = 255)
+    private String note;
+
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "DEPARTMENT_FK")
+    private OrganisationUnit assigningDept;
+
     @ManyToOne
     @NotNull
     @JoinColumn(name = "STAFF_FK")
@@ -57,25 +68,8 @@ public class CourseStaffing extends Auditable {
     @NotNull
     @JoinColumn(name = "COURSE_INSTANCE_FK")
     private CourseInstance courseInstance;
-
-    @ManyToOne
-    @NotNull
-    @JoinColumn(name = "DEPARTMENT_FK")
-    private OrganisationUnit assigningDept;
-
-    @OneToOne(mappedBy = "courseStaffing")
-    private AssignmentPlan plan;
-
-    @OneToOne(mappedBy = "courseStaffing")
-    private AssignmentTE te;
-
-    @OneToOne(mappedBy = "courseStaffing")
-    private AssignmentOutcome outcome;
-
-
-    @Column(name = "NOTE", length = 255)
-    private String note;
-
+  
+  
     /* Public methods */
 
 /*
@@ -130,12 +124,10 @@ public class CourseStaffing extends Auditable {
     }
  */
 
-    public float getTotalHours() {
-    	return plan.getTotalHours();
-    }
+    public abstract float getTotalHours();
 
-    public float getPlainTeachingHours() {
-    	return plan.getPlainTeachingHours();
-    }
+    public abstract float getPlainTeachingHours();
+
+//   public abstract CourseInstance getCourseInstance();
 
 }

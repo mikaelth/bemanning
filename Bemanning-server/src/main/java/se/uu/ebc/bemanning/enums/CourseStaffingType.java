@@ -3,10 +3,8 @@ package se.uu.ebc.bemanning.enums;
 /**
  * 
  */
-public enum AssignmentType
+public enum CourseStaffingType
 {
-	PLAN,
-	TE,
-	OUTCOME,
+	MODERN,
 	LEGACY;
 }

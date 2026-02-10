@@ -10,6 +10,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
 
+import org.thymeleaf.exceptions.TemplateInputException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -50,7 +52,8 @@ public class GlobalExceptionHandler {
 
    @ExceptionHandler({
     		ConfigurationException.class, MappingException.class, UnsupportedOperationException.class,
-    		ClassCastException.class, NullPointerException.class, OptimisticLockingFailureException.class
+    		ClassCastException.class, NullPointerException.class, OptimisticLockingFailureException.class,
+    		TemplateInputException.class
     	})
     public ResponseEntity<ErrorResponse> handleInternalExceptions(Exception ex) {
 		log.debug("Internal error exception caught " + ex);

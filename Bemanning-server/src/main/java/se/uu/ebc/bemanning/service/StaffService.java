@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.time.Instant;
 import java.time.Duration;
+import java.util.stream.Collectors;
 
 /* 
 import se.uu.ebc.bemanning.vo.PersonVO;
@@ -228,6 +229,11 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 	public List<Staff> getAssignedStaff (String year, OrganisationUnit dept) 
 	{
 		return staffRepo.findUserByOuListAndYear(dept.getExpandedOu(year),year);
+ 	}
+
+	public List<Staff> getAssignedStaff (String year) 
+	{
+		return staffRepo.findByYear(year).stream().collect(Collectors.toList());
  	}
 
 }

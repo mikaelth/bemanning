@@ -16,7 +16,6 @@ import jakarta.persistence.DiscriminatorValue;
 
 import se.uu.ebc.bemanning.entity.Auditable;
 import se.uu.ebc.bemanning.entity.CourseGrant;
-import se.uu.ebc.bemanning.entity.CourseStaffing;
 import se.uu.ebc.bemanning.entity.FactorRecord;
 import se.uu.ebc.bemanning.entity.InstanceDeptYear;
 import se.uu.ebc.bemanning.entity.MaxCost;
@@ -26,7 +25,7 @@ import se.uu.ebc.bemanning.entity.PhDPosition;
 import se.uu.ebc.bemanning.entity.Progress;
 import se.uu.ebc.bemanning.entity.YearlyStaffing;
 import se.uu.ebc.bemanning.entity.YearsOfHierarchy;
-
+import se.uu.ebc.bemanning.entity.assignment.CourseStaffing;
 import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 
