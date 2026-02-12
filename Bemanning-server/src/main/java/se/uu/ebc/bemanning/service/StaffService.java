@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Map;
 import java.util.List;
@@ -37,6 +39,7 @@ import se.uu.ebc.bemanning.enums.StaffKind;
 import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
 import se.uu.ebc.bemanning.repo.MaxCostRepo;
+import se.uu.ebc.bemanning.security.UserRepo;
 
 import org.modelmapper.ModelMapper;
 
@@ -49,11 +52,11 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 public class StaffService {
 
 
-/* 
-	@Autowired
-	private PersonRepo personRepo;
 
- */
+	@Autowired
+	private UserRepo userRepo;
+
+
 	private ModelMapper modelMapper = new ModelMapper();
  
 	@Autowired
@@ -233,7 +236,29 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 
 	public List<Staff> getAssignedStaff (String year) 
 	{
-		return staffRepo.findByYear(year).stream().collect(Collectors.toList());
+		List<Staff> staffList = new ArrayList<Staff>();
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		log.debug("auth, {}",auth);
+
+		if (auth != null && auth.isAuthenticated()) {
+			if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoleType.CoreDataAdmin.toString().toUpperCase()))) {
+				staffList = staffRepo.findByYear(year);
+				log.debug("getAssignedStaff, CoreDataAdmin, got {} staff", staffList.size());
+			} else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoleType.DirectorOfStudies.toString().toUpperCase()))) {
+				String uName = auth.getName();
+				Person p = userRepo.findUserByUsername(uName);
+				staffList = this.getAssignedStaff( year, this.findUserByPersonAndYear(p, year).getOrganisationUnit().getEconomyHolder(year) );
+				log.debug("getAssignedStaff, DirectorOfStudies, got {} staff", staffList.size());
+			} else {
+				String uName = auth.getName();
+				Person p = userRepo.findUserByUsername("uName");
+				staffList = staffRepo.findUserByPersonAndYear(p, year);
+				log.debug("getAssignedStaff, Staff, got {} staff", staffList.size());
+		}
+		}
+			return staffList;
+
  	}
 
 }

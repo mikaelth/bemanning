@@ -119,4 +119,11 @@ public class CourseStaffingModern extends CourseStaffing {
     	return plan.getPlainTeachingHours();
     }
 
+    public Float getHoursAdmin(){return plan.getHoursAdmin();};
+    public Float getHoursDevelopment(){return plan.getHoursDevelopment();};
+    public Float getHoursLecture(){return plan.getHoursLecture();};
+    public Float getHoursPractical(){return plan.getHoursPractical();};
+    public Float getHoursExcursion(){return plan.getHoursExcursion();};
+    public Float getHoursSeminar(){return plan.getHoursSeminar();};
+
 }

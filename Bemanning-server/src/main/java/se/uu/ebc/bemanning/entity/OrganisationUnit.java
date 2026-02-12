@@ -38,7 +38,7 @@ public class OrganisationUnit  extends Auditable {
     private Long id;
 
  
-	@OneToMany(mappedBy = "assigningDept", fetch = FetchType.LAZY)
+	  @OneToMany(mappedBy = "assigningDept", fetch = FetchType.LAZY)
     private Set<CourseStaffing> assignments;
     
     @OneToMany(mappedBy = "debitUnit", fetch = FetchType.LAZY)

@@ -16,6 +16,7 @@ import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 
 import se.uu.ebc.bemanning.entity.Auditable;
+import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -46,5 +47,12 @@ public abstract class UGAItem extends Auditable {
      
     @Column(name = "NOTE", length = 255)
     private String note;
+
+    @OneToMany(mappedBy = "course")
+    private Set<CourseInstance> courseInstances;
     
+
+    public abstract String getFullCourseNameSv();
+
 }
+

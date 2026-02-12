@@ -29,7 +29,7 @@ import se.uu.ebc.bemanning.entity.Progress;
 import se.uu.ebc.bemanning.entity.YearlyStaffing;
 import se.uu.ebc.bemanning.entity.YearsOfHierarchy;
 import se.uu.ebc.bemanning.entity.assignment.CourseStaffing;
-import se.uu.ebc.bemanning.entity.course.Course;
+import se.uu.ebc.bemanning.entity.course.UGAItem;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 
 import lombok.*;
@@ -57,7 +57,7 @@ public abstract class CourseInstance extends Auditable {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "COURSE_FK")
-	private Course course;
+	private UGAItem course;
 
     @ManyToOne
     @NotNull
@@ -173,11 +173,11 @@ public abstract class CourseInstance extends Auditable {
 
 	/* Public methods */
 	 
-/* 
-	public String getDesignation() {
-		return course.getCode() +" " + course.getSeName() + " " + extraDesignation;
-	}
 
+	public String getDesignation() {
+		return course.getFullCourseNameSv() + " " + extraDesignation;
+	}
+/* 
 	public int getTotalHours() {
 		int hours = 0;
 		for (Assignment asn : this.assignments) {

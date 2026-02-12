@@ -22,10 +22,10 @@ import java.util.List;
 public interface StaffRepo extends JpaRepository<Staff, Long>, JpaSpecificationExecutor<Staff>{
 
 	@Query("SELECT s FROM Staff AS s WHERE s.person = ?1")
-	public Set<Staff> findUserByPerson(Person person);
+	public List<Staff> findUserByPerson(Person person);
 
 	@Query("SELECT s FROM Staff AS s WHERE s.year = ?1")
-    public Set<Staff> findByYear(String Year);
+    public List<Staff> findByYear(String Year);
 
 	@Query("SELECT s FROM Staff AS s WHERE s.person = ?1 and s.year = ?2")
 	public List<Staff> findUserByPersonAndYear(Person person, String year);

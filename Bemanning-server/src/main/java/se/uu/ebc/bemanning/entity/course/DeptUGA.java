@@ -23,15 +23,16 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 //@Builder(toBuilder = true)
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
 @DiscriminatorValue("OTHER")
 @Slf4j
 public class DeptUGA extends UGAItem {
 
-    
-    @OneToMany(mappedBy = "course")
-    private Set<CourseInstance> courseInstances;
-    
+
+    @Override
+    public String getFullCourseNameSv() {
+        return this.getSeName();
+    }
     
 }

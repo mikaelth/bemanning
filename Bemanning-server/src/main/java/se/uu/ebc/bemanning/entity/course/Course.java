@@ -44,10 +44,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Course extends UGAItem {
 
-    
-    @OneToMany(mappedBy = "course")
-    private Set<CourseInstance> courseInstances;
-    
     @Column(name = "CODE", length = 255, unique = true)
     private String code;
         
@@ -68,4 +64,8 @@ public class Course extends UGAItem {
 	private Person secondaryExaminer;
  */
     
+    @Override
+    public String getFullCourseNameSv() {
+        return this.getCode() +" " + this.getSeName();
+    }
 }

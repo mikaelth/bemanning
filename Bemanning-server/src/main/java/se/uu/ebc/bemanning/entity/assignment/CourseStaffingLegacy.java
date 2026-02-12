@@ -117,4 +117,12 @@ public class CourseStaffingLegacy extends CourseStaffing {
     // 	return legacy.getCourseInstance();
     // }
 
+
+    public Float getHoursAdmin(){return legacy.getHoursAdmin();};
+    public Float getHoursDevelopment(){return legacy.getHoursDevelopment();};
+    public Float getHoursLecture(){return legacy.getHoursLecture();};
+    public Float getHoursPractical(){return legacy.getHoursPractical();};
+    public Float getHoursExcursion(){return legacy.getHoursExcursion();};
+    public Float getHoursSeminar(){return legacy.getHoursSeminar();};
+  
 }
