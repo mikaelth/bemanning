@@ -50,6 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 //import se.uu.ebc.bemanning.service.AKKAService;
 import se.uu.ebc.bemanning.service.PhDService;
 import se.uu.ebc.bemanning.service.StaffService;
+import se.uu.ebc.bemanning.service.StaffingRecord;
 
 import se.uu.ebc.bemanning.repo.CourseInstanceRepo;
 import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
@@ -120,46 +121,20 @@ public class AssignmentViewController {
 
 			String thisYear = year==null ? thisYear() : year;
 
-//		try {
 			log.debug("viewByPerson, year {}", year);
 			log.debug("viewByPerson, year " + year);
-// 			log.debug("viewByPerson, model {}", model);
-// 			log.debug("viewByPerson, principal {}", principal);
 
-//			String budgetDept = staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear).getOrganisationUnit().getEconomyHolder(thisYear).getSvName();
-//			Set<Staff> staff = staffRepo.findByYear(thisYear);
-			List<Staff> staff;
+			StaffingRecord assStaff = staffingService.getAssignedStaff(thisYear);
 
-			staff = staffingService.getAssignedStaff(thisYear);
-// 			if (allowUserAll(request)) {
-// 				staff = staffingService.getAssignedStaff(thisYear, staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear).getOrganisationUnit().getEconomyHolder(thisYear));
-// 			} else {
-// 				staff = new ArrayList<Staff>();
-// 				staff.add(staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear));
-// 			}
-			Map<OrganisationUnit, List<Staff>> ous = new HashMap<OrganisationUnit, List<Staff>>();
-			for (Staff s : staff) {
-				if (!ous.containsKey(s.getOrganisationUnit())) {
-					ous.put(s.getOrganisationUnit(),new ArrayList<Staff>());
-				}
-				ous.get(s.getOrganisationUnit()).add(s);
-			}
-
-			model.addAttribute("ous", ous);
-			model.addAttribute("staff", staff);
+			model.addAttribute("ous", assStaff.ous());
+			model.addAttribute("staff", assStaff.staffing());
 			model.addAttribute("serverTime", new Date());
 			model.addAttribute("budgetYear", new BudgetYear(thisYear, staffRepo.getStaffedYears()));
-			model.addAttribute("budgetDept", "Institution");
+			model.addAttribute("budgetDept", assStaff.budgetDept().getSvName());
 			model.addAttribute("year", thisYear);
 			model.addAttribute("teUrl", teUrl);
 
 			return "ViewByPerson";
-//        } catch (Exception e) {
-//			if (log.isErrorEnabled()) {
-//				log.error("viewByPerson, pesky exception "+e);
-//			}
-//           return "{\"ERROR\":"+e.getMessage()+"\"}";
-//        }
 	}
 
     @RequestMapping(value = "/ViewByPerson", method = RequestMethod.POST)
@@ -236,32 +211,21 @@ public class AssignmentViewController {
     @GetMapping("/ViewStaffSummary")
     public String viewStaffSummary(@RequestParam(value = "year", required = false) String year, @RequestParam(value = "ou", required = false) Long ouid, Model model, Principal principal, HttpServletRequest request) {
 			log.debug("viewStaffSummary, year "+ year);
-// 			log.debug("viewStaffSummary, model "+ReflectionToStringBuilder.toString(model, ToStringStyle.MULTI_LINE_STYLE));
-// 			log.debug("viewStaffSummary, principal "+ReflectionToStringBuilder.toString(principal, ToStringStyle.MULTI_LINE_STYLE));
-// 			log.debug("viewStaffSummary, principal "+ReflectionToStringBuilder.toString(request, ToStringStyle.MULTI_LINE_STYLE));
-			log.debug("viewStaffSummary, model "+ model.toString());
-			log.debug("viewStaffSummary, principal "+principal.toString());
-			log.debug("viewStaffSummary, principal "+request.toString());
 
 			String thisYear = year==null ? thisYear() : year;
-// 			OrganisationUnit budgetDept = ouid == null ?
-// 				staffingService.findUserByPersonAndYear(userRepo.findUserByUsername(principal.getName()), thisYear).getOrganisationUnit().getEconomyHolder(thisYear) :
-// 				ouRepo.findById(ouid);
- 			OrganisationUnit budgetDept = ouid == null ?
-				ouRepo.findById(2L).get() :
- 				ouRepo.findById(ouid).get();
 
-			List<Staff> staff = staffingService.getAssignedStaff(thisYear,budgetDept);
+			StaffingRecord assStaff = staffingService.getAssignedStaff(thisYear);
 
 
-			log.debug("viewStaffSummary, budgetDept "+budgetDept.getSvName());
+
+			log.debug("viewStaffSummary, budgetDept "+assStaff.budgetDept().getSvName());
 
 //			model.addAttribute("akka", akkaService);
 
-			model.addAttribute("staff", staff);
+			model.addAttribute("staff", assStaff.staffing());
 			model.addAttribute("serverTime", new Date());
 			model.addAttribute("budgetYear", new BudgetYear(thisYear, staffRepo.getStaffedYears()));
-			model.addAttribute("budgetDept", budgetDept);
+			model.addAttribute("budgetDept", assStaff.budgetDept());
 			model.addAttribute("activeDepts", ouRepo.findOusInSystem());
 			model.addAttribute("year", thisYear);
 
@@ -442,7 +406,8 @@ public class AssignmentViewController {
 	}
 
 
-	private boolean allowUserAll (HttpServletRequest request) /* throws Exception */
+/*
+	private boolean allowUserAll (HttpServletRequest request)
 	{
 		boolean granted = false;
 //		try {
@@ -462,6 +427,8 @@ public class AssignmentViewController {
 		return granted;
 
 	}
+
+ */
 
 	private String thisYear() {
 		Calendar now = Calendar.getInstance();
