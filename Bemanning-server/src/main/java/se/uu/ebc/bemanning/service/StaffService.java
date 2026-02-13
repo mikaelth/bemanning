@@ -1,6 +1,7 @@
 package se.uu.ebc.bemanning.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -8,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -16,8 +18,8 @@ import java.util.Iterator;
 import java.time.Instant;
 import java.time.Duration;
 import java.util.stream.Collectors;
-
-/* 
+import java.util.Optional;
+/*
 import se.uu.ebc.bemanning.vo.PersonVO;
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.repo.PersonRepo;
@@ -52,13 +54,15 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 public class StaffService {
 
 
+	@Value("${bemanning.top.ouid}")
+	private Long defaultEcoHolder;
 
 	@Autowired
 	private UserRepo userRepo;
 
 
 	private ModelMapper modelMapper = new ModelMapper();
- 
+
 	@Autowired
 	private StaffRepo staffRepo;
 
@@ -71,11 +75,12 @@ public class StaffService {
 	@Autowired
 	private AKKAService akka;
  */
-	
-/* 
+
+/*
 	@Autowired
 	private AKKAUserRepo ldapRepo;
  */
+
 
 	/* Staff */
 
@@ -84,10 +89,10 @@ public class StaffService {
 			log.debug("getAllStaff()");
 			for (Staff s : staffRepo.findAll()) {
  				sVO.add(modelMapper.map(s, StaffVO.class));
- 				
+
  			}
-         	return sVO;        	        
-	
+         	return sVO;
+
     }
 
 	public StaffVO getById (Long id) {
@@ -96,13 +101,13 @@ public class StaffService {
 		log.debug(s.toString());
 		return modelMapper.map(s, StaffVO.class);
 //		return new StaffVO(s);
-	}   
-	
+	}
+
 	public StaffVO saveStaff(StaffVO svo) throws Exception {
     	Staff s = svo.getId() == null ? toStaff(svo) : toStaff(staffRepo.findById(svo.getId()).get(), svo);
     	staffRepo.save(s);
  		return modelMapper.map(s, StaffVO.class);
-   
+
     }
 
 	private Staff toStaff (StaffVO svo) throws Exception {
@@ -117,26 +122,31 @@ public class StaffService {
 		modelMapper.map(svo, s);
 		return s;
 	}
-    
+
 	public synchronized void deleteStaff(Long sID) throws IllegalArgumentException, OptimisticLockingFailureException {
 		staffRepo.deleteById(sID);
 		return;
     }
 
-   	
+
   	public Staff findUserByPersonAndYear(Person person, String year) {
- 		
+
  		List<Staff> staff = staffRepo.findUserByPersonAndYear(person,year);
  		return staff.size() > 0 ? staff.get(0) : null;
  	}
-				
+
+  	public Optional<Staff> findStaffByPersonAndYear(Person person, String year) {
+ 		return Optional.ofNullable(findUserByPersonAndYear(person,year));
+ 	}
+
+
 	/* Staff */
 
-/* 
+/*
 
 	public List<StaffVO> getAllStaff() throws Exception {
 		List<StaffVO> svo = new ArrayList<StaffVO>();
-		try {	
+		try {
 logger.debug("getAllStaff, begin findAll");
 Instant start = Instant.now();
 staffRepo.findAll();
@@ -149,22 +159,22 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
  			}
 end = Instant.now();
 logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
-         	return svo;        	        
+         	return svo;
         } catch (Exception e) {
 
 			logger.debug("getAllStaff caught a pesky exception, " + e);
 			return null;
-			
+
         }
     }
-    
+
     public StaffVO saveStaff(StaffVO svo) throws Exception {
     	Staff s = svo.getId() == null ? toStaff(svo) : toStaff(staffRepo.findById(svo.getId()), svo);
     	staffRepo.save(s);
 //		return new StaffVO(s,getPreviousUb(s));
 		logger.error("saveStaff saved staff: "+ s);
 		return new StaffVO(s);
-    
+
     }
 
     public synchronized void deleteStaff(Long id) throws Exception {
@@ -191,7 +201,7 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 			s.setYear(vo.getYear());
 			s.setNote(vo.getNote());
 			s.setIb(vo.getIb());
-	
+
 			MaxCost m = mcRepo.findByCategoryYear(s.getPosition(), s.getYear());
 			if (m == null){
 				m = new MaxCost(s.getPosition(), s.getYear());
@@ -207,7 +217,7 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 	}
  */
 
-/* 
+/*
     private Float getPreviousUb(Staff s) {
     	Float ub = 0.0f;
 		try {
@@ -216,48 +226,58 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 			logger.debug("getPreviousUb; s " + s + "; os " + os);
 
     		if (os != null) {
-    			ub = os.getUb();  
-    		} 
-    		
+    			ub = os.getUb();
+    		}
+
 		} catch (Exception e) {
 			logger.error("getPreviousUb got a pesky exception " + e);
-		}	
+		}
 		finally {
 			return ub;
 		}
     }
  */
-    
-    
-	public List<Staff> getAssignedStaff (String year, OrganisationUnit dept) 
+
+
+	public List<Staff> getAssignedStaff (String year, OrganisationUnit dept)
 	{
 		return staffRepo.findUserByOuListAndYear(dept.getExpandedOu(year),year);
  	}
 
-	public List<Staff> getAssignedStaff (String year) 
+	public StaffingRecord getAssignedStaff (String year)
 	{
 		List<Staff> staffList = new ArrayList<Staff>();
+		OrganisationUnit ecoHolder = ouRepo.findById(defaultEcoHolder).get();
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		log.debug("auth, {}",auth);
+		String uName = auth.getName();
+		Person p = userRepo.findUserByUsername(uName);
+//		Person p = userRepo.findUserByUsername("mikathol");
+		Optional<Staff> s = this.findStaffByPersonAndYear(p, year);
+		if(s.isPresent()) {
+			ecoHolder = s.get().getOrganisationUnit().getEconomyHolder(year);
+		}
+
 
 		if (auth != null && auth.isAuthenticated()) {
 			if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoleType.CoreDataAdmin.toString().toUpperCase()))) {
 				staffList = staffRepo.findByYear(year);
 				log.debug("getAssignedStaff, CoreDataAdmin, got {} staff", staffList.size());
 			} else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoleType.DirectorOfStudies.toString().toUpperCase()))) {
-				String uName = auth.getName();
-				Person p = userRepo.findUserByUsername(uName);
-				staffList = this.getAssignedStaff( year, this.findUserByPersonAndYear(p, year).getOrganisationUnit().getEconomyHolder(year) );
+				staffList = this.getAssignedStaff( year, ecoHolder);
 				log.debug("getAssignedStaff, DirectorOfStudies, got {} staff", staffList.size());
 			} else {
-				String uName = auth.getName();
-				Person p = userRepo.findUserByUsername("uName");
 				staffList = staffRepo.findUserByPersonAndYear(p, year);
 				log.debug("getAssignedStaff, Staff, got {} staff", staffList.size());
+			}
 		}
-		}
-			return staffList;
+
+		Map<OrganisationUnit, List<Staff>> ous = staffList.stream()
+			.collect(Collectors.groupingBy(Staff::getOrganisationUnit));
+
+
+			return new StaffingRecord (ecoHolder, ous, staffList);
 
  	}
 
