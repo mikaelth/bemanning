@@ -18,22 +18,28 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.web.service.registry.ImportHttpServices;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.context.annotation.Configuration;
 
-
+import se.uu.ebc.bemanning.service.ColumnHeadersRecord;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @EnableLdapRepositories(basePackages = "se.uu.ebc.ldap")
+//@Configuration
+//@ConfigurationPropertiesScan({"se.uu.ebc.bemanning"})
+@EnableConfigurationProperties(ColumnHeadersRecord.class)
 //@PropertySource("classpath:application.properties")
-// @EnableTransactionManagement
-// @EnableJpaAuditing(auditorAwareRef="auditorProvider")
-// @EnableScheduling
-// @EnableAutoConfiguration
-// @RestController("/")
-// @CrossOrigin(origins = "http://localhost:1841")
-// @Import({StaticResourceConfiguration.class, LuntanSecurityConfig.class, LuntanMethodSecurityConfig.class})
-// @ComponentScan(basePackages = {"se.uu.ebc.bemanning.service","se.uu.ebc.bemanning.controller","se.uu.ebc.bemanning.security"})
+//@EnableTransactionManagement
+//@EnableJpaAuditing(auditorAwareRef="auditorProvider")
+//@EnableScheduling
+//@EnableAutoConfiguration
+//@RestController("/")
+//@CrossOrigin(origins = "http://localhost:1841")
+//@Import({StaticResourceConfiguration.class, LuntanSecurityConfig.class, LuntanMethodSecurityConfig.class})
+//@ComponentScan(basePackages = {"se.uu.ebc.bemanning.service","se.uu.ebc.bemanning.controller","se.uu.ebc.bemanning.security"})
 @SpringBootApplication
 //@ImportHttpServices(basePackages = "se.uu.ebc.bemanning.controller")
 public class Bemanning /* extends SpringBootServletInitializer { Deploying to Tomcat container */ {
