@@ -64,7 +64,8 @@ public abstract class CourseInstance extends Auditable {
     @JoinColumn(name = "COURSE_LEADER_FK")
 	private Staff courseLeader;
 
-
+	@Column(name="INSTANCE_CODE")
+    private String instanceCode;
     
     @OneToMany(mappedBy = "courseInstance")
     private Set<CourseStaffing> assignments;

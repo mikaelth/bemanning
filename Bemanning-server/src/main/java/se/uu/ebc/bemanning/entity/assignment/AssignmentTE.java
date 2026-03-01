@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Getter
 @Setter
-//@Builder(toBuilder = true)
+@Builder(toBuilder = true)
 @NoArgsConstructor
 //@AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)

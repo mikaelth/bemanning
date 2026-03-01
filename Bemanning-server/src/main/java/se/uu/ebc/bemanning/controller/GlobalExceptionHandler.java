@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 	
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
-		log.debug("ResourceNotFoundException caught " + ex);
+		log.error("ResourceNotFoundException caught " + ex);
         ErrorResponse error = new ErrorResponse(
             HttpStatus.NOT_FOUND.value(), 
             ex.getMessage(),
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ErrorResponse> handleIOIssueFound(ResourceNotFoundException ex) {
-		log.debug("IOException caught " + ex);
+		log.error("IOException caught " + ex);
         ErrorResponse error = new ErrorResponse(
             HttpStatus.INTERNAL_SERVER_ERROR.value(), 
             ex.getMessage(),
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
     		TemplateInputException.class
     	})
     public ResponseEntity<ErrorResponse> handleInternalExceptions(Exception ex) {
-		log.debug("Internal error exception caught " + ex);
+		log.error("Internal error exception caught " + ex);
         ErrorResponse error = new ErrorResponse(
             HttpStatus.INTERNAL_SERVER_ERROR.value(), 
             ex.getMessage(),
@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException.class
     	})
     public ResponseEntity<ErrorResponse> handleBadRequestExceptions(Exception ex) {
-		log.debug("Bad request exception caught " + ex);
+		log.error("Bad request exception caught " + ex);
         ErrorResponse error = new ErrorResponse(
             HttpStatus.BAD_REQUEST.value(), 
             ex.getMessage(),
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-		log.debug("General exception caught " + ex);
+		log.error("General exception caught " + ex);
         ErrorResponse error = new ErrorResponse(
             HttpStatus.INTERNAL_SERVER_ERROR.value(), 
             ex.getMessage(),

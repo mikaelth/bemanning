@@ -20,8 +20,19 @@ public class TEExcelVO {
 	private String activity;
 	private ActivityType activityType;
 	private String staff;
+	private Float actTime;
 	private Float duration;
 	private String courseCode;
 	private String ciNumber;
+	private boolean updated;
 
+
+	public String givenName() {
+		return staff.split(" ")[0];
+	}
+	
+	public String familyName() {
+		return staff.split(" ").length > 1 ? staff.split(" ")[1] : staff.split(" ")[0];
+	}
 }
+

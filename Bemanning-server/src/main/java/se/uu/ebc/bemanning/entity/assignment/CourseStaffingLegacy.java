@@ -20,6 +20,7 @@ import java.util.Set;
 import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.EmploymentType;
+import se.uu.ebc.bemanning.enums.ActivityType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -102,6 +103,11 @@ public class CourseStaffingLegacy extends CourseStaffing {
     }
  */
 
+    @Override
+	public boolean updateTEAssignment (ActivityType actType, Float duration, boolean replace) {
+		return false;
+	}
+	
     @Override
     public float getTotalHours() {
     	return legacy.getTotalHours();

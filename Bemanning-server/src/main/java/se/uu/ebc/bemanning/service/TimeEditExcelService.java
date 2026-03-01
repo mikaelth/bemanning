@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import se.uu.ebc.bemanning.enums.ActivityType;
-import se.uu.ebc.bemanning.enums.TEColumnHeader;
+//import se.uu.ebc.bemanning.enums.TEColumnHeader;
 import se.uu.ebc.bemanning.service.ColumnHeadersRecord;
 import se.uu.ebc.bemanning.vo.TEExcelVO;
 import se.uu.ebc.bemanning.repo.TEActivityRepo;
+import se.uu.ebc.bemanning.repo.CourseStaffingRepo;
 import se.uu.ebc.bemanning.entity.utils.TEActivity;
+import se.uu.ebc.bemanning.entity.assignment.CourseStaffingModern;
 
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,13 +43,18 @@ public class TimeEditExcelService {
 
     private final ColumnHeadersRecord colHeaders;
     private final TEActivityRepo teActivityRepo;
+    private final CourseStaffingRepo csRepo;
 
  	/* Constructor injection */
-   public TimeEditExcelService (ColumnHeadersRecord colHeaders, TEActivityRepo teActivityRepo) {
+   public TimeEditExcelService (ColumnHeadersRecord colHeaders, TEActivityRepo teActivityRepo, CourseStaffingRepo csRepo) {
         this.colHeaders = colHeaders;
 		this.teActivityRepo = teActivityRepo;
+		this.csRepo = csRepo;
     }
-	public record EntryRecord (String staff, String course, String activity, Float hours) {
+	public record EntryRecord (String staff, String course, String activity, ActivityType actType, Float hours) {
+		public String getActKey() {
+			return staff+";"+course+";"+actType.toString();
+		}
 		public String getKey() {
 			return staff+";"+course+";"+activity;
 		}
@@ -68,6 +75,7 @@ public class TimeEditExcelService {
 		Map<String,Integer> headerMap = new HashMap<String,Integer>();
 		Map<String,Integer> columnMap = new HashMap<String, Integer>();
 
+		Map<String,Float> actMap = new HashMap<String,Float>();
 		Map<String,Float> sumMap = new HashMap<String,Float>();
 		Map<String,EntryRecord> entryMap = new HashMap<String,EntryRecord>();
 				
@@ -129,19 +137,28 @@ public class TimeEditExcelService {
                 String stfVal = row.getCell(stfIdx).getStringCellValue();
                 String crsVal = row.getCell(crsIdx).getStringCellValue();
                 String actVal = row.getCell(actIdx).getStringCellValue();
-                float timVal = (float)Math.ceil(row.getCell(timIdx).getNumericCellValue());
+                
+                float timVal = (float)Math.ceil(row.getCell(timIdx).getNumericCellValue()); /* Round the 45 m lectures to full hours */
                 
 				if (stfVal.equals("") || 
 					crsVal.equals("") ||
 					actVal.equals("")) continue;
 					
+					ActivityType actType = teActivityRepo.findByTeText(actVal).orElse(new TEActivity()).getBpActivity();
+
+
 					for (String s : stfVal.split(", ")) {
-						EntryRecord entRec = new EntryRecord (s, crsVal,actVal, timVal);
+						EntryRecord entRec = new EntryRecord (s, crsVal, actVal, actType, timVal);
  						entryMap.put(entRec.getKey(),entRec);
- 						if (sumMap.containsKey(entRec.getKey())) {
- 							sumMap.put( entRec.getKey(), sumMap.get(entRec.getKey()) + entRec.hours() );
+ 						if (sumMap.containsKey(entRec.getActKey())) {
+ 							sumMap.put( entRec.getActKey(), sumMap.get(entRec.getActKey()) + entRec.hours() );
  						} else {
- 							sumMap.put(entRec.getKey(),entRec.hours());
+ 							sumMap.put(entRec.getActKey(),entRec.hours());
+ 						}
+ 						if (actMap.containsKey(entRec.getKey())) {
+ 							actMap.put( entRec.getKey(), actMap.get(entRec.getKey()) + entRec.hours() );
+ 						} else {
+ 							actMap.put(entRec.getKey(),entRec.hours());
  						}
 					 	log.debug("{}, {}, {}, {}, {}, key {}", s, crsVal,actVal, timVal, teActivityRepo.findByTeText(actVal).orElse(new TEActivity()).getBpActivity(), entRec.getKey());
 					}
@@ -152,11 +169,14 @@ public class TimeEditExcelService {
 		log.debug("The sumMap {}", sumMap);
 		
 		for (String theKey : entryMap.keySet()) {
+
+			ActivityType actType = teActivityRepo.findByTeText(entryMap.get(theKey).activity()).orElse(new TEActivity()).getBpActivity();
 			TEExcelVO tVO = new TEExcelVO().builder()
 				.activity(entryMap.get(theKey).activity())
-				.activityType(teActivityRepo.findByTeText(entryMap.get(theKey).activity()).orElse(new TEActivity()).getBpActivity())
+				.activityType(actType)
 				.staff(entryMap.get(theKey).staff())
-				.duration(sumMap.get(theKey))
+				.actTime(actMap.get(theKey))
+				.duration(sumMap.get(entryMap.get(theKey).getActKey()))
 				.courseCode(entryMap.get(theKey).course().split("-")[0])
 				.ciNumber(entryMap.get(theKey).course().split("-")[2])
 				.build();
@@ -164,8 +184,29 @@ public class TimeEditExcelService {
 			log.debug("Entry {}",tVO);
 		}
 		
-
+		updateTEEntities(teEntries);
+		
         return teEntries;
     }
-    
+
+	private void updateTEEntities(List<TEExcelVO> teEntries) {
+	
+		for (TEExcelVO tVO : teEntries) {
+		
+			csRepo.findByCourseIntanceAndPerson(tVO.getCourseCode(),tVO.getCiNumber(),tVO.givenName(),tVO.familyName())
+    			.ifPresentOrElse(
+					cs -> {
+						tVO.setUpdated( cs.updateTEAssignment(tVO.getActivityType(),tVO.getDuration(),true) );
+						if (cs instanceof CourseStaffingModern) {log.debug("The TEAssignment {}",((CourseStaffingModern)cs).getTe());}
+						csRepo.save(cs);
+						log.debug("Staffing entry found: {}", cs);
+					},
+					() -> {
+						tVO.setUpdated(false);
+						log.debug("Staffing entry not found: {}", tVO);
+					}
+				);
+
+		}
+	}   
 }

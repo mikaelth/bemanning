@@ -83,6 +83,7 @@ public class TEFileController {
         Files.write(path, formValues.getExcelFile().getBytes());
 		
  		model.addAttribute( "teEntries",teExcelService.getExcelDataAsList(formValues.isIgnoreExistingValues()).stream().sorted( (TEExcelVO t1,TEExcelVO t2) -> t1.getStaff().compareTo(t2.getStaff()) ) );
+		log.debug("Model: {}",model);
 
         return "TEBulkUpload";
     }

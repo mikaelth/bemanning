@@ -24,6 +24,7 @@
 					<th>Aktivitet i TE</th>
 					<th>Aktivitet i BP</th>
 					<th>Timmar</th>
+					<th>Uppdaterad</th>
 				</tr>
 				<tr th:each="te: ${teEntries}">
 					<td class='alnleft' th:text="${te.courseCode}" />
@@ -31,7 +32,8 @@
 					<td class='alnleft' th:text="${te.staff}" />
 					<td class='alnleft' th:text="${te.activity}" />
 					<td class='alnleft' th:text="${te.activityType}" />
-					<td class='alnleft' th:text="${te.duration}" />
+					<td class='alnleft' th:text="${te.actTime}" />
+					<td class='alnleft' th:if="${te.updated}">X</td>
 				</tr>
 			</table>
 		</div>

@@ -23,6 +23,7 @@ import se.uu.ebc.bemanning.entity.OrganisationUnit;
 import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.EmploymentType;
+import se.uu.ebc.bemanning.enums.ActivityType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -123,6 +124,8 @@ public abstract class CourseStaffing extends Auditable {
         	hoursLecture;
     }
  */
+ 
+ 	public abstract boolean updateTEAssignment (ActivityType actType, Float duration, boolean replace);
 
     public abstract float getTotalHours();
 

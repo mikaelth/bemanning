@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.CascadeType;
 
 import java.util.Set;
 
@@ -21,6 +22,7 @@ import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.entity.OrganisationUnit;
 import se.uu.ebc.bemanning.enums.EmploymentType;
+import se.uu.ebc.bemanning.enums.ActivityType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -43,10 +45,10 @@ public class CourseStaffingModern extends CourseStaffing {
     private static final float PORFESSOR_LECTURE_FACTOR = 4.0f;
     private static final float STUDENT_LECTURE_FACTOR = 8.0f;
 
-     @OneToOne(mappedBy = "courseStaffing")
+    @OneToOne(mappedBy = "courseStaffing")
     private AssignmentPlan plan;
 
-    @OneToOne(mappedBy = "courseStaffing")
+    @OneToOne(mappedBy = "courseStaffing",cascade = CascadeType.ALL)
     private AssignmentTE te;
 
     @OneToOne(mappedBy = "courseStaffing")
@@ -108,6 +110,42 @@ public class CourseStaffingModern extends CourseStaffing {
         	hoursLecture;
     }
  */
+
+    @Override
+	public boolean updateTEAssignment (ActivityType actType, Float duration, boolean replace) {
+		boolean updated = false;
+		if (te == null) {
+			te = new AssignmentTE();
+			te.setHoursAdmin(new Float(0.0f));
+			te.setHoursDevelopment(0.0f);
+			te.setHoursLecture(0.0f);
+			te.setHoursPractical(0.0f);
+			te.setHoursSeminar(0.0f);
+			te.setHoursExcursion(0.0f);
+			te.setCourseStaffing(this);
+		};
+		
+		Float item = switch (actType) {
+			case ActivityType.LECTURE -> te.getHoursLecture();
+			case ActivityType.PRACTICAL -> te.getHoursPractical();
+			case ActivityType.EXCURSION -> te.getHoursExcursion();
+			case ActivityType.SEMINAR -> te.getHoursSeminar();
+			default -> 0.0f;
+		};
+
+		if (item == 0 || replace) {
+			switch (actType) {
+				case ActivityType.LECTURE -> te.setHoursLecture(duration);
+				case ActivityType.PRACTICAL -> te.setHoursPractical(duration);
+				case ActivityType.EXCURSION -> te.setHoursExcursion(duration);
+				case ActivityType.SEMINAR -> te.setHoursSeminar(duration);
+			};
+			updated = true;
+		}
+
+		return updated;
+	}
+
 
     @Override
     public float getTotalHours() {
