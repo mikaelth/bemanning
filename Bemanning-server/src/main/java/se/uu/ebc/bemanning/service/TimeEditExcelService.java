@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 @Slf4j
-@ConfigurationPropertiesScan 
+@ConfigurationPropertiesScan
 @Service
 public class TimeEditExcelService {
 
@@ -59,17 +59,17 @@ public class TimeEditExcelService {
 			return staff+";"+course+";"+activity;
 		}
 	};
-	
+
 // 	@PostConstruct
 // 	public void init () {
 // 		log.debug("Header for activity: {}",colHeaders.seActivity());
 // 	}
 
- 		
+
     public List<TEExcelVO> getExcelDataAsList(boolean substitutingExistingValues) throws IOException {
         List<TEExcelVO> teEntries = new ArrayList<TEExcelVO>();
         List<EntryRecord> entryList = new ArrayList<EntryRecord>();
-        
+
  		log.debug("In getExcelDataAsList");
 
 		Map<String,Integer> headerMap = new HashMap<String,Integer>();
@@ -78,39 +78,39 @@ public class TimeEditExcelService {
 		Map<String,Float> actMap = new HashMap<String,Float>();
 		Map<String,Float> sumMap = new HashMap<String,Float>();
 		Map<String,EntryRecord> entryMap = new HashMap<String,EntryRecord>();
-				
+
         try (Workbook workbook = WorkbookFactory.create(new File(excelFilePath))) {
             Sheet sheet = workbook.getSheetAt(0);
 			log.debug("Excel file opened {}", sheet.getSheetName());
 
-			
-			Row row; 
+
+			Row row;
 			Cell cell;
 			int rowNum = 1;
  			int colNum = 0;
  			while (headerMap.size() < 4) {
 				row = sheet.getRow(rowNum++);
                 while (row == null) continue;
-	
+
 				for (colNum = 0; row.getCell(colNum) != null; colNum++)	{
 					cell = row.getCell(colNum);
-					columnMap.put(cell.getStringCellValue(),colNum);	
+					columnMap.put(cell.getStringCellValue(),colNum);
 
 					log.debug("Row {} and column {}, value {}",rowNum,colNum,cell.getStringCellValue());
-			
+
 				}
-				
+
 				for (String item : colHeaders.asList())	{
 					if (columnMap.containsKey(item)) {
 						headerMap.put(item, columnMap.get(item));
 					}
-				}	
-				
+				}
+
  			}
- 	
+
  			log.debug("The column map is {}",columnMap);
  			log.debug("The header map is {}",headerMap);
- 
+
 //			List<String> headers = headerMap.containsKey(colHeaders.seActivity()) ? colHeaders.seList() colHeaders.enList();
 			int stfIdx;
 			int crsIdx;
@@ -122,28 +122,28 @@ public class TimeEditExcelService {
 				crsIdx = headerMap.get(colHeaders.seCourse());
 				actIdx = headerMap.get(colHeaders.seActivity());
 				timIdx = headerMap.get(colHeaders.seTime());
-			
+
 			} else {
 				stfIdx = headerMap.get(colHeaders.enStaff());
 				crsIdx = headerMap.get(colHeaders.enCourse());
 				actIdx = headerMap.get(colHeaders.enActivity());
 				timIdx = headerMap.get(colHeaders.enTime());
 			}
-					
-			
+
+
             for (int i = rowNum; i <= sheet.getLastRowNum(); i++) {
                 row = sheet.getRow(i);
                 if (row == null) continue;
                 String stfVal = row.getCell(stfIdx).getStringCellValue();
                 String crsVal = row.getCell(crsIdx).getStringCellValue();
                 String actVal = row.getCell(actIdx).getStringCellValue();
-                
+
                 float timVal = (float)Math.ceil(row.getCell(timIdx).getNumericCellValue()); /* Round the 45 m lectures to full hours */
-                
-				if (stfVal.equals("") || 
+
+				if (stfVal.equals("") ||
 					crsVal.equals("") ||
 					actVal.equals("")) continue;
-					
+
 					ActivityType actType = teActivityRepo.findBpActivityByTeText(actVal).orElse(ActivityType.UNKNOWN);
 
 
@@ -165,35 +165,37 @@ public class TimeEditExcelService {
 
 			}
  		}
-		
+
 		log.debug("The sumMap {}", sumMap);
-		
+
 		for (String theKey : entryMap.keySet()) {
 
 			ActivityType actType = teActivityRepo.findBpActivityByTeText(entryMap.get(theKey).activity()).orElse(ActivityType.UNKNOWN);
+			String[] courseString = entryMap.get(theKey).course().split("-");
 			TEExcelVO tVO = new TEExcelVO().builder()
 				.activity(entryMap.get(theKey).activity())
 				.activityType(actType)
 				.staff(entryMap.get(theKey).staff())
 				.actTime(actMap.get(theKey))
 				.duration(sumMap.get(entryMap.get(theKey).getActKey()))
-				.courseCode(entryMap.get(theKey).course().split("-")[0])
-				.ciNumber(entryMap.get(theKey).course().split("-")[2])
+				.courseCode(courseString[0])
+				.year("20" + courseString[1].substring(1,3))
+				.ciNumber(courseString[2])
 				.build();
 			teEntries.add(tVO);
 			log.debug("Entry {}",tVO);
 		}
-		
+
 		updateTEEntities(teEntries);
-		
+
         return teEntries;
     }
 
 	private void updateTEEntities(List<TEExcelVO> teEntries) {
-	
+
 		for (TEExcelVO tVO : teEntries) {
-		
-			csRepo.findByCourseIntanceAndPerson(tVO.getCourseCode(),tVO.getCiNumber(),tVO.givenName(),tVO.familyName())
+
+			csRepo.findByCourseIntanceAndPerson(tVO.getCourseCode(),tVO.getCiNumber(), tVO.getYear(), tVO.givenName(),tVO.familyName())
     			.ifPresentOrElse(
 					cs -> {
 						tVO.setUpdated( cs.updateTEAssignment(tVO.getActivityType(),tVO.getDuration(),true) );
@@ -208,5 +210,5 @@ public class TimeEditExcelService {
 				);
 
 		}
-	}   
+	}
 }

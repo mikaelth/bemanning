@@ -54,8 +54,8 @@ public class CourseStaffingModern extends CourseStaffing {
     @OneToOne(mappedBy = "courseStaffing")
     private AssignmentOutcome outcome;
 
-    @Column(name = "NOTE", length = 255)
-    private String note;
+//     @Column(name = "NOTE", length = 255)
+//     private String note;
 
     /* Public methods */
 
@@ -116,15 +116,15 @@ public class CourseStaffingModern extends CourseStaffing {
 		boolean updated = false;
 		if (te == null) {
 			te = new AssignmentTE();
-			te.setHoursAdmin(new Float(0.0f));
-			te.setHoursDevelopment(0.0f);
-			te.setHoursLecture(0.0f);
-			te.setHoursPractical(0.0f);
-			te.setHoursSeminar(0.0f);
-			te.setHoursExcursion(0.0f);
+			te.setHoursAdmin(Float.valueOf(0.0f));
+			te.setHoursDevelopment(Float.valueOf(0.0f));
+			te.setHoursLecture(Float.valueOf(0.0f));
+			te.setHoursPractical(Float.valueOf(0.0f));
+			te.setHoursSeminar(Float.valueOf(0.0f));
+			te.setHoursExcursion(Float.valueOf(0.0f));
 			te.setCourseStaffing(this);
 		};
-		
+
 		Float item = switch (actType) {
 			case ActivityType.LECTURE -> te.getHoursLecture();
 			case ActivityType.PRACTICAL -> te.getHoursPractical();

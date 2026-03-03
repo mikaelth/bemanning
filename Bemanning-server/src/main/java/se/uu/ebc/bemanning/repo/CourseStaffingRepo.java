@@ -14,8 +14,8 @@ import se.uu.ebc.bemanning.entity.assignment.CourseStaffing;
 @Transactional(readOnly = true)
 public interface CourseStaffingRepo extends JpaRepository<CourseStaffing, Long>, JpaSpecificationExecutor<CourseStaffing>{
 
- 
- 	@Query("SELECT cs FROM CourseStaffing AS cs WHERE (cs.courseInstance.instanceCode=?2 AND cs.courseInstance.course.code=?1 AND cs.staff.person.givenName=?3 and cs.staff.person.familyName=?4)")
- 	Optional<CourseStaffing> findByCourseIntanceAndPerson(String courseCode, String instanceCode, String givenName, String familyName);
+
+ 	@Query("SELECT cs FROM CourseStaffing AS cs WHERE (cs.courseInstance.instanceCode=?2 AND cs.courseInstance.course.code=?1 AND cs.courseInstance.year=?3 AND cs.staff.person.givenName=?4 and cs.staff.person.familyName=?5)")
+ 	Optional<CourseStaffing> findByCourseIntanceAndPerson(String courseCode, String instanceCode, String year, String givenName, String familyName);
     // findById(Long id) is inherited from JpaRepository and returns Optional<CourseStaffing>
 }
