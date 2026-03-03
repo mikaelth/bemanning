@@ -144,7 +144,7 @@ public class TimeEditExcelService {
 					crsVal.equals("") ||
 					actVal.equals("")) continue;
 					
-					ActivityType actType = teActivityRepo.findByTeText(actVal).orElse(new TEActivity()).getBpActivity();
+					ActivityType actType = teActivityRepo.findBpActivityByTeText(actVal).orElse(ActivityType.UNKNOWN);
 
 
 					for (String s : stfVal.split(", ")) {
@@ -170,7 +170,7 @@ public class TimeEditExcelService {
 		
 		for (String theKey : entryMap.keySet()) {
 
-			ActivityType actType = teActivityRepo.findByTeText(entryMap.get(theKey).activity()).orElse(new TEActivity()).getBpActivity();
+			ActivityType actType = teActivityRepo.findBpActivityByTeText(entryMap.get(theKey).activity()).orElse(ActivityType.UNKNOWN);
 			TEExcelVO tVO = new TEExcelVO().builder()
 				.activity(entryMap.get(theKey).activity())
 				.activityType(actType)

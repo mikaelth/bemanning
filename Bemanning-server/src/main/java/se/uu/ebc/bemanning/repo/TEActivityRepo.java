@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import se.uu.ebc.bemanning.enums.ActivityType;
 
 import se.uu.ebc.bemanning.entity.utils.TEActivity;
 
@@ -18,4 +19,8 @@ public interface TEActivityRepo extends JpaRepository<TEActivity, Long>, JpaSpec
 
     // findById(Long id) is inherited from JpaRepository and returns Optional<Course>
     Optional<TEActivity> findByTeText(String teText);
+
+	@Query("SELECT te.bpActivity FROM TEActivity AS te WHERE te.teText = ?1")
+    Optional<ActivityType> findBpActivityByTeText(String teText);
+
 }
