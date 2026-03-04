@@ -20,10 +20,13 @@ import se.uu.ebc.bemanning.entity.PhDPosition;
 import se.uu.ebc.bemanning.entity.assignment.CourseStaffing;
 import se.uu.ebc.bemanning.entity.assignment.CourseStaffingLegacy;
 import se.uu.ebc.bemanning.entity.assignment.CourseStaffingModern;
+import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.CourseStaffingType;
 import se.uu.ebc.bemanning.vo.CourseStaffingVO;
 import se.uu.ebc.bemanning.vo.PhDPositionVO;
 import se.uu.ebc.bemanning.repo.CourseStaffingRepo;
+import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +39,9 @@ public class CourseStaffingService {
 
     @Autowired
     CourseStaffingRepo csRepo;
+
+    @Autowired
+    OrganisationUnitRepo ouRepo;
 
 	private ModelMapper mapper = new ModelMapper();
 	
@@ -92,4 +98,12 @@ public class CourseStaffingService {
 		return;
     }
 
+	public CourseStaffing createCouurseStaffing (Staff staff, CourseInstance ci) {
+		CourseStaffingModern cs = new CourseStaffingModern();
+		cs.setStaff(staff);
+		cs.setCourseInstance(ci);
+		cs.setAssigningDept(ouRepo.findByAbbreviation("IBG"));
+		
+		return cs;
+	}
 }

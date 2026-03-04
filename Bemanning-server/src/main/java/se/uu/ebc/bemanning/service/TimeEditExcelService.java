@@ -14,6 +14,7 @@ import se.uu.ebc.bemanning.enums.ActivityType;
 import se.uu.ebc.bemanning.enums.TEMatchStatus;
 //import se.uu.ebc.bemanning.enums.TEColumnHeader;
 import se.uu.ebc.bemanning.service.ColumnHeadersRecord;
+import se.uu.ebc.bemanning.service.CourseStaffingService;
 import se.uu.ebc.bemanning.vo.TEExcelVO;
 import se.uu.ebc.bemanning.repo.TEActivityRepo;
 import se.uu.ebc.bemanning.repo.CourseStaffingRepo;
@@ -53,14 +54,16 @@ public class TimeEditExcelService {
     private final CourseStaffingRepo csRepo;
     private final StaffRepo staffRepo;
     private final CourseInstanceRepo ciRepo;
+    private final CourseStaffingService csService;
 
  	/* Constructor injection */
-   public TimeEditExcelService (ColumnHeadersRecord colHeaders, TEActivityRepo teActivityRepo, CourseStaffingRepo csRepo, StaffRepo staffRepo, CourseInstanceRepo ciRepo) {
+   public TimeEditExcelService (ColumnHeadersRecord colHeaders, TEActivityRepo teActivityRepo, CourseStaffingRepo csRepo, StaffRepo staffRepo, CourseInstanceRepo ciRepo, CourseStaffingService csService) {
         this.colHeaders = colHeaders;
 		this.teActivityRepo = teActivityRepo;
 		this.csRepo = csRepo;
 		this.staffRepo = staffRepo;
 		this.ciRepo = ciRepo;
+		this.csService = csService;
     }
 	public record EntryRecord (String staff, String course, String activity, ActivityType actType, Float hours) {
 		public String getActKey() {
@@ -231,7 +234,7 @@ public class TimeEditExcelService {
 
 		if (!theStaff.isEmpty()) {
 			if (theStaff.size() == 1 && theCI.isPresent()) {
-				
+				teEntry.setUpdated( csService.createCouurseStaffing(theStaff.iterator().next(),theCI.get()).updateTEAssignment(teEntry.getActivityType(),teEntry.getDuration(),false) );
 				teEntry.setStatus(TEMatchStatus.MATCH);
 			} else {
 				if (theStaff.size() > 1) {
