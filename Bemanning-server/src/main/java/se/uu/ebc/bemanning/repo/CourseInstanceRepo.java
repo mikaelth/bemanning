@@ -16,6 +16,7 @@ import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 
 import java.util.Set;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
@@ -41,5 +42,8 @@ public interface CourseInstanceRepo extends JpaRepository<CourseInstance, Long>,
 		)
     public List<CourseInstance> loadInvolvedCourses(@Param("ous") String[] ous, @Param("dept") String dept, @Param("year") String year);
 
+	@Query("SELECT ci FROM CourseInstance AS ci WHERE ci.year = ?1 AND ci.course.code= ?2 AND ci.instanceCode=?3")
+	public Optional<CourseInstance> findByYearAndCourseInstance(String year, String courseCode, String instanceCode);
 
+	
 }

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import se.uu.ebc.bemanning.enums.ActivityType;
+import se.uu.ebc.bemanning.enums.TEMatchStatus;
 
 @Data
 @NoArgsConstructor
@@ -26,6 +27,7 @@ public class TEExcelVO {
 	private String courseCode;
 	private String ciNumber;
 	private boolean updated;
+	private TEMatchStatus status;
 
 
 	public String givenName() {

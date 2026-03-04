@@ -5,17 +5,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import se.uu.ebc.bemanning.enums.ActivityType;
+import se.uu.ebc.bemanning.enums.TEMatchStatus;
 //import se.uu.ebc.bemanning.enums.TEColumnHeader;
 import se.uu.ebc.bemanning.service.ColumnHeadersRecord;
 import se.uu.ebc.bemanning.vo.TEExcelVO;
 import se.uu.ebc.bemanning.repo.TEActivityRepo;
 import se.uu.ebc.bemanning.repo.CourseStaffingRepo;
+import se.uu.ebc.bemanning.repo.StaffRepo;
+import se.uu.ebc.bemanning.repo.CourseInstanceRepo;
 import se.uu.ebc.bemanning.entity.utils.TEActivity;
 import se.uu.ebc.bemanning.entity.assignment.CourseStaffingModern;
+import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
+import se.uu.ebc.bemanning.entity.staff.Staff;
 
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,12 +51,16 @@ public class TimeEditExcelService {
     private final ColumnHeadersRecord colHeaders;
     private final TEActivityRepo teActivityRepo;
     private final CourseStaffingRepo csRepo;
+    private final StaffRepo staffRepo;
+    private final CourseInstanceRepo ciRepo;
 
  	/* Constructor injection */
-   public TimeEditExcelService (ColumnHeadersRecord colHeaders, TEActivityRepo teActivityRepo, CourseStaffingRepo csRepo) {
+   public TimeEditExcelService (ColumnHeadersRecord colHeaders, TEActivityRepo teActivityRepo, CourseStaffingRepo csRepo, StaffRepo staffRepo, CourseInstanceRepo ciRepo) {
         this.colHeaders = colHeaders;
 		this.teActivityRepo = teActivityRepo;
 		this.csRepo = csRepo;
+		this.staffRepo = staffRepo;
+		this.ciRepo = ciRepo;
     }
 	public record EntryRecord (String staff, String course, String activity, ActivityType actType, Float hours) {
 		public String getActKey() {
@@ -186,29 +197,56 @@ public class TimeEditExcelService {
 			log.debug("Entry {}",tVO);
 		}
 
-		updateTEEntities(teEntries);
+		updateTEEntities(teEntries, substitutingExistingValues);
 
         return teEntries;
     }
 
-	private void updateTEEntities(List<TEExcelVO> teEntries) {
+	private void updateTEEntities(List<TEExcelVO> teEntries, boolean replace) {
 
 		for (TEExcelVO tVO : teEntries) {
 
 			csRepo.findByCourseIntanceAndPerson(tVO.getCourseCode(),tVO.getCiNumber(), tVO.getYear(), tVO.givenName(),tVO.familyName())
     			.ifPresentOrElse(
 					cs -> {
-						tVO.setUpdated( cs.updateTEAssignment(tVO.getActivityType(),tVO.getDuration(),true) );
+						tVO.setStatus(TEMatchStatus.MATCH);
+						tVO.setUpdated( cs.updateTEAssignment(tVO.getActivityType(),tVO.getDuration(),replace) );
 						if (cs instanceof CourseStaffingModern) {log.debug("The TEAssignment {}",((CourseStaffingModern)cs).getTe());}
 						csRepo.save(cs);
 						log.debug("Staffing entry found: {}", cs);
 					},
 					() -> {
-						tVO.setUpdated(false);
+//						tVO.setUpdated(false);
+						checkTEForStaffAndCourse(tVO);
 						log.debug("Staffing entry not found: {}", tVO);
 					}
 				);
 
 		}
 	}
+
+	private void checkTEForStaffAndCourse( TEExcelVO teEntry) {
+		Set<Staff> theStaff = staffRepo.findStaffByNameAndYear(teEntry.givenName(), teEntry.familyName(), teEntry.getYear());
+		Optional<CourseInstance> theCI = ciRepo.findByYearAndCourseInstance(teEntry.getYear(), teEntry.getCourseCode(), teEntry.getCiNumber());
+
+		if (!theStaff.isEmpty()) {
+			if (theStaff.size() == 1 && theCI.isPresent()) {
+				
+				teEntry.setStatus(TEMatchStatus.MATCH);
+			} else {
+				if (theStaff.size() > 1) {
+					teEntry.setStatus(TEMatchStatus.AMBIGTEACHER);
+				} else if (!theCI.isPresent()) {
+					teEntry.setStatus(TEMatchStatus.NOCOURSE);
+				}
+			}
+		} else {
+			if (theCI.isPresent()) {
+				teEntry.setStatus(TEMatchStatus.NOTEACHER);	
+			} else {
+				teEntry.setStatus(TEMatchStatus.NOMATCH);
+			}
+		}	
+	}
+
 }

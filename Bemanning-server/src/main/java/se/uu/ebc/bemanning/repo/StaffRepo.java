@@ -16,6 +16,7 @@ import se.uu.ebc.bemanning.enums.EmploymentType;
 
 import java.util.Set;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
@@ -39,6 +40,6 @@ public interface StaffRepo extends JpaRepository<Staff, Long>, JpaSpecificationE
 	@Query("SELECT s FROM Staff AS s WHERE s.year = ?2 AND s.organisationUnit in ?1 order by s.person.familyName")
 	public List<Staff> findUserByOuListAndYear(List<OrganisationUnit> ous, String year);
 
-
-
+	@Query("SELECT s FROM Staff AS s WHERE s.year = ?3 AND s.person.givenName=?1 AND s.person.familyName=?2")
+	public Set<Staff> findStaffByNameAndYear(String givenName, String familyName, String year);
 }
