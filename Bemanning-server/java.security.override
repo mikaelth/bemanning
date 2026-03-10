@@ -1,0 +1,12 @@
+# Custom Java security properties to enable ciphers required for LDAP
+# This overrides restrictive defaults in Java 25
+
+# Enable TLS 1.2 and required cipher suites
+jdk.tls.disabledAlgorithms=SSLv3, RC4, DES, MD5withRSA, DH keySize < 1024, \
+    EC keySize < 224, 3DES_EDE_CBC, anon, NULL
+
+# Allow RSA keys down to 1024 bits (some LDAP servers use this)
+#jdk.certpath.disabledAlgorithms=MD2, MD5, RSA keySize < 1024
+
+# Enable legacy TLS versions if needed
+#jdk.tls.legacyAlgorithms=NULL, anon, RC4, DES, 3DES_EDE_CBC

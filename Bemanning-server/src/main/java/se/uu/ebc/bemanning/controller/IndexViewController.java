@@ -123,7 +123,7 @@ public class IndexViewController {
 			return "Anonymous";
 		}
 	}	
-	
+	/*
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test(Model model, Principal principal, HttpServletRequest request) {
 
@@ -134,4 +134,5 @@ public class IndexViewController {
 			return "Exception";
 		}
 	}
+	*/
 }

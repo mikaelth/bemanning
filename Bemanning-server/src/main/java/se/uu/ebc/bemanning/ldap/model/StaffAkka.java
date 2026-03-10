@@ -1,20 +1,24 @@
-package se.uu.ebc.ldap.entity;
+package se.uu.ebc.bemanning.ldap.model;
 
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.DnAttribute;
-import javax.naming.Name;
+//import javax.naming.Name;
+import module java.naming;
 import java.util.StringJoiner;
 
 import lombok.Data;
-
+/*
 @Entry(
   base = "cn=People,dc=uu,dc=se",
   objectClasses = { "person", "inetOrgPerson", "top", "uuAKKAperson", "eduPerson" })
+*/
+
+@Entry(base = "ou=people", objectClasses = {"person", "top"})
 
 @Data
-public final class UUStaff {
+public final class StaffAkka {
 
     @Id
     private Name dn;
@@ -30,9 +34,7 @@ public final class UUStaff {
     private @Attribute(name = "telephoneNumber") String phone;
     private @Attribute(name = "mail") String mail;
     private @Attribute(name = "department") String fullDepartment;
-
-    private boolean examinerEligible;
-	private boolean biologySection;
+	private @Attribute(name = "norEduPersonNIN") String pNIN;
 
 	// Business methods
 
@@ -71,10 +73,5 @@ public final class UUStaff {
 
 	}
 
-/*
-	public boolean isExaminerEligible() {
 
-		return !title.toLowerCase().contains("forskare");
-	}
- */
  }

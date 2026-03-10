@@ -4,23 +4,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import se.uu.ebc.ldap.entity.UUStaff;
-import se.uu.ebc.ldap.repo.UUStaffRepo;
+import lombok.extern.slf4j.Slf4j;
 
 
+import se.uu.ebc.bemanning.ldap.repository.StaffAkkaRepository;
+
+
+@Slf4j
 @Service
 public class TestService {
 
 	@Autowired
-	UUStaffRepo uuStaffRepo;
+	StaffAkkaRepository uuStaffRepo;
 
 
-	public String test() throws Exception {
+	public Object test() throws Exception {
 	
-		UUStaff theStaff = uuStaffRepo.findEmployeeByMail("thollesson@ebc.uu.se");
-		
-		return theStaff.getDepartment();
+		log.debug ( "ldaps got {}", uuStaffRepo.findByLastName("Thollesson")) ;
+		return "Okelidokeli";
 	}    
-
  
 }

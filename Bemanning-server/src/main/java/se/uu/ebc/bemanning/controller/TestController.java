@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import lombok.extern.slf4j.Slf4j;
 
 import se.uu.ebc.bemanning.service.OrgHierarchyService;
+import se.uu.ebc.bemanning.service.TestService;
 
 import java.io.IOException;
 
@@ -24,8 +25,12 @@ import java.io.IOException;
 public class TestController {
 
 
-	@Autowired
+	
+  @Autowired
 	OrgHierarchyService ouService;
+
+  @Autowired
+	TestService testService;
 
 
 
@@ -34,6 +39,10 @@ public class TestController {
 		return ResponseEntity.ok(ouService.getOUs() );
     }
 
+   @GetMapping(value="/testldap")
+    public ResponseEntity doTest() throws Exception{
+		return ResponseEntity.ok(testService.test() );
+    }
 
 
 }
