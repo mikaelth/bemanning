@@ -1,0 +1,29 @@
+<html lang="se-SE">
+	<head>
+		<title> Upload a CSV with course instances from LADOK to upadte registered students</title>
+		<meta http-equiv="Content-Type" content="text/html; charset:UTF-8" />
+    	<link th:href="@{/styles/main.css}" rel="stylesheet" />
+	<!-- 
+		<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default-application.css" th:href="@{/layout/default-application.css}"></link>
+		<link rel="stylesheet" type="text/css" media="screen, print" href="../layout/default.css" th:href="@{/layout/default.css}"></link>
+	 -->
+	</head>
+	<body>
+		<form method="POST" th:action="@{/files/primula/bulk/upload}" enctype="multipart/form-data" th:object="${formValues}">
+			<div>
+				<fieldset>
+					<legend>Excel-fil från Primula för att uppdatera Bemanning/Personal</legend>
+					<label for="ignore">Skriv över existerande värden</label>
+					<input type="checkbox" th:field="*{ignoreExistingValues}" />
+    <label>Year</label>
+    <input type="text" th:field="*{year}" placeholder="Year" />
+
+					<br />
+					<label for="file">Välj .XLS-fil</label>
+					<input th:field="*{excelFile}" type="file" class="form-control-file" accept=".xls" />
+				</fieldset>
+			</div>
+			<button type="submit" class="btn btn-primary">Ladda upp värden</button>
+		</form>
+	</body>
+</html>

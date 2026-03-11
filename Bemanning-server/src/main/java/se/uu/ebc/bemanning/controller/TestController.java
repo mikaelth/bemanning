@@ -44,5 +44,9 @@ public class TestController {
 		return ResponseEntity.ok(testService.test() );
     }
 
+   @GetMapping(value="/testempnum")
+    public ResponseEntity doTestEmpnum() throws Exception{
+		return ResponseEntity.ok(testService.testempnum() );
+    }
 
 }
