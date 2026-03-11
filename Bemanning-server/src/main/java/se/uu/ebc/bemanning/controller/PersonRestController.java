@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 import se.uu.ebc.bemanning.security.SecurityService;
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.service.PeopleService;
 import se.uu.ebc.bemanning.vo.PersonVO;
 import se.uu.ebc.bemanning.vo.UserVO;
@@ -113,8 +113,8 @@ public class PersonRestController {
 
 	private UserVO createDummyUser() {
 
-		HashSet<UserRoleType> roles = new HashSet<UserRoleType>();
-		roles.add(UserRoleType.Staff);
+		HashSet<UserRoles> roles = new HashSet<UserRoles>();
+		roles.add(UserRoles.Staff);
 		HashMap<String,String> depts = new HashMap<String,String>();
 		depts.put(Integer.toString (Year.now().getValue()) , "IOB");
 

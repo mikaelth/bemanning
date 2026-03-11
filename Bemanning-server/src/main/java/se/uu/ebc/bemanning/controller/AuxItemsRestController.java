@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.http.ResponseEntity;
 
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.enums.GrantType;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 import se.uu.ebc.bemanning.enums.CourseGroup;
@@ -52,9 +52,9 @@ public class AuxItemsRestController {
 
 	@GetMapping("/userroletypes")
     public ResponseEntity userRoleTypes() {
-    	List<Map<String, UserRoleType>> theList = new ArrayList<Map<String, UserRoleType>>();
-    	for (UserRoleType s : UserRoleType.values()) {
-			java.util.Map<String,UserRoleType> vMap = new java.util.HashMap<String, UserRoleType>();
+    	List<Map<String, UserRoles>> theList = new ArrayList<Map<String, UserRoles>>();
+    	for (UserRoles s : UserRoles.values()) {
+			java.util.Map<String,UserRoles> vMap = new java.util.HashMap<String, UserRoles>();
 			vMap.put("label", s);
     		theList.add(vMap);
     	}

@@ -24,7 +24,10 @@ public class TestService {
 
 	public Object test() throws Exception {
 	
-		log.debug ( "ldaps got {}", uuStaffRepo.findByLastName("Thollesson")) ;
+		log.debug("ldaps got by last name {}", uuStaffRepo.findByLastName("Thollesson"));
+		log.debug("ldaps got by pNIN {}", uuStaffRepo.findByPNIN("196304115196"));
+		log.debug("ldaps got by department {}", uuStaffRepo.findByDepartment("Institutionen för organismbiologi*"));
+		log.debug("ldaps got by programme {}", uuStaffRepo.findByProgramme("Systematisk biologi"));
 		return "Okelidokeli";
 	}    
 
@@ -33,5 +36,6 @@ public class TestService {
 		log.debug ( "Got {}", akkaStaffRepo.findUserByEmployeeNumberAndYear("N0-346_2", "2026").get().getPerson().getName()) ;
 		return "Okelidokeli";
 	}    
+
 
 }

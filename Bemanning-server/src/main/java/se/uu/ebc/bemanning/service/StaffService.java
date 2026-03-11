@@ -34,7 +34,7 @@ import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.entity.MaxCost;
 import se.uu.ebc.bemanning.entity.OrganisationUnit;
 
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 import se.uu.ebc.bemanning.enums.StaffKind;
 
@@ -261,10 +261,10 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 
 
 		if (auth != null && auth.isAuthenticated()) {
-			if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoleType.CoreDataAdmin.toString().toUpperCase()))) {
+			if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoles.CoreDataAdmin.toString().toUpperCase()))) {
 				staffList = staffRepo.findByYear(year);
 				log.debug("getAssignedStaff, CoreDataAdmin, got {} staff", staffList.size());
-			} else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoleType.DirectorOfStudies.toString().toUpperCase()))) {
+			} else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoles.DirectorOfStudies.toString().toUpperCase()))) {
 				staffList = this.getAssignedStaff( year, ecoHolder);
 				log.debug("getAssignedStaff, DirectorOfStudies, got {} staff", staffList.size());
 			} else {
@@ -272,7 +272,10 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 				log.debug("getAssignedStaff, Staff, got {} staff", staffList.size());
 			}
 		}
-
+		/* Testing */
+		staffList = staffRepo.findByYear("2026");
+		log.debug("Staff list {}",staffList);		
+		
 		Map<OrganisationUnit, List<Staff>> ous = staffList.stream()
 			.collect(Collectors.groupingBy(Staff::getOrganisationUnit));
 

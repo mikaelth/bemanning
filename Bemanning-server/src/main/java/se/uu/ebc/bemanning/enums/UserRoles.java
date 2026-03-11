@@ -1,12 +1,13 @@
 package se.uu.ebc.bemanning.enums;
 
-public enum UserRoleType
+public enum UserRoles
 {
 	Staff,
 	CourseCoordinator,
 	DirectorOfStudies,
 	PhDAdmin,
 	CoreDataAdmin,
+	PrimulaAdmin,
 	Administrator,
 	SysAdmin;
 }

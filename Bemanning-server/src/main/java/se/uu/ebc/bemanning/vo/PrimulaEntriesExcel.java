@@ -33,6 +33,7 @@ public class PrimulaEntriesExcel {
     @ExcelCellName("      Lön+LBK")
     private Float cost;
 
+	@Builder.Default
 	private boolean updated =  false;
 	
 	

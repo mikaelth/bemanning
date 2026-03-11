@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
 
 import jakarta.validation.constraints.NotNull;
 import se.uu.ebc.bemanning.entity.staff.Staff;
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -69,19 +69,19 @@ public class Person extends Auditable {
     private boolean isActive;
 
  
-	@ElementCollection(targetClass = UserRoleType.class)
+	@ElementCollection(targetClass = UserRoles.class)
 	@CollectionTable(name="USER_ROLE", joinColumns=@JoinColumn(name="user_fk"))
 	@Column(name="ROLE")
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	private Set<UserRoleType> userRoles = new HashSet<UserRoleType>();
+	private Set<UserRoles> userRoles = new HashSet<UserRoles>();
  
  
 	/* Constructors */
 	
 	public Person() {
 		staff = new HashSet<Staff>();
-		userRoles.add(UserRoleType.Staff);
+		userRoles.add(UserRoles.Staff);
 	}
 	
     /* Custom business methods */

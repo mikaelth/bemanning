@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.HashMap;
 
 
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 
 import lombok.*;
 
@@ -22,10 +22,10 @@ public class UserVO {
   	private String formName;
 	private String name;
 	private Map<String, String> principalDepts;
-	private Set<UserRoleType> userRoles;
+	private Set<UserRoles> userRoles;
 
 /* 
 	private Map<String, String> principalDepts = new HashMap<String, String>();
-	private Set<UserRoleType> userRoles = new HashSet<UserRoleType>();
+	private Set<UserRoles> userRoles = new HashSet<UserRoles>();
  */
 }

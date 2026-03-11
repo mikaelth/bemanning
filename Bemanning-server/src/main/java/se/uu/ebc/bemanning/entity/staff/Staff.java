@@ -76,7 +76,7 @@ public abstract class Staff extends Auditable {
 	private OrganisationUnit organisationUnit;
 
 
-    @OneToMany(mappedBy = "staff"/* ,  fetch = FetchType.LAZY */)
+    @OneToMany(mappedBy = "staff" ,  fetch = FetchType.EAGER)
     private Set<CourseStaffing> assignments;
 
     @OneToMany(mappedBy = "courseLeader", fetch = FetchType.LAZY)

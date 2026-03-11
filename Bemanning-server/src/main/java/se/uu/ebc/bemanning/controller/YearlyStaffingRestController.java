@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 import se.uu.ebc.bemanning.security.SecurityService;
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.service.YearlyStaffingService;
 import se.uu.ebc.bemanning.vo.YearlyStaffingVO;
 import se.uu.ebc.bemanning.vo.UserVO;

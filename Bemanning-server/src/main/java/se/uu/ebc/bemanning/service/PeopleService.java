@@ -18,7 +18,7 @@ import se.uu.ebc.bemanning.security.UserRepo;
 import se.uu.ebc.bemanning.vo.StaffVO;
 import se.uu.ebc.bemanning.entity.Staff;
 import se.uu.ebc.bemanning.entity.MaxCost;
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;

@@ -30,6 +30,7 @@ public class StaffAkkaRepository {
         this.ldapTemplate = ldapTemplate;
     }
 
+/* This is for when the repo is an interface */
 /*
   @Query("(&(employmentType=*)(!(employmentType=Hired))(mail=:mail))")
   StaffAkka findEmployeeByMail(String mail);
@@ -49,6 +50,19 @@ public class StaffAkkaRepository {
         );
     }
 
+    public List<StaffAkka> findByDepartment(String dept) {
+        return ldapTemplate.find(
+            query().where("objectclass").is("person").and("department").like(dept),
+            StaffAkka.class
+        );
+    }
+
+    public List<StaffAkka> findByProgramme(String prog) {
+        return ldapTemplate.find(
+            query().where("objectclass").is("person").and("ou").like(prog),
+            StaffAkka.class
+        );
+    }
 
 }
 

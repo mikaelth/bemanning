@@ -35,6 +35,7 @@ public class TEFileController {
     @Autowired
     private TimeEditExcelService teExcelService;
 
+/*
     @PostMapping("/rest/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         Path path = Paths.get(uploadDir + File.separator + file.getOriginalFilename());
@@ -43,7 +44,7 @@ public class TEFileController {
         return "File uploaded successfully: " + file.getOriginalFilename();
     }
 
-/* 
+ 
     @PostMapping("/save")
     public String saveData() throws IOException {
         List<Invoice> invoices = excelDataService.getExcelDataAsList();
@@ -54,7 +55,7 @@ public class TEFileController {
     
     
     
-	@Secured({("ROLE_REGISTRATIONUPDATER")})
+	@Secured({("ROLE_DIRECTOROFSTUDIES")})
 	@RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String viewCSVCIUploadRequest(Model model, HttpServletRequest request) {
 		try {
@@ -72,7 +73,7 @@ public class TEFileController {
         }
 	}
 
-	@Secured({("ROLE_REGISTRATIONUPDATER")})
+	@Secured({("ROLE_DIRECTOROFSTUDIES")})
 	@RequestMapping(value="/bulk/upload", method = RequestMethod.POST, headers = "Accept=application/json")
     public String requestUpdateRegsFromCSV(Model model, HttpServletRequest request, HttpServletResponse response, final FormFileDataVO formValues) throws IOException{
 

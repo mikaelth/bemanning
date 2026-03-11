@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import se.uu.ebc.bemanning.repo.CourseStaffingRepo;
 import se.uu.ebc.bemanning.entity.staff.Staff;
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.service.CourseStaffingService;
 import se.uu.ebc.bemanning.vo.CourseStaffingVO;
 import se.uu.ebc.bemanning.vo.StaffVO;

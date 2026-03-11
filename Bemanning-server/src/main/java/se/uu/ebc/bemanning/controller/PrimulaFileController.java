@@ -54,7 +54,7 @@ public class PrimulaFileController {
     
     
     
-	@Secured({("ROLE_REGISTRATIONUPDATER")})
+	@Secured({("ROLE_PRIMULAADMIN")})
 	@RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String viewCSVCIUploadRequest(Model model, HttpServletRequest request) {
 		try {
@@ -72,7 +72,7 @@ public class PrimulaFileController {
         }
 	}
 
-	@Secured({("ROLE_REGISTRATIONUPDATER")})
+	@Secured({("ROLE_PRIMULAADMIN")})
 	@RequestMapping(value="/bulk/upload", method = RequestMethod.POST, headers = "Accept=application/json")
     public String requestUpdateRegsFromCSV(Model model, HttpServletRequest request, HttpServletResponse response, final FormFileDataVO formValues) throws IOException{
 

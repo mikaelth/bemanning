@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import se.uu.ebc.bemanning.entity.Person;
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.security.SecurityServiceException;
 import se.uu.ebc.bemanning.security.UserRepo;
 import se.uu.ebc.bemanning.vo.UserVO;
@@ -81,14 +81,14 @@ public class SecurityService implements BemanningUserService {
 			}
  */
 
-			for (UserRoleType userRole : localUser.getUserRoles()) {
+			for (UserRoles userRole : localUser.getUserRoles()) {
 				authorities.add( new SimpleGrantedAuthority(ROLE_PREFIX + userRole.toString().toUpperCase()) );
 				log.debug("MTh loadUserByUsername, role "+userRole);
 			}
 
 			/* Add role COURSELEADER dynamically if person has been assigned as course leader */
 			if ( localUser.getStaff().stream().filter(s -> s.isCourseLeader()).count() > 0) {
-				authorities.add( new SimpleGrantedAuthority(ROLE_PREFIX + UserRoleType.CourseCoordinator.toString().toUpperCase()) );
+				authorities.add( new SimpleGrantedAuthority(ROLE_PREFIX + UserRoles.CourseCoordinator.toString().toUpperCase()) );
 			}
 
 //			authorities.add( new SimpleGrantedAuthority("ROLE_USER") );

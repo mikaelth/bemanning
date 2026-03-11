@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
 
-import se.uu.ebc.bemanning.enums.UserRoleType;
+import se.uu.ebc.bemanning.enums.UserRoles;
 
 import lombok.*;
 
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PersonVO {
 
     private Long id;
-    private Set<UserRoleType> userRoles;
+    private Set<UserRoles> userRoles;
    
     @NotBlank(message = "Given name is mandatory")
     private String givenName;
