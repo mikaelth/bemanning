@@ -97,10 +97,30 @@ Logged user: <span sec:authentication="name">Bob</span>
 											<td th:text="${assignment.courseInstance.designation}" />
 											<td th:text="${assignment.hoursAdmin}" />
 											<td th:text="${assignment.hoursDevelopment}" />
+											<td th:with="cat=${T(se.uu.ebc.bemanning.enums.FactorCategory).LECTURE}" th:text="${assignment.isLegacy()} ?  ${assignment.getArrHours(cat)[0]} : 
+												${assignment.getArrHours(cat)[0]} + '/' + ${assignment.getArrHours(cat)[1]} + '/' + ${assignment.getArrHours(cat)[2]}" />
+<!-- 
+											<td th:text="${assignment.compHoursLecture}" />
 											<td th:text="${assignment.hoursLecture}" />
+ -->
+<!-- 
+											<td th:text="${assignment.isLegacy()} ?  ${assignment.getArrHoursPractical()[0]} : ${assignment.getArrHoursPractical()[0]} + '/' + ${assignment.getArrHoursPractical()[1]} + '/' + ${assignment.getArrHoursPractical()[2]}" />
+ -->
+<!-- 
 											<td th:text="${assignment.hoursPractical}" />
+ -->
+<!-- 
 											<td th:text="${assignment.hoursExcursion}" />
+ -->
+											<td th:with="cat=${T(se.uu.ebc.bemanning.enums.FactorCategory).PRACTICAL}" th:text="${assignment.isLegacy()} ?  ${assignment.getArrHours(cat)[0]} : 
+												${assignment.getArrHours(cat)[0]} + '/' + ${assignment.getArrHours(cat)[1]} + '/' + ${assignment.getArrHours(cat)[2]}" />
+											<td th:with="cat=${T(se.uu.ebc.bemanning.enums.FactorCategory).EXCURSION}" th:text="${assignment.isLegacy()} ?  ${assignment.getArrHours(cat)[0]} : 
+												${assignment.getArrHours(cat)[0]} + '/' + ${assignment.getArrHours(cat)[1]} + '/' + ${assignment.getArrHours(cat)[2]}" />
+											<td th:with="cat=${T(se.uu.ebc.bemanning.enums.FactorCategory).SEMINAR}" th:text="${assignment.isLegacy()} ?  ${assignment.getArrHours(cat)[0]} : 
+												${assignment.getArrHours(cat)[0]} + '/' + ${assignment.getArrHours(cat)[1]} + '/' + ${assignment.getArrHours(cat)[2]}" />
+<!-- 
 											<td th:text="${assignment.hoursSeminar}" />
+ -->
 											<td th:text="${assignment.totalHours}" />
 											<td> </td>
 										</tr>

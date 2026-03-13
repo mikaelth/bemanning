@@ -21,6 +21,7 @@ import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.EmploymentType;
 import se.uu.ebc.bemanning.enums.ActivityType;
+import se.uu.ebc.bemanning.enums.FactorCategory;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class CourseStaffingLegacy extends CourseStaffing {
   
 
     @OneToOne(mappedBy = "courseStaffing")
+    @NotNull
     private AssignmentLegacy legacy;
 
 
@@ -131,4 +133,38 @@ public class CourseStaffingLegacy extends CourseStaffing {
     public Float getHoursExcursion(){return legacy.getHoursExcursion();};
     public Float getHoursSeminar(){return legacy.getHoursSeminar();};
   
+
+    public Float[] getArrHoursLecture() {
+    	Float[] hours = new Float[3];
+    	hours[0] = legacy != null ? legacy.getHoursLecture() : 0.0f;
+    	hours[1] = 0.0f;
+    	hours[2] =  0.0f;
+    	
+    	return hours;
+    }
+    public Float[] getArrHoursPractical() {
+    	Float[] hours = new Float[3];
+    	hours[0] = legacy != null ? legacy.getHoursPractical() : 0.0f;
+    	hours[1] = 0.0f;
+    	hours[2] =  0.0f;
+    	
+    	return hours;
+    }
+
+      public Float[] getArrHours(FactorCategory cat) {
+    	Float[] hours = new Float[3];
+		hours[0] = switch (cat) {
+			case FactorCategory.PRACTICAL -> legacy.getHoursPractical();
+			case FactorCategory.LECTURE -> legacy.getHoursLecture();
+			case FactorCategory.SEMINAR -> legacy.getHoursSeminar();
+			case FactorCategory.EXCURSION -> legacy.getHoursExcursion();
+			case FactorCategory.DEVELOPMENT -> legacy.getHoursDevelopment();
+			case FactorCategory.ADMIN -> legacy.getHoursAdmin();
+		};
+		hours[1] = 0.0f;
+		hours[2] = 0.0f;
+		
+      	return hours;
+    }
+
 }

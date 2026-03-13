@@ -130,6 +130,12 @@ public abstract class CourseStaffing extends Auditable {
     public abstract float getTotalHours();
 
     public abstract float getPlainTeachingHours();
+    
+    public boolean isLegacy() {
+    
+    	return (this instanceof CourseStaffingLegacy);
+    	
+    }
 
 //   public abstract CourseInstance getCourseInstance();
 

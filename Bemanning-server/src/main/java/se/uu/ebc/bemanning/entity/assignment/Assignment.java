@@ -104,6 +104,8 @@ public abstract class Assignment extends Auditable {
     
     /* Public methods */
     
+
+
     public float getAssignmentCost()
     {
         float cost = 0.0f;
