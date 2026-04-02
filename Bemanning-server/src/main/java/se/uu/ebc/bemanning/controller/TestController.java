@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import se.uu.ebc.bemanning.service.OrgHierarchyService;
 import se.uu.ebc.bemanning.service.TestService;
+import se.uu.ebc.bemanning.service.StaffService;
 
 import java.io.IOException;
 
@@ -25,13 +26,15 @@ import java.io.IOException;
 public class TestController {
 
 
-	
+
   @Autowired
 	OrgHierarchyService ouService;
 
   @Autowired
 	TestService testService;
 
+  @Autowired
+	StaffService staffService;
 
 
     @GetMapping(value="/test")
@@ -47,6 +50,11 @@ public class TestController {
    @GetMapping(value="/testempnum")
     public ResponseEntity doTestEmpnum() throws Exception{
 		return ResponseEntity.ok(testService.testempnum() );
+    }
+
+   @GetMapping(value="/testupdate")
+    public ResponseEntity doUpdateENums() throws Exception{
+		return ResponseEntity.ok(staffService.updateEmpolyeeNumber() );
     }
 
 }

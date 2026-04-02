@@ -5,6 +5,7 @@ public enum UserRoles
 	Staff,
 	CourseCoordinator,
 	DirectorOfStudies,
+	ProgrammeHead,
 	PhDAdmin,
 	CoreDataAdmin,
 	PrimulaAdmin,

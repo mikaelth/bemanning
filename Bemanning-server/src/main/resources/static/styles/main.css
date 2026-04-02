@@ -1,0 +1,179 @@
+#course_instances {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    margin-left:5%; 
+    margin-right:5%;
+}
+#course_instances td, #course_instances th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#course_instances tr:nth-child(even){background-color: #f2f2f2;}
+#course_instances tr:hover {background-color: #ddd;}
+#course_instances th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#course_instance_summary {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    margin-left:5%; 
+    margin-right:5%;
+}
+#course_instance_summary td, #course_instances th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#course_instance_summary tr:nth-child(even){background-color: #f2f2f2;}
+#course_instance_summary tr:hover {background-color: #ddd;}
+#course_instance_summary th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+#course_instance_adjustment {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    margin-left:5%; 
+    margin-right:5%;
+}
+#course_instance_adjustment td, #course_instances th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#course_instance_adjustment tr:nth-child(even){background-color: #f2f2f2;}
+#course_instance_adjustment tr:hover {background-color: #ddd;}
+#course_instance_adjustment th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#courses {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+#courses td, #courses th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#courses tr:nth-child(even){background-color: #f2f2f2;}
+#courses tr:hover {background-color: #ddd;}
+#courses th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#models {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    margin-left:5%; 
+    margin-right:5%;
+}
+#models td, #course_instances th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#models tr:nth-child(even){background-color: #f2f2f2;}
+#models tr:hover {background-color: #ddd;}
+#models th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#economy_doc_grants {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    margin-left:5%; 
+    margin-right:5%;
+}
+#economy_doc_grants td, #course_instances th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#economy_doc_grants tr:nth-child(even){background-color: #f2f2f2;}
+#economy_doc_grants tr:hover {background-color: #ddd;}
+#economy_doc_grants th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.alnright { text-align: right; }
+.alnleft { text-align: left; }
+
+.examiner_table td, .examiner_table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+.examiner_table tr:nth-child(even){background-color: #f2f2f2;}
+
+.examiner_table tr.first{background-color: #f2f2f2;}
+.examiner_table tr.other{background-color: #ffffff;}
+
+tr.emph_row  {font-weight: bold;text-decoration: underline;}
+tr.normal_row {font-weight: normal;}
+
+#economy_doc_summary {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    margin-left:5%; 
+    margin-right:5%;
+}
+#economy_doc_summary td, #course_instances th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#economy_doc_summary tr:nth-child(even){background-color: #f2f2f2;}
+#economy_doc_summary tr:hover {background-color: #ddd;}
+#economy_doc_summary th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#course_instances_update {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    margin-left:5%; 
+    margin-right:5%;
+}
+#course_instances_update td, #course_instances th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#course_instances_update tr:nth-child(even){background-color: #f2f2f2;}
+#course_instances_update tr:hover {background-color: #ddd;}
+#course_instances_update th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}

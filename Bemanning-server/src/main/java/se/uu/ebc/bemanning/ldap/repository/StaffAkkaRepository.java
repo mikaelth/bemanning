@@ -43,6 +43,13 @@ public class StaffAkkaRepository {
         );
     }
 
+    public List<StaffAkka> findByName(String givenName, String lastName) {
+        return ldapTemplate.find(
+            query().where("objectclass").is("person").and("sn").is(lastName).and("givenname").is(givenName),
+            StaffAkka.class
+        );
+    }
+
     public List<StaffAkka> findByPNIN(String pNIN) {
         return ldapTemplate.find(
             query().where("objectclass").is("person").and("norEduPersonNIN").is(pNIN),
@@ -60,6 +67,20 @@ public class StaffAkkaRepository {
     public List<StaffAkka> findByProgramme(String prog) {
         return ldapTemplate.find(
             query().where("objectclass").is("person").and("ou").like(prog),
+            StaffAkka.class
+        );
+    }
+
+    public List<StaffAkka> findByEmployeeNumber(String empNum) {
+        return ldapTemplate.find(
+            query().where("objectclass").is("person").and("employeeNumber").is(empNum),
+            StaffAkka.class
+        );
+    }
+
+    public List<StaffAkka> findByUsername(String username) {
+        return ldapTemplate.find(
+            query().where("objectclass").is("person").and("uid").is(username),
             StaffAkka.class
         );
     }

@@ -26,13 +26,13 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
 
 	private record ErrorResponse (int statusCode, String message, LocalDateTime timeStamp) {};
-	
-	
+
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
 		log.error("ResourceNotFoundException caught " + ex);
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.NOT_FOUND.value(), 
+            HttpStatus.NOT_FOUND.value(),
             ex.getMessage(),
             LocalDateTime.now()
         );
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIOIssueFound(ResourceNotFoundException ex) {
 		log.error("IOException caught " + ex);
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
             ex.getMessage(),
             LocalDateTime.now()
         );
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInternalExceptions(Exception ex) {
 		log.error("Internal error exception caught " + ex);
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
             ex.getMessage(),
             LocalDateTime.now()
         );
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBadRequestExceptions(Exception ex) {
 		log.error("Bad request exception caught " + ex);
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.BAD_REQUEST.value(), 
+            HttpStatus.BAD_REQUEST.value(),
             ex.getMessage(),
             LocalDateTime.now()
         );
@@ -82,9 +82,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-		log.error("General exception caught " + ex);
-        ErrorResponse error = new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+//		log.error("General exception caught {}", ex);
+		log.error("General exception caught: {}, {}", ex.getMessage(), ex);
+           ErrorResponse error = new ErrorResponse(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
             ex.getMessage(),
             LocalDateTime.now()
         );

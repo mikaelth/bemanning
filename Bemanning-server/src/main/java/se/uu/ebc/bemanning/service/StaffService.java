@@ -39,9 +39,12 @@ import se.uu.ebc.bemanning.enums.EmploymentType;
 import se.uu.ebc.bemanning.enums.StaffKind;
 
 import se.uu.ebc.bemanning.repo.StaffRepo;
+import se.uu.ebc.bemanning.repo.AkkaStaffRepo;
 import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
 import se.uu.ebc.bemanning.repo.MaxCostRepo;
 import se.uu.ebc.bemanning.security.UserRepo;
+import se.uu.ebc.bemanning.ldap.repository.StaffAkkaRepository;
+import se.uu.ebc.bemanning.ldap.model.StaffAkka;
 
 import org.modelmapper.ModelMapper;
 
@@ -60,6 +63,8 @@ public class StaffService {
 	@Autowired
 	private UserRepo userRepo;
 
+	@Autowired
+	private StaffAkkaRepository uuStaffRepo;
 
 	private ModelMapper modelMapper = new ModelMapper();
 
@@ -67,18 +72,14 @@ public class StaffService {
 	private StaffRepo staffRepo;
 
 	@Autowired
+	private AkkaStaffRepo akkaStaffRepo;
+
+	@Autowired
 	private OrganisationUnitRepo ouRepo;
 
 /*	@Autowired
 	private MaxCostRepo mcRepo;
 
-	@Autowired
-	private AKKAService akka;
- */
-
-/*
-	@Autowired
-	private AKKAUserRepo ldapRepo;
  */
 
 
@@ -248,6 +249,7 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 	{
 		List<Staff> staffList = new ArrayList<Staff>();
 		OrganisationUnit ecoHolder = ouRepo.findById(defaultEcoHolder).get();
+		OrganisationUnit ou = ouRepo.findById(defaultEcoHolder).get();
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		log.debug("auth, {}",auth);
@@ -256,7 +258,8 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 //		Person p = userRepo.findUserByUsername("mikathol");
 		Optional<Staff> s = this.findStaffByPersonAndYear(p, year);
 		if(s.isPresent()) {
-			ecoHolder = s.get().getOrganisationUnit().getEconomyHolder(year);
+			ou = s.get().getOrganisationUnit();
+			ecoHolder = ou.getEconomyHolder(year);
 		}
 
 
@@ -265,17 +268,20 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 				staffList = staffRepo.findByYear(year);
 				log.debug("getAssignedStaff, CoreDataAdmin, got {} staff", staffList.size());
 			} else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoles.DirectorOfStudies.toString().toUpperCase()))) {
-				staffList = this.getAssignedStaff( year, ecoHolder);
+				staffList = this.getAssignedStaff( year, ecoHolder );
 				log.debug("getAssignedStaff, DirectorOfStudies, got {} staff", staffList.size());
+			} else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(UserRoles.ProgrammeHead.toString().toUpperCase()))) {
+				staffList = this.getAssignedStaff( year, ou );
+				log.debug("getAssignedStaff, Programme head, got {} staff", staffList.size());
 			} else {
 				staffList = staffRepo.findUserByPersonAndYear(p, year);
 				log.debug("getAssignedStaff, Staff, got {} staff", staffList.size());
 			}
 		}
 		/* Testing */
-		staffList = staffRepo.findByYear("2026");
-		log.debug("Staff list {}",staffList);		
-		
+// 		staffList = staffRepo.findByYear("2026");
+// 		log.debug("Staff list {}",staffList);
+
 		Map<OrganisationUnit, List<Staff>> ous = staffList.stream()
 			.collect(Collectors.groupingBy(Staff::getOrganisationUnit));
 
@@ -284,4 +290,19 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
 
  	}
 
+	public String updateEmpolyeeNumber() {
+		log.debug("updateEmpolyeeNumber");
+		for (AkkaStaff s : akkaStaffRepo.findAll()) {
+//			log.debug("Updated staff {}",s);
+			List<StaffAkka> as = uuStaffRepo.findByUsername(s.getPerson().getUsername());
+			if (as.size() == 1) {
+				s.setEmployeeNumber(as.get(0).getEmployeeNumber());
+				akkaStaffRepo.save(s);
+//				log.debug("Updated staff {}, username {}, {}",s.getEmployeeNumber(), s.getPerson().getUsername(), s.getPerson().getName());
+			} else if (as.size() > 1) {
+				log.debug("Not updated, ambiguous staff {}, {}, {} hits",s.getPerson().getUsername(), s.getPerson().getName(),as.size());
+			}
+		}
+		return "Okelidokeli";
+	}
 }

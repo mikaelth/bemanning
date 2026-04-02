@@ -25,4 +25,7 @@ public interface AkkaStaffRepo extends JpaRepository<AkkaStaff, Long>, JpaSpecif
 	@Query("SELECT s FROM AkkaStaff AS s WHERE s.employeeNumber = ?1 and s.year = ?2")
 	public Optional<AkkaStaff> findUserByEmployeeNumberAndYear(String employeeNumber, String year);
 
+	@Query("SELECT s FROM AkkaStaff AS s WHERE s.person.username = ?1 and s.year = ?2")
+	public Optional<AkkaStaff> findStaffByUsernameAndYear(String username, String year);
+
 }

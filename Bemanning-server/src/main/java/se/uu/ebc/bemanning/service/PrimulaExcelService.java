@@ -52,26 +52,29 @@ public class PrimulaExcelService {
 
     @Value("${bemanning.upload.primulafile}")
     private String excelFilePath;
-    
+
     private final AKKAService akkaService;
     private final AkkaStaffRepo akkaStaffRepo;
-    
+
     /* Constructor injection of autowired */
     PrimulaExcelService (AKKAService akkaService, AkkaStaffRepo akkaStaffRepo) {
     	this.akkaService = akkaService;
     	this.akkaStaffRepo = akkaStaffRepo;
     }
-    
+
     public List<PrimulaEntriesExcel> getExcelDataAsList (boolean overWrite) {
+		Map<String,PrimulaEntriesExcel> pMap = new HashMap<String,PrimulaEntriesExcel>();
 		File file = new File(excelFilePath);
         List<PrimulaEntriesExcel> entries = Poiji.fromExcel(file, PrimulaEntriesExcel.class);
 
-        entries.forEach(entry -> {updateAkkaCost(entry, "2026"); log.debug("{}", entry);});
-        
-        
+//        entries.forEach(entry -> {updateAkkaCost(entry, "2026");});
+        entries.forEach( entry -> {pMap.put(entry.getPNIN(),entry);} );
+		pMap.values().forEach(entry -> {updateAkkaCost(entry, "2026");});
+
         return entries;
     }
-    
+
+/*
 	private void updateAkkaCost (PrimulaEntriesExcel entry, String year) {
 
 		try {
@@ -80,12 +83,31 @@ public class PrimulaExcelService {
 					staff -> {
 						staff.setHourlyCharge (entry.hourlyCost());
 						akkaStaffRepo.save(staff);
-						log.debug("Updated {} to {}",staff.getPerson().getName(),staff.getHourlyCharge());
+						log.debug("With {}, {}, updated {} to {}",eNum, entry.pNINForLdap(), staff.getPerson().getName(),staff.getHourlyCharge());
 						entry.setUpdated(true);
 					}
 				);
-			} 
+			}
 		} catch (Exception e) {
 		}
 	}
+ */
+
+	private void updateAkkaCost (PrimulaEntriesExcel entry, String year) {
+
+		try {
+			for (String eNum : akkaService.findUsernameBypNIN(entry.pNINForLdap())) {
+				akkaStaffRepo.findStaffByUsernameAndYear(eNum, year).ifPresent (
+					staff -> {
+						staff.setHourlyCharge (entry.hourlyCost());
+						akkaStaffRepo.save(staff);
+						log.debug("With {}, {}, updated {} to {}",eNum, entry.pNINForLdap(), staff.getPerson().getName(),staff.getHourlyCharge());
+						entry.setUpdated(true);
+					}
+				);
+			}
+		} catch (Exception e) {
+		}
+	}
+
 }

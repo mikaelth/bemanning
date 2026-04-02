@@ -9,7 +9,7 @@
 			<div id="content">
 				<div>
 					<h1 th:text="#{display.bp.primulaupdateresult.title}" />
-<!-- 
+<!--
 					<h1 th:text="#{display.bp.teupdateresult.title} + ', ' + ${year}" />
 					<h1 th:text="${year}" />
  -->
@@ -28,7 +28,7 @@
 					<td class='alnleft' th:text="${te.pNINForLdap()}" />
 					<td class='alnleft' th:text="${te.hourlyCost()}" />
 
-					<td class='alnleft' th:if="${te.updated}">X</td>
+					<td class='alnleft' th:text="${te.updated}  ? 'X' : ' '"</>
 
 				</tr>
 			</table>

@@ -40,10 +40,10 @@ import se.uu.ebc.bemanning.enums.EmploymentType;
 @Slf4j
 public class AkkaStaff extends Staff {
 
-    @Column(name = "EMPLOYEENUMBER", length = 255, unique = true)
+    @Column(name = "EMPLOYEENUMBER", length = 255)
 	private String employeeNumber;
-    
+
     /* Public methods */
-    
-    
+
+
 }

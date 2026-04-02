@@ -44,7 +44,7 @@ public class AKKAService {
 // 	{
 // 		enumMap.put( "196304115196", new ArrayList<String>() );
 // 		enumMap.put( "196810140480", new ArrayList<String>() );
-// 
+//
 // 		enumMap.get("196304115196").add("N0-346_4");
 // 		enumMap.get("196304115196").add("N0-346_3");
 // 		enumMap.get("196304115196").add("N0-346_2");
@@ -54,8 +54,8 @@ public class AKKAService {
 
 
  	public List<String> findEmployeenumberBypNIN (String pNIN) throws Exception {
-	
- 
+
+
 		return uuStaffRepo.findByPNIN(pNIN).stream()
 			.map(StaffAkka::getEmployeeNumber)
 			.toList();
@@ -68,5 +68,14 @@ public class AKKAService {
 // 		} else {
 // 			return new ArrayList<String>();
 // 		}
-	}    
+	}
+
+	 	public List<String> findUsernameBypNIN (String pNIN) throws Exception {
+
+
+		return uuStaffRepo.findByPNIN(pNIN).stream()
+			.map(StaffAkka::getUsername)
+			.toList();
+
+		}
 }
