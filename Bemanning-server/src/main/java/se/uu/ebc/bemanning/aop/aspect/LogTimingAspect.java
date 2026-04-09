@@ -17,7 +17,7 @@ public class LogTimingAspect {
     // Define a pointcut for all methods in the service package
     // You could also refine this to specific annotations or method patterns
 //    @Around("execution(* se.uu.ebc.bemanning.service.*.*(..))")
-    public Object logMethodExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+	public Object logMethodExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.nanoTime();
         String methodName = joinPoint.getSignature().toShortString();
         String className = joinPoint.getTarget().getClass().getName();

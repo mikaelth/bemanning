@@ -26,7 +26,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
-@Table(name = "TE_ACTIVITY_LOOKUP",indexes = @Index(columnList = "teText"))
+@Table(name = "TE_ACTIVITY_LOOKUP",indexes = @Index(columnList = "TE_ACTIVITY"))
 @Getter
 @Setter
 //@Builder(toBuilder = true)
@@ -44,7 +44,7 @@ public class TEActivity  extends Auditable {
     @Column(name = "TE_ACTIVITY", length = 255)
     private String teText;
 
-    @Enumerated(EnumType.STRING)    
+    @Enumerated(EnumType.STRING)
     @Column(name = "BP_ACTIVITY")
     private ActivityType bpActivity;
 

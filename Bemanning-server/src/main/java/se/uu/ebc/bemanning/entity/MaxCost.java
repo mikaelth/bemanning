@@ -22,7 +22,7 @@ import se.uu.ebc.bemanning.enums.EmploymentType;
 @Slf4j
 public class MaxCost {
 
- 	@EmbeddedId 
+ 	@EmbeddedId
  	private CostId id;
 
  	public CostId getId()
@@ -38,7 +38,7 @@ public class MaxCost {
 
 	@Formula("(select max(s.HOURLY_CHARGE) from staff as s where s.YEAR=staffyear AND s.POSITION=staffposition )")
 	private Float maxHourlyCharge = 0.0f;
-	
+
 	public Float getMaxHourlyCharge()
 	{
 		log.debug("getMaxHourlyCharge " + id.getPosition() + " - " + id.getYear() +": " + maxHourlyCharge);
@@ -46,23 +46,26 @@ public class MaxCost {
 	}
 
 	/* Constructors */
-	
+
 	public MaxCost() {}
-	
+
 	public MaxCost(EmploymentType type, String year) {
 		id = new CostId(year, type);
 	}
-	
-	
+
+
 	@Embeddable
+	@Setter
+	@Getter
 	static class CostId implements Serializable {
 		@Column(name = "STAFFYEAR")
 		private String year;
 
-		@Enumerated(EnumType.STRING)    
+		@Enumerated(EnumType.STRING)
 		@Column(name = "STAFFPOSITION")
 		private EmploymentType position;
 
+/*
 		public String getYear()
 		{
 			return this.year;
@@ -73,7 +76,7 @@ public class MaxCost {
 			this.year = year;
 		}
 
-	
+
 		public EmploymentType getPosition()
 		{
 			return this.position;
@@ -83,13 +86,42 @@ public class MaxCost {
 		{
 			this.position = position;
 		}
+ */
 
-		
+
 		public CostId() {}
 		public CostId(String year, EmploymentType position){
 			this.year = year;
 			this.position = position;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o == this)
+				return true;
+			if (!(o instanceof CostId))
+				return false;
+			CostId other = (CostId) o;
+			boolean yearEquals = (this.year == null && other.year == null)
+			  || (this.year != null && this.year.equals(other.year));
+			boolean posEquals = (this.position == null && other.position == null)
+			  || (this.position != null && this.position.equals(other.position));
+			return yearEquals && posEquals;
+		}
+
+		@Override
+		public final int hashCode() {
+			int result = 17;
+			if (year != null) {
+				result = 31 * result + year.hashCode();
+			}
+			if (position != null) {
+				result = 31 * result + position.hashCode();
+			}
+			return result;
+		}
+
+
 	}
 
 }

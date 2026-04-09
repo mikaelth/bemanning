@@ -26,7 +26,7 @@ public class InstanceDeptYear {
 
  	@EmbeddedId
  	@Getter
- 	@Setter 
+ 	@Setter
  	private InstYearId id;
 
     @ManyToOne
@@ -46,7 +46,7 @@ public class InstanceDeptYear {
 
 
  	@Getter
- 	@Setter 
+ 	@Setter
     @Column(name = "PERCENTAGE")
  	private Float percentage;
 
@@ -55,8 +55,8 @@ public class InstanceDeptYear {
 
 
 	/* Constructors */
-	
-	
+
+
 	@Embeddable
 	@NoArgsConstructor
 	@AllArgsConstructor
@@ -72,8 +72,34 @@ public class InstanceDeptYear {
 		@Setter
 		protected Long yearlyStaffingId;
 
+		@Override
+		public boolean equals(Object o) {
+			if (o == this)
+				return true;
+			if (!(o instanceof InstYearId))
+				return false;
+			InstYearId other = (InstYearId) o;
+			boolean ciEquals = (this.courseInstanceId == null && other.courseInstanceId == null)
+			  || (this.courseInstanceId != null && this.courseInstanceId.equals(other.courseInstanceId));
+			boolean ysEquals = (this.yearlyStaffingId == null && other.yearlyStaffingId == null)
+			  || (this.yearlyStaffingId != null && this.yearlyStaffingId.equals(other.yearlyStaffingId));
+			return ciEquals && ysEquals;
+		}
 
-		
+		@Override
+		public final int hashCode() {
+			int result = 17;
+			if (courseInstanceId != null) {
+				result = 31 * result + courseInstanceId.hashCode();
+			}
+			if (yearlyStaffingId != null) {
+				result = 31 * result + yearlyStaffingId.hashCode();
+			}
+			return result;
+		}
+
 	}
+
+
 
 }
