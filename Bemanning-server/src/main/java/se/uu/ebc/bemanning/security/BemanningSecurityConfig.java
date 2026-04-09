@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.apereo.cas.client.session.SingleSignOutFilter;
-import org.apereo.cas.client.validation.Cas30ServiceTicketValidator;
+import org.apereo.cas.client.validation.Cas20ServiceTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import java.util.Arrays;
 
 /**
  * Spring Security configuration for Bemanning application with CAS integration.
- * 
+ *
  * This configuration provides:
  * - CAS-based authentication for web interface
  * - REST API endpoints with different authentication
@@ -70,27 +70,27 @@ public class BemanningSecurityConfig {
                 .requestMatchers("/", "/login", "/logout", "/error").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
-                
+
                 // REST API endpoints - require authentication but different handling
                 .requestMatchers("/rest/**").authenticated()
-                
+
                 // Admin endpoints - require ADMIN role
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                
+
                 // All other requests require authentication
                 .anyRequest().authenticated()
             )
-            
+
             // CAS configuration
             .exceptionHandling(exceptions -> exceptions
                 .authenticationEntryPoint(restAuthenticationEntryPointBean())
             )
-            
+
             // Add CAS filters
             .addFilter(casAuthenticationFilter())
             .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
             .addFilterBefore(logoutFilter(), LogoutFilter.class)
-            
+
             // Logout configuration
             .logout(logout -> logout
                 .logoutUrl("/logout")
@@ -98,18 +98,18 @@ public class BemanningSecurityConfig {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
             )
-            
+
             // CSRF configuration
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers("/rest/**") // Disable CSRF for REST endpoints
             )
-            
+
             // Session management
             .sessionManagement(session -> session
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
             )
-            
+
             // Headers configuration for security
             .headers(headers -> headers
 //                .frameOptions().deny()
@@ -150,7 +150,7 @@ public class BemanningSecurityConfig {
      */
     @Bean
     public TicketValidator ticketValidator() {
-        return new Cas30ServiceTicketValidator(casServerUrl);
+        return new Cas20ServiceTicketValidator(casServerUrl);
     }
 
     /**
