@@ -14,11 +14,11 @@ import org.springframework.security.cas.authentication.CasAssertionAuthenticatio
 import java.util.List;
 import java.util.ArrayList;
 
+import se.uu.ebc.bemanning.dto.UserDTO;
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.security.SecurityServiceException;
 import se.uu.ebc.bemanning.security.UserRepo;
-import se.uu.ebc.bemanning.vo.UserVO;
 
 import org.modelmapper.ModelMapper;
 
@@ -105,9 +105,9 @@ public class SecurityService implements BemanningUserService {
     }
 
 
-   	public UserVO getByUserName(String username) {
+   	public UserDTO getByUserName(String username) {
 		Person p = userRepo.findUserByUsername(username);
-		return modelMapper.map(p, UserVO.class);
+		return modelMapper.map(p, UserDTO.class);
 	}
 
     @Override

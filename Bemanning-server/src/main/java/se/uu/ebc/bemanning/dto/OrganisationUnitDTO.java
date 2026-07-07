@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.vo;
+package se.uu.ebc.bemanning.dto;
 
 import se.uu.ebc.bemanning.entity.OrganisationUnit;
 
@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @NoArgsConstructor
 @Slf4j
-public class OrganisationUnitVO {
+public class OrganisationUnitDTO {
 
 
     private Long id;
@@ -24,7 +24,7 @@ public class OrganisationUnitVO {
 
 
 
-	public OrganisationUnitVO(OrganisationUnit ou) {
+	public OrganisationUnitDTO(OrganisationUnit ou) {
 		this.id = ou.getId();
 		this.svName = ou.getSvName();
 		this.enName = ou.getEnName();

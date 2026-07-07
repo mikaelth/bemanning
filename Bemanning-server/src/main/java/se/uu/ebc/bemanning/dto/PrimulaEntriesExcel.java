@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.vo;
+package se.uu.ebc.bemanning.dto;
 
 import com.poiji.annotation.ExcelCellName;
 import com.poiji.annotation.ExcelRow;

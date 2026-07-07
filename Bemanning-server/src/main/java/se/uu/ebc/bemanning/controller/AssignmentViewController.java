@@ -122,7 +122,6 @@ public class AssignmentViewController {
 			String thisYear = year==null ? thisYear() : year;
 
 			log.debug("viewByPerson, year {}", year);
-			log.debug("viewByPerson, year " + year);
 
 			StaffingRecord assStaff = staffingService.getAssignedStaff(thisYear);
 

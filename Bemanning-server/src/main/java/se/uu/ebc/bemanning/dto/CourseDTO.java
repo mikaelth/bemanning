@@ -1,4 +1,4 @@
-package  se.uu.ebc.bemanning.vo;
+package  se.uu.ebc.bemanning.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @NoArgsConstructor
 @Slf4j
-public class CourseVO {
+public class CourseDTO {
 
     private Long id;
 

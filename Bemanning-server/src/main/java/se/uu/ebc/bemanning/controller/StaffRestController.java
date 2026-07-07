@@ -20,10 +20,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.extern.slf4j.Slf4j;
 
 import se.uu.ebc.bemanning.repo.StaffRepo;
+import se.uu.ebc.bemanning.dto.StaffDTO;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.service.StaffService;
-import se.uu.ebc.bemanning.vo.StaffVO;
 
 import java.util.List;
 import java.util.HashSet;
@@ -45,8 +45,8 @@ public class StaffRestController {
 
 
 	private record DeleteStatus (Boolean sucess, Long id) {}
-	private record CreateStaffStatus (Boolean sucess, StaffVO staff) {}
-	private record CreateStaffListStatus (Boolean sucess, List<StaffVO> staff) {}
+	private record CreateStaffStatus (Boolean sucess, StaffDTO staff) {}
+	private record CreateStaffListStatus (Boolean sucess, List<StaffDTO> staff) {}
 
 	/* Persons */
 		
@@ -56,22 +56,22 @@ public class StaffRestController {
     }
 
     @GetMapping(value="/staff/{id}")
-    public StaffVO getEntity(@PathVariable Long id) {
+    public StaffDTO getEntity(@PathVariable Long id) {
 		return staffService.getById(id); 
     }
    
 	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @PostMapping(value="/staff")
-	public ResponseEntity createEntity(@RequestBody StaffVO sVO) throws Exception {
-		StaffVO nsVO = staffService.saveStaff(sVO);
+	public ResponseEntity createEntity(@RequestBody StaffDTO sVO) throws Exception {
+		StaffDTO nsVO = staffService.saveStaff(sVO);
 		return ResponseEntity.ok(new CreateStaffStatus(true,nsVO));
 	}
 
 	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @PutMapping(value="/staff/{id}")
-    public ResponseEntity updateEntity(@RequestBody StaffVO sVO, @PathVariable Long id) throws Exception {
+    public ResponseEntity updateEntity(@RequestBody StaffDTO sVO, @PathVariable Long id) throws Exception {
 		if (sVO.getId().equals(id)) {
-			StaffVO nsVO = staffService.saveStaff(sVO);
+			StaffDTO nsVO = staffService.saveStaff(sVO);
 			return ResponseEntity.ok(new CreateStaffStatus(true,nsVO));		
 		} else {
 			throw ( new IllegalArgumentException() );

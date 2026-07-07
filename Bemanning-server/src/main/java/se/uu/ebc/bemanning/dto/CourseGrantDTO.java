@@ -1,4 +1,4 @@
-package  se.uu.ebc.bemanning.vo;
+package  se.uu.ebc.bemanning.dto;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @NoArgsConstructor
 @Slf4j
-public class CourseGrantVO {
+public class CourseGrantDTO {
 
     private Long id;
 

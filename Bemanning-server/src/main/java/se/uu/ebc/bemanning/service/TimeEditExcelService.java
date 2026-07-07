@@ -15,12 +15,12 @@ import se.uu.ebc.bemanning.enums.TEMatchStatus;
 //import se.uu.ebc.bemanning.enums.TEColumnHeader;
 import se.uu.ebc.bemanning.service.ColumnHeadersRecord;
 import se.uu.ebc.bemanning.service.CourseStaffingService;
-import se.uu.ebc.bemanning.vo.TEExcelVO;
 import se.uu.ebc.bemanning.repo.TEActivityRepo;
 import se.uu.ebc.bemanning.repo.CourseStaffingRepo;
 import se.uu.ebc.bemanning.repo.StaffRepo;
 import se.uu.ebc.bemanning.repo.CourseInstanceRepo;
 import se.uu.ebc.bemanning.entity.utils.TEActivity;
+import se.uu.ebc.bemanning.dto.TEExcelDTO;
 import se.uu.ebc.bemanning.entity.assignment.CourseStaffingModern;
 import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.entity.staff.Staff;
@@ -80,8 +80,8 @@ public class TimeEditExcelService {
 // 	}
 
 
-    public List<TEExcelVO> getExcelDataAsList(boolean substitutingExistingValues) throws IOException {
-        List<TEExcelVO> teEntries = new ArrayList<TEExcelVO>();
+    public List<TEExcelDTO> getExcelDataAsList(boolean substitutingExistingValues) throws IOException {
+        List<TEExcelDTO> teEntries = new ArrayList<TEExcelDTO>();
         List<EntryRecord> entryList = new ArrayList<EntryRecord>();
 
  		log.debug("In getExcelDataAsList");
@@ -186,7 +186,7 @@ public class TimeEditExcelService {
 
 			ActivityType actType = teActivityRepo.findBpActivityByTeText(entryMap.get(theKey).activity()).orElse(ActivityType.UNKNOWN);
 			String[] courseString = entryMap.get(theKey).course().split("-");
-			TEExcelVO tVO = new TEExcelVO().builder()
+			TEExcelDTO tVO = new TEExcelDTO().builder()
 				.activity(entryMap.get(theKey).activity())
 				.activityType(actType)
 				.staff(entryMap.get(theKey).staff())
@@ -205,9 +205,9 @@ public class TimeEditExcelService {
         return teEntries;
     }
 
-	private void updateTEEntities(List<TEExcelVO> teEntries, boolean replace) {
+	private void updateTEEntities(List<TEExcelDTO> teEntries, boolean replace) {
 
-		for (TEExcelVO tVO : teEntries) {
+		for (TEExcelDTO tVO : teEntries) {
 
 			csRepo.findByCourseIntanceAndPerson(tVO.getCourseCode(),tVO.getCiNumber(), tVO.getYear(), tVO.givenName(),tVO.familyName())
     			.ifPresentOrElse(
@@ -228,7 +228,7 @@ public class TimeEditExcelService {
 		}
 	}
 
-	private void checkTEForStaffAndCourse( TEExcelVO teEntry) {
+	private void checkTEForStaffAndCourse( TEExcelDTO teEntry) {
 		Set<Staff> theStaff = staffRepo.findStaffByNameAndYear(teEntry.givenName(), teEntry.familyName(), teEntry.getYear());
 		Optional<CourseInstance> theCI = ciRepo.findByYearAndCourseInstance(teEntry.getYear(), teEntry.getCourseCode(), teEntry.getCiNumber());
 

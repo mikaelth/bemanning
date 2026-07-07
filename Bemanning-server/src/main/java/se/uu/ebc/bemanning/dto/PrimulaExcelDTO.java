@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.vo;
+package se.uu.ebc.bemanning.dto;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @Slf4j
-public class PrimulaExcelVO {
+public class PrimulaExcelDTO {
 
 	private String employeeNumber;
 	private String year;

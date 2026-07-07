@@ -16,6 +16,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.FetchType;
+
 
 import jakarta.validation.constraints.NotNull;
 import se.uu.ebc.bemanning.entity.staff.Staff;
@@ -44,7 +46,7 @@ public class Person extends Auditable {
     @OneToOne(mappedBy = "person")
     private PhDPosition phDPosition;
     
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person",fetch = FetchType.LAZY)
     private Set<Staff> staff;
     
     @Column(name = "GIVEN_NAME", length = 255)
@@ -69,7 +71,7 @@ public class Person extends Auditable {
     private boolean isActive;
 
  
-	@ElementCollection(targetClass = UserRoles.class)
+	@ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
 	@CollectionTable(name="USER_ROLE", joinColumns=@JoinColumn(name="user_fk"))
 	@Column(name="ROLE")
 	@NotNull

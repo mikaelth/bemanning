@@ -22,10 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 
 
 import se.uu.ebc.bemanning.security.SecurityService;
+import se.uu.ebc.bemanning.dto.UserDTO;
+import se.uu.ebc.bemanning.dto.YearlyStaffingDTO;
 import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.service.YearlyStaffingService;
-import se.uu.ebc.bemanning.vo.YearlyStaffingVO;
-import se.uu.ebc.bemanning.vo.UserVO;
 
 import java.util.List;
 import java.util.HashSet;
@@ -51,8 +51,8 @@ public class YearlyStaffingRestController {
 	}
 
 	private record DeleteStatus (Boolean sucess, Long id) {}
-	private record CreateYearlyStaffingStatus (Boolean success, YearlyStaffingVO yearlyStaffing) {}
-	private record YearlyStaffing (List<YearlyStaffingVO> yearlyStaffing) {};
+	private record CreateYearlyStaffingStatus (Boolean success, YearlyStaffingDTO yearlyStaffing) {}
+	private record YearlyStaffing (List<YearlyStaffingDTO> yearlyStaffing) {};
 
 
 	/* Yearly Staffing plans */	
@@ -63,22 +63,22 @@ public class YearlyStaffingRestController {
     }
 
     @GetMapping(value="/ysp/{id}")
-    public YearlyStaffingVO getEntity(@PathVariable Long id) {
+    public YearlyStaffingDTO getEntity(@PathVariable Long id) {
 		return yearlyStaffingService.getById(id);
     }
 
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @PostMapping(value="/ysp")
-	public ResponseEntity<CreateYearlyStaffingStatus> createEntity(@Valid @RequestBody YearlyStaffingVO pVO) throws Exception {
-		YearlyStaffingVO npVO = yearlyStaffingService.saveYearlyStaffing(pVO);
+	public ResponseEntity<CreateYearlyStaffingStatus> createEntity(@Valid @RequestBody YearlyStaffingDTO pVO) throws Exception {
+		YearlyStaffingDTO npVO = yearlyStaffingService.saveYearlyStaffing(pVO);
 		return ResponseEntity.ok(new CreateYearlyStaffingStatus(true,npVO));
 	}
 
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @PutMapping(value="/ysp/{id}")
-    public ResponseEntity<CreateYearlyStaffingStatus> updateEntity(@Valid @RequestBody YearlyStaffingVO pVO, @PathVariable Long id) throws Exception {
+    public ResponseEntity<CreateYearlyStaffingStatus> updateEntity(@Valid @RequestBody YearlyStaffingDTO pVO, @PathVariable Long id) throws Exception {
 		if (pVO.getId().equals(id)) {
-			YearlyStaffingVO npVO = yearlyStaffingService.saveYearlyStaffing(pVO);
+			YearlyStaffingDTO npVO = yearlyStaffingService.saveYearlyStaffing(pVO);
 			return ResponseEntity.ok(new CreateYearlyStaffingStatus(true,npVO));
 		} else {
 			throw ( new IllegalArgumentException() );

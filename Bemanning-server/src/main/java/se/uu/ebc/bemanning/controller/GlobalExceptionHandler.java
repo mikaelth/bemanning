@@ -6,6 +6,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import org.modelmapper.ConfigurationException;
 import org.modelmapper.MappingException;
@@ -67,6 +68,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
     		IllegalArgumentException.class,
+    		MethodArgumentNotValidException.class,
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class
     	})

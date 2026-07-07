@@ -19,11 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
-
-
+import se.uu.ebc.bemanning.dto.PhDPositionDTO;
+import se.uu.ebc.bemanning.dto.ProgressDTO;
 import se.uu.ebc.bemanning.service.PhDService;
-import se.uu.ebc.bemanning.vo.PhDPositionVO;
-import se.uu.ebc.bemanning.vo.ProgressVO;
 
 import java.util.List;
 
@@ -37,16 +35,20 @@ import jakarta.validation.Valid;
 public class PhDRestController {
 
 
-	@Autowired
-	PhDService phdService;
+//	@Autowired
+	private final PhDService phdService;
+    // Spring automatically injects this dependency!
+	public PhDRestController(PhDService phdService) {
+		this.phdService = phdService;
+	}
 
 	/* PhDPositions */
 
 	private record DeleteStatus (Boolean sucess, Long id) {}
-	private record CreatePhdPositionStatus (Boolean sucess, PhDPositionVO phdpositions) {}
-	private record CreatePhdPositionListStatus (Boolean success, List<PhDPositionVO> phdpositions) {};
-	private record CreateProgressStatus (Boolean sucess, ProgressVO progress) {}
-	private record CreateProgressListStatus (Boolean success, List<ProgressVO> progress) {};
+	private record CreatePhdPositionStatus (Boolean sucess, PhDPositionDTO phdpositions) {}
+	private record CreatePhdPositionListStatus (Boolean success, List<PhDPositionDTO> phdpositions) {};
+	private record CreateProgressStatus (Boolean sucess, ProgressDTO progress) {}
+	private record CreateProgressListStatus (Boolean success, List<ProgressDTO> progress) {};
 			
 			
     @GetMapping(value="/phdpositions")
@@ -55,22 +57,22 @@ public class PhDRestController {
     }
 
     @GetMapping(value="/phdpositions/{id}")
-    public PhDPositionVO getPhdPosition(@PathVariable Long id) {
+    public PhDPositionDTO getPhdPosition(@PathVariable Long id) {
 		return phdService.getPhDById(id); 
     }
    
 	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
     @PostMapping(value="/phdpositions")
-	public ResponseEntity createPhdPosition(@Valid @RequestBody PhDPositionVO pVO) throws Exception {
-		PhDPositionVO npVO = phdService.savePhDPosition(pVO);
+	public ResponseEntity createPhdPosition(@Valid @RequestBody PhDPositionDTO pVO) throws Exception {
+		PhDPositionDTO npVO = phdService.savePhDPosition(pVO);
 		return ResponseEntity.ok(new CreatePhdPositionStatus(true,npVO));
 	}
 
 	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
     @PutMapping(value="/phdpositions/{id}")
-    public ResponseEntity updatePhdPosition(@Valid @RequestBody PhDPositionVO pVO, @PathVariable Long id) throws Exception {
+    public ResponseEntity updatePhdPosition(@Valid @RequestBody PhDPositionDTO pVO, @PathVariable Long id) throws Exception {
 		if (pVO.getId().equals(id)) {
-			PhDPositionVO npVO = phdService.savePhDPosition(pVO);
+			PhDPositionDTO npVO = phdService.savePhDPosition(pVO);
 			return ResponseEntity.ok(new CreatePhdPositionStatus(true,npVO));		
 		} else {
 			throw ( new IllegalArgumentException() );
@@ -94,16 +96,16 @@ public class PhDRestController {
 
 	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
     @PostMapping(value="/progress")
-	public ResponseEntity createProgress(@Valid @RequestBody ProgressVO pVO) throws Exception {
-		ProgressVO npVO = phdService.saveProgress(pVO);
+	public ResponseEntity createProgress(@Valid @RequestBody ProgressDTO pVO) throws Exception {
+		ProgressDTO npVO = phdService.saveProgress(pVO);
 		return ResponseEntity.ok(new CreateProgressStatus(true,npVO));
 	}
 
 	@PreAuthorize("hasRole('ROLE_PHDADMIN')")
     @PutMapping(value="/progress/{id}")
-    public ResponseEntity updateProgress(@Valid @RequestBody ProgressVO pVO, @PathVariable Long id) throws Exception {
+    public ResponseEntity updateProgress(@Valid @RequestBody ProgressDTO pVO, @PathVariable Long id) throws Exception {
 		if (pVO.getId().equals(id)) {
-			ProgressVO npVO = phdService.saveProgress(pVO);
+			ProgressDTO npVO = phdService.saveProgress(pVO);
 			return ResponseEntity.ok(new CreateProgressStatus(true,npVO));		
 		} else {
 			throw ( new IllegalArgumentException() );

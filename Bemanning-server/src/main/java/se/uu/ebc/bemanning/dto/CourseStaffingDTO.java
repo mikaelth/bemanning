@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.vo;
+package se.uu.ebc.bemanning.dto;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @NoArgsConstructor
 @Slf4j
-public class CourseStaffingVO {
+public class CourseStaffingDTO {
 
     private Long id;
 
@@ -26,10 +26,10 @@ public class CourseStaffingVO {
     private Long courseInstanceId;
     private String assigningDeptAbbreviation;
 
-    private AssignmentVO legacy;
-    private AssignmentVO plan;
-    private AssignmentVO te;
-    private AssignmentVO outcome;
+    private AssignmentDTO legacy;
+    private AssignmentDTO plan;
+    private AssignmentDTO te;
+    private AssignmentDTO outcome;
 	
 	private LocalDateTime creationDate;
 	private LocalDateTime lastModifiedDate;

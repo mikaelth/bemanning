@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.vo;
+package se.uu.ebc.bemanning.dto;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import se.uu.ebc.bemanning.enums.TEMatchStatus;
 @AllArgsConstructor
 @Builder
 @Slf4j
-public class TEExcelVO {
+public class TEExcelDTO {
 
 	private String activity;
 	private ActivityType activityType;

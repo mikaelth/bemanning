@@ -20,11 +20,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.extern.slf4j.Slf4j;
 
 import se.uu.ebc.bemanning.repo.CourseStaffingRepo;
+import se.uu.ebc.bemanning.dto.CourseStaffingDTO;
+import se.uu.ebc.bemanning.dto.StaffDTO;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.service.CourseStaffingService;
-import se.uu.ebc.bemanning.vo.CourseStaffingVO;
-import se.uu.ebc.bemanning.vo.StaffVO;
 
 import java.util.List;
 import java.util.HashSet;
@@ -43,8 +43,8 @@ public class CoursStaffingRestController {
 
 
 	private record DeleteStatus (Boolean sucess, Long id) {}
-	private record CreateStaffingStatus (Boolean sucess, CourseStaffingVO staffing) {}
-	private record CreateStaffingListStatus (Boolean sucess, List<CourseStaffingVO> staffing) {}
+	private record CreateStaffingStatus (Boolean sucess, CourseStaffingDTO staffing) {}
+	private record CreateStaffingListStatus (Boolean sucess, List<CourseStaffingDTO> staffing) {}
 
 	/* Persons */
 		
@@ -54,22 +54,22 @@ public class CoursStaffingRestController {
     }
 
     @GetMapping(value="/coursestaffing/{id}")
-    public CourseStaffingVO getEntity(@PathVariable Long id) {
+    public CourseStaffingDTO getEntity(@PathVariable Long id) {
 		return csService.getCourseStaffingById(id); 
     }
    
 	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @PostMapping(value="/coursestaffing")
-	public ResponseEntity<CreateStaffingStatus> createEntity(@RequestBody CourseStaffingVO sVO) throws Exception {
-		CourseStaffingVO nsVO = csService.saveCourseStaffing(sVO);
+	public ResponseEntity<CreateStaffingStatus> createEntity(@RequestBody CourseStaffingDTO sVO) throws Exception {
+		CourseStaffingDTO nsVO = csService.saveCourseStaffing(sVO);
 		return ResponseEntity.ok(new CreateStaffingStatus(true,nsVO));
 	}
 
 	@PreAuthorize("hasRole('ROLE_DIRECTOROFSTUDIES')")
     @PutMapping(value="/coursestaffing/{id}")
-    public ResponseEntity<CreateStaffingStatus> updateEntity(@RequestBody CourseStaffingVO sVO, @PathVariable Long id) throws Exception {
+    public ResponseEntity<CreateStaffingStatus> updateEntity(@RequestBody CourseStaffingDTO sVO, @PathVariable Long id) throws Exception {
 		if (sVO.getId().equals(id)) {
-			CourseStaffingVO nsVO = csService.saveCourseStaffing(sVO);
+			CourseStaffingDTO nsVO = csService.saveCourseStaffing(sVO);
 			return ResponseEntity.ok(new CreateStaffingStatus(true,nsVO));		
 		} else {
 			throw ( new IllegalArgumentException() );

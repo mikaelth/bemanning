@@ -14,11 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import se.uu.ebc.bemanning.dto.FormFileDataDTO;
+import se.uu.ebc.bemanning.dto.TEExcelDTO;
 import se.uu.ebc.bemanning.service.TimeEditExcelService;
-import se.uu.ebc.bemanning.vo.FormFileDataVO;
-import se.uu.ebc.bemanning.vo.TEExcelVO;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -59,7 +57,7 @@ public class TEFileController {
 	@RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String viewCSVCIUploadRequest(Model model, HttpServletRequest request) {
 		try {
-			FormFileDataVO fb = new FormFileDataVO();
+			FormFileDataDTO fb = new FormFileDataDTO();
 			fb.setIgnoreExistingValues(false);
 
 //			model.addAttribute("years",edRepo.getYears());
@@ -75,7 +73,7 @@ public class TEFileController {
 
 	@Secured({("ROLE_DIRECTOROFSTUDIES")})
 	@RequestMapping(value="/bulk/upload", method = RequestMethod.POST, headers = "Accept=application/json")
-    public String requestUpdateRegsFromCSV(Model model, HttpServletRequest request, HttpServletResponse response, final FormFileDataVO formValues) throws IOException{
+    public String requestUpdateRegsFromCSV(Model model, HttpServletRequest request, HttpServletResponse response, final FormFileDataDTO formValues) throws IOException{
 
 		log.debug("FormValues: {}",formValues);
 //        Path path = Paths.get(uploadDir + File.separator + formValues.getExcelFile().getOriginalFilename());
@@ -83,7 +81,7 @@ public class TEFileController {
 		Files.createDirectories(path.getParent());
         Files.write(path, formValues.getExcelFile().getBytes());
 		
- 		model.addAttribute( "teEntries",teExcelService.getExcelDataAsList(formValues.isIgnoreExistingValues()).stream().sorted( (TEExcelVO t1,TEExcelVO t2) -> t1.getStaff().compareTo(t2.getStaff()) ) );
+ 		model.addAttribute( "teEntries",teExcelService.getExcelDataAsList(formValues.isIgnoreExistingValues()).stream().sorted( (TEExcelDTO t1,TEExcelDTO t2) -> t1.getStaff().compareTo(t2.getStaff()) ) );
 		log.debug("Model: {}",model);
 
         return "TEBulkUpload";

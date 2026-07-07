@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.vo;
+package se.uu.ebc.bemanning.dto;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Slf4j
 @Data
 @NoArgsConstructor
-public class LuntanCGDVO {
+public class LuntanCGDDTO {
 
 
     private Long id;

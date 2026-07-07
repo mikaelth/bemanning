@@ -25,12 +25,11 @@ import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.repo.PersonRepo;
  */
 
-import se.uu.ebc.bemanning.vo.StaffVO;
-
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.entity.staff.AkkaStaff;
 import se.uu.ebc.bemanning.entity.staff.ExternalStaff;
 import se.uu.ebc.bemanning.entity.staff.Staff;
+import se.uu.ebc.bemanning.dto.StaffDTO;
 import se.uu.ebc.bemanning.entity.MaxCost;
 import se.uu.ebc.bemanning.entity.OrganisationUnit;
 
@@ -85,33 +84,33 @@ public class StaffService {
 
 	/* Staff */
 
-	public List<StaffVO> getAllStaff() throws ResourceNotFoundException  {
-		List<StaffVO> sVO = new ArrayList<StaffVO>();
+	public List<StaffDTO> getAllStaff() throws ResourceNotFoundException  {
+		List<StaffDTO> sVO = new ArrayList<StaffDTO>();
 			log.debug("getAllStaff()");
 			for (Staff s : staffRepo.findAll()) {
- 				sVO.add(modelMapper.map(s, StaffVO.class));
+ 				sVO.add(modelMapper.map(s, StaffDTO.class));
 
  			}
          	return sVO;
 
     }
 
-	public StaffVO getById (Long id) {
+	public StaffDTO getById (Long id) {
 		log.debug("getById()");
 		Staff s = staffRepo.findById(id).get();
 		log.debug(s.toString());
-		return modelMapper.map(s, StaffVO.class);
+		return modelMapper.map(s, StaffDTO.class);
 //		return new StaffVO(s);
 	}
 
-	public StaffVO saveStaff(StaffVO svo) throws Exception {
+	public StaffDTO saveStaff(StaffDTO svo) throws Exception {
     	Staff s = svo.getId() == null ? toStaff(svo) : toStaff(staffRepo.findById(svo.getId()).get(), svo);
     	staffRepo.save(s);
- 		return modelMapper.map(s, StaffVO.class);
+ 		return modelMapper.map(s, StaffDTO.class);
 
     }
 
-	private Staff toStaff (StaffVO svo) throws Exception {
+	private Staff toStaff (StaffDTO svo) throws Exception {
 		return switch (svo.getStaffKind()) {
  			case StaffKind.AKKA -> toStaff (new AkkaStaff(), svo);
  			case StaffKind.EXTERNAL -> toStaff (new ExternalStaff(), svo);
@@ -119,7 +118,7 @@ public class StaffService {
  		};
    	}
 
-	private Staff toStaff (Staff s, StaffVO svo) throws Exception {
+	private Staff toStaff (Staff s, StaffDTO svo) throws Exception {
 		modelMapper.map(svo, s);
 		return s;
 	}

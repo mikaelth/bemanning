@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.vo;
+package se.uu.ebc.bemanning.dto;
 
 import java.util.Set;
 import java.util.Map;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 //@NoArgsConstructor
 @Builder
 @Slf4j
-public class UserVO {
+public class UserDTO {
 	private Long id;
     private String username;
   	private String formName;

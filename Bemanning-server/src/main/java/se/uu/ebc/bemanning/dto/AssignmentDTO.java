@@ -1,4 +1,4 @@
-package se.uu.ebc.bemanning.vo;
+package se.uu.ebc.bemanning.dto;
 
 import se.uu.ebc.bemanning.enums.AssignmentType;
 
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @NoArgsConstructor
 @Slf4j
-public class AssignmentVO {
+public class AssignmentDTO {
 	    
     private Long id;
 

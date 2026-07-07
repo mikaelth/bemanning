@@ -14,13 +14,13 @@ import java.time.Year;
 import jakarta.annotation.PostConstruct;
 import se.uu.ebc.bemanning.entity.Progress;
 import se.uu.ebc.bemanning.entity.staff.Staff;
+import se.uu.ebc.bemanning.dto.PhDPositionDTO;
+import se.uu.ebc.bemanning.dto.ProgressDTO;
 import se.uu.ebc.bemanning.entity.PhDPosition;
 import se.uu.ebc.bemanning.repo.PhDPositionRepo;
 import se.uu.ebc.bemanning.repo.ProgressRepo;
 import se.uu.ebc.bemanning.repo.PersonRepo;
 
-import se.uu.ebc.bemanning.vo.PhDPositionVO;
-import se.uu.ebc.bemanning.vo.ProgressVO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 
@@ -50,8 +50,8 @@ public class PhDService {
 	private ModelMapper mapper = new ModelMapper();
 	private ModelMapper progressModelMapper = new ModelMapper();
 	
-	private TypeMap<PhDPosition, PhDPositionVO> phdToVOMapper = mapper.createTypeMap(PhDPosition.class, PhDPositionVO.class);
-	private TypeMap<PhDPositionVO,PhDPosition> voTophdMapper = mapper.createTypeMap(PhDPositionVO.class, PhDPosition.class);
+	private TypeMap<PhDPosition, PhDPositionDTO> phdToVOMapper = mapper.createTypeMap(PhDPosition.class, PhDPositionDTO.class);
+	private TypeMap<PhDPositionDTO,PhDPosition> voTophdMapper = mapper.createTypeMap(PhDPositionDTO.class, PhDPosition.class);
 
 /* 
 	public Set<Staff> getAllRelevantStaff(OrganisationUnit dept, String year) throws Exception {
@@ -69,10 +69,10 @@ public class PhDService {
  
 	@PostConstruct
 	public void init () {
- 		phdToVOMapper.addMapping(PhDPosition::currentRemainingProjectTime, PhDPositionVO::setCurrentRemainingProjectTime);
- 		phdToVOMapper.addMapping(PhDPosition::predictedFinishDate, PhDPositionVO::setPredictedFinishDate);
- 		phdToVOMapper.addMapping(PhDPosition::predictedHalfTime, PhDPositionVO::setPredictedHalfTime);
- 		phdToVOMapper.addMapping(PhDPosition::predicted80Percent, PhDPositionVO::setPredicted80Percent);
+ 		phdToVOMapper.addMapping(PhDPosition::currentRemainingProjectTime, PhDPositionDTO::setCurrentRemainingProjectTime);
+ 		phdToVOMapper.addMapping(PhDPosition::predictedFinishDate, PhDPositionDTO::setPredictedFinishDate);
+ 		phdToVOMapper.addMapping(PhDPosition::predictedHalfTime, PhDPositionDTO::setPredictedHalfTime);
+ 		phdToVOMapper.addMapping(PhDPosition::predicted80Percent, PhDPositionDTO::setPredicted80Percent);
 	}
  	
  	
@@ -116,8 +116,8 @@ public class PhDService {
 
 	/* PhD Positions */
 
-	public List<PhDPositionVO> getAllPhDPositions() throws ResourceNotFoundException {
-		List<PhDPositionVO> pVOs = new ArrayList<PhDPositionVO>();
+	public List<PhDPositionDTO> getAllPhDPositions() throws ResourceNotFoundException {
+		List<PhDPositionDTO> pVOs = new ArrayList<PhDPositionDTO>();
 
 
  			String year = String.valueOf(Year.now().getValue());
@@ -130,7 +130,7 @@ public class PhDService {
 				log.debug("getAllPhDPositions staff: "+s);
 				String program = s == null ? "" : s.getOrganisationUnit().getSvName();			
 
- 				PhDPositionVO pVO = mapper.map(p,PhDPositionVO.class);
+ 				PhDPositionDTO pVO = mapper.map(p,PhDPositionDTO.class);
  				pVO.setProgram(program);
  				pVOs.add(pVO);
  			}
@@ -138,20 +138,20 @@ public class PhDService {
 
     }
 
-	public PhDPositionVO getPhDById (Long id) {
+	public PhDPositionDTO getPhDById (Long id) {
 		log.debug("getById()");
 		PhDPosition p = phdPositionRepo.findById(id).get();
 		log.debug(p.toString());
-		return mapper.map(p, PhDPositionVO.class);
+		return mapper.map(p, PhDPositionDTO.class);
 	}   
     
-    public PhDPositionVO savePhDPosition(PhDPositionVO pvo) throws Exception {
+    public PhDPositionDTO savePhDPosition(PhDPositionDTO pvo) throws Exception {
     	PhDPosition p = pvo.getId() == null ? toPhDPosition(pvo) : toPhDPosition(phdPositionRepo.findById(pvo.getId()).get(), pvo);
     	phdPositionRepo.save(p);
 
 		String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
 		Staff s = staffService.findUserByPersonAndYear(p.getPerson(),year);
-		PhDPositionVO pVO = mapper.map(p,PhDPositionVO.class);
+		PhDPositionDTO pVO = mapper.map(p,PhDPositionDTO.class);
  		pVO.setProgram(s == null ? "" : s.getOrganisationUnit().getSvName());
 
 		return pVO;
@@ -162,11 +162,11 @@ public class PhDService {
 		phdPositionRepo.deleteById(pID);
     }
    	 
-	private PhDPosition toPhDPosition (PhDPositionVO pvo) throws Exception {
+	private PhDPosition toPhDPosition (PhDPositionDTO pvo) throws Exception {
 		return toPhDPosition (new PhDPosition(),pvo);
    	}
 
-	private PhDPosition toPhDPosition (PhDPosition p, PhDPositionVO pvo) throws Exception {
+	private PhDPosition toPhDPosition (PhDPosition p, PhDPositionDTO pvo) throws Exception {
 		mapper.map(pvo,p);
 		return p;
 	}
@@ -175,10 +175,10 @@ public class PhDService {
 	
 	/* Progresses */
 
-	public List<ProgressVO> getAllProgress() throws ResourceNotFoundException  {
-		List<ProgressVO> pVO = new ArrayList<ProgressVO>();
+	public List<ProgressDTO> getAllProgress() throws ResourceNotFoundException  {
+		List<ProgressDTO> pVO = new ArrayList<ProgressDTO>();
 		for (Progress p : progressRepo.findAll()) {
- 			pVO.add(progressModelMapper.map(p, ProgressVO.class));
+ 			pVO.add(progressModelMapper.map(p, ProgressDTO.class));
  		}
         return pVO;        	        
 
@@ -186,10 +186,10 @@ public class PhDService {
     }
    
     
-    public ProgressVO saveProgress(ProgressVO pvo) throws Exception {
+    public ProgressDTO saveProgress(ProgressDTO pvo) throws Exception {
     	Progress p = pvo.getId() == null ? toProgress(pvo) : toProgress(progressRepo.findById(pvo.getId()).get(), pvo);
     	progressRepo.save(p);
-		return progressModelMapper.map(p,ProgressVO.class);
+		return progressModelMapper.map(p,ProgressDTO.class);
     
     }
 
@@ -197,11 +197,11 @@ public class PhDService {
 		progressRepo.deleteById(pID);
     }	
  
-	private Progress toProgress (ProgressVO pvo) throws Exception {
+	private Progress toProgress (ProgressDTO pvo) throws Exception {
  		return toProgress (new Progress(), pvo);
    	}
 
-	private Progress toProgress (Progress p, ProgressVO pvo) throws Exception {
+	private Progress toProgress (Progress p, ProgressDTO pvo) throws Exception {
 		progressModelMapper.map(pvo,p);
 		return p;
 

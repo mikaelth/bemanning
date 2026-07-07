@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
+import se.uu.ebc.bemanning.dto.CourseStaffingDTO;
+import se.uu.ebc.bemanning.dto.PhDPositionDTO;
 import se.uu.ebc.bemanning.entity.PhDPosition;
 import se.uu.ebc.bemanning.entity.assignment.CourseStaffing;
 import se.uu.ebc.bemanning.entity.assignment.CourseStaffingLegacy;
@@ -23,8 +25,6 @@ import se.uu.ebc.bemanning.entity.assignment.CourseStaffingModern;
 import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.enums.CourseStaffingType;
-import se.uu.ebc.bemanning.vo.CourseStaffingVO;
-import se.uu.ebc.bemanning.vo.PhDPositionVO;
 import se.uu.ebc.bemanning.repo.CourseStaffingRepo;
 import se.uu.ebc.bemanning.repo.OrganisationUnitRepo;
 
@@ -45,8 +45,8 @@ public class CourseStaffingService {
 
 	private ModelMapper mapper = new ModelMapper();
 	
-	private TypeMap<CourseStaffing, CourseStaffingVO> csToVOMapper = mapper.createTypeMap(CourseStaffing.class, CourseStaffingVO.class);
-	private TypeMap<CourseStaffingVO,CourseStaffing> voToCSmapper = mapper.createTypeMap(CourseStaffingVO.class, CourseStaffing.class);
+	private TypeMap<CourseStaffing, CourseStaffingDTO> csToVOMapper = mapper.createTypeMap(CourseStaffing.class, CourseStaffingDTO.class);
+	private TypeMap<CourseStaffingDTO,CourseStaffing> voToCSmapper = mapper.createTypeMap(CourseStaffingDTO.class, CourseStaffing.class);
 
 
 	@PostConstruct
@@ -58,27 +58,27 @@ public class CourseStaffingService {
 
 	/* CoursesStaffings */
 	
-	public List<CourseStaffingVO> getAllCourseStaffings() throws ResourceNotFoundException  {
-		List<CourseStaffingVO> pVO = new ArrayList<CourseStaffingVO>();
+	public List<CourseStaffingDTO> getAllCourseStaffings() throws ResourceNotFoundException  {
+		List<CourseStaffingDTO> pVO = new ArrayList<CourseStaffingDTO>();
 			log.debug("getAllCourseStaffings()");
 			for (CourseStaffing p : csRepo.findAll()) {
- 				pVO.add(mapper.map(p, CourseStaffingVO.class));
+ 				pVO.add(mapper.map(p, CourseStaffingDTO.class));
   			}
          	return pVO;        	        
     }
 
-	public CourseStaffingVO getCourseStaffingById (Long id) {
+	public CourseStaffingDTO getCourseStaffingById (Long id) {
 		CourseStaffing p = csRepo.findById(id).get();
-		return mapper.map(p, CourseStaffingVO.class);
+		return mapper.map(p, CourseStaffingDTO.class);
 	}   
 		
-	public CourseStaffingVO saveCourseStaffing(CourseStaffingVO pvo) throws Exception {
+	public CourseStaffingDTO saveCourseStaffing(CourseStaffingDTO pvo) throws Exception {
     	CourseStaffing p = pvo.getId() == null ? toCourseStaffing(pvo) : toCourseStaffing(csRepo.findById(pvo.getId()).get(), pvo);
     	csRepo.save(p);
- 		return mapper.map(p, CourseStaffingVO.class);
+ 		return mapper.map(p, CourseStaffingDTO.class);
     }
 
-	private CourseStaffing toCourseStaffing (CourseStaffingVO pvo) throws Exception {
+	private CourseStaffing toCourseStaffing (CourseStaffingDTO pvo) throws Exception {
 		CourseStaffing cs = switch (pvo.getType()) {
 			case null -> throw new IllegalArgumentException();
 			case CourseStaffingType.LEGACY -> new CourseStaffingLegacy();
@@ -88,7 +88,7 @@ public class CourseStaffingService {
 		return toCourseStaffing (cs, pvo);
    	}
 
-	private CourseStaffing toCourseStaffing (CourseStaffing p, CourseStaffingVO pvo) throws Exception {
+	private CourseStaffing toCourseStaffing (CourseStaffing p, CourseStaffingDTO pvo) throws Exception {
 		mapper.map(pvo, p);
 		return p;
 	}

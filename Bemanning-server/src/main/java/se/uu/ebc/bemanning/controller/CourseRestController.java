@@ -18,10 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
-
+import se.uu.ebc.bemanning.dto.CourseDTO;
 import se.uu.ebc.bemanning.service.CourseService;
 import se.uu.ebc.luntan.vo.CourseInstanceVO;
-import se.uu.ebc.bemanning.vo.CourseVO;
 
 import java.util.List;
 import java.util.Map;
@@ -39,8 +38,8 @@ public class CourseRestController {
 	CourseService courseService;
 
 	private record DeleteStatus (Boolean sucess, Long id) {}
-	private record CreateCourseStatus (Boolean sucess, CourseVO courses) {}
-	private record Courses (List<CourseVO> courses) {};
+	private record CreateCourseStatus (Boolean sucess, CourseDTO courses) {}
+	private record Courses (List<CourseDTO> courses) {};
 
 
 	/* Courses */	
@@ -51,22 +50,22 @@ public class CourseRestController {
     }
 
     @GetMapping(value="/courses/{id}")
-    public CourseVO getEntity(@PathVariable Long id) {
+    public CourseDTO getEntity(@PathVariable Long id) {
 		return courseService.getById(id);
     }
 
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @PostMapping(value="/courses")
-	public ResponseEntity<CreateCourseStatus> createEntity(@Valid @RequestBody CourseVO pVO) throws Exception {
-		CourseVO npVO = courseService.saveCourse(pVO);
+	public ResponseEntity<CreateCourseStatus> createEntity(@Valid @RequestBody CourseDTO pVO) throws Exception {
+		CourseDTO npVO = courseService.saveCourse(pVO);
 		return ResponseEntity.ok(new CreateCourseStatus(true,npVO));
 	}
 
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @PutMapping(value="/courses/{id}")
-    public ResponseEntity<CreateCourseStatus> updateEntity(@Valid @RequestBody CourseVO pVO, @PathVariable Long id) throws Exception {
+    public ResponseEntity<CreateCourseStatus> updateEntity(@Valid @RequestBody CourseDTO pVO, @PathVariable Long id) throws Exception {
 		if (pVO.getId().equals(id)) {
-			CourseVO npVO = courseService.saveCourse(pVO);
+			CourseDTO npVO = courseService.saveCourse(pVO);
 			return ResponseEntity.ok(new CreateCourseStatus(true,npVO));
 		} else {
 			throw ( new IllegalArgumentException() );

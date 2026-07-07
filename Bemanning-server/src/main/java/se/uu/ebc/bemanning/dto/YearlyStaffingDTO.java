@@ -1,4 +1,4 @@
-package  se.uu.ebc.bemanning.vo;
+package  se.uu.ebc.bemanning.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import se.uu.ebc.bemanning.entity.FactorRecord;
 @Data
 @NoArgsConstructor
 @Slf4j
-public class YearlyStaffingVO {
+public class YearlyStaffingDTO {
 
     
     private Long id;

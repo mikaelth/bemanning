@@ -13,9 +13,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import se.uu.ebc.luntan.vo.CourseInstanceVO;
-
+import se.uu.ebc.bemanning.dto.CourseDTO;
 import se.uu.ebc.bemanning.entity.course.Course;
-import se.uu.ebc.bemanning.vo.CourseVO;
 import se.uu.ebc.bemanning.repo.CourseRepo;
 
 
@@ -37,32 +36,32 @@ public class CourseService {
 
 	/* Courses */
 	
-	public List<CourseVO> getAllCourses() throws ResourceNotFoundException  {
-		List<CourseVO> pVO = new ArrayList<CourseVO>();
+	public List<CourseDTO> getAllCourses() throws ResourceNotFoundException  {
+		List<CourseDTO> pVO = new ArrayList<CourseDTO>();
 			log.debug("getAllCourses()");
 			for (Course p : courseRepo.findAll()) {
- 				pVO.add(modelMapper.map(p, CourseVO.class));
+ 				pVO.add(modelMapper.map(p, CourseDTO.class));
   			}
          	return pVO;        	        
     }
 
-	public CourseVO getById (Long id) {
+	public CourseDTO getById (Long id) {
 		Course p = courseRepo.findById(id).get();
-		return modelMapper.map(p, CourseVO.class);
+		return modelMapper.map(p, CourseDTO.class);
 	}   
 		
-	public CourseVO saveCourse(CourseVO pvo) throws Exception {
+	public CourseDTO saveCourse(CourseDTO pvo) throws Exception {
     	Course p = pvo.getId() == null ? toCourse(pvo) : toCourse(courseRepo.findById(pvo.getId()).get(), pvo);
     	courseRepo.save(p);
- 		return modelMapper.map(p, CourseVO.class);
+ 		return modelMapper.map(p, CourseDTO.class);
    
     }
 
-	private Course toCourse (CourseVO pvo) throws Exception {
+	private Course toCourse (CourseDTO pvo) throws Exception {
  		return toCourse (new Course(), pvo);
    	}
 
-	private Course toCourse (Course p, CourseVO pvo) throws Exception {
+	private Course toCourse (Course p, CourseDTO pvo) throws Exception {
 		modelMapper.map(pvo, p);
 		return p;
 	}

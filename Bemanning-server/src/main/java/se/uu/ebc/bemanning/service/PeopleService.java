@@ -8,9 +8,8 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import java.util.List;
 import java.util.ArrayList;
 
-
-import se.uu.ebc.bemanning.vo.PersonVO;
-import se.uu.ebc.bemanning.vo.UserVO;
+import se.uu.ebc.bemanning.dto.PersonDTO;
+import se.uu.ebc.bemanning.dto.UserDTO;
 import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.repo.PersonRepo;
 /* 
@@ -73,12 +72,12 @@ public class PeopleService {
 
 	/* Person */
 
-	public List<PersonVO> getAllPersons() throws ResourceNotFoundException  {
-		List<PersonVO> pVO = new ArrayList<PersonVO>();
+	public List<PersonDTO> getAllPersons() throws ResourceNotFoundException  {
+		List<PersonDTO> pVO = new ArrayList<PersonDTO>();
 //		try {	
 			log.debug("getAllPersons()");
 			for (Person p : personRepo.findAll()) {
- 				pVO.add(modelMapper.map(p, PersonVO.class));
+ 				pVO.add(modelMapper.map(p, PersonDTO.class));
  				
 // Map<String,String> ldapSessionMap = akka.doLookup(p);
 // logger.debug("mail: "+(ldapSessionMap.containsKey("mail") ? ldapSessionMap.get("mail") :"") +", phone: " + (ldapSessionMap.containsKey("telephoneNumber") ? ldapSessionMap.get("telephoneNumber") :""));
@@ -93,23 +92,23 @@ public class PeopleService {
 //        }
     }
 
-	public PersonVO getById (Long id) {
+	public PersonDTO getById (Long id) {
 		Person p = personRepo.findById(id).get();
-		return modelMapper.map(p, PersonVO.class);
+		return modelMapper.map(p, PersonDTO.class);
 	}   
 		
-	public PersonVO savePerson(PersonVO pvo) throws Exception {
+	public PersonDTO savePerson(PersonDTO pvo) throws Exception {
     	Person p = pvo.getId() == null ? toPerson(pvo) : toPerson(personRepo.findById(pvo.getId()).get(), pvo);
     	personRepo.save(p);
- 		return modelMapper.map(p, PersonVO.class);
+ 		return modelMapper.map(p, PersonDTO.class);
    
     }
 
-	private Person toPerson (PersonVO pvo) throws Exception {
+	private Person toPerson (PersonDTO pvo) throws Exception {
  		return toPerson (new Person(), pvo);
    	}
 
-	private Person toPerson (Person p, PersonVO pvo) throws Exception {
+	private Person toPerson (Person p, PersonDTO pvo) throws Exception {
 		modelMapper.map(pvo, p);
 		return p;
 	}

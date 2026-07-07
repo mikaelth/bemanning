@@ -13,9 +13,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import se.uu.ebc.luntan.vo.CourseInstanceVO;
-
+import se.uu.ebc.bemanning.dto.YearlyStaffingDTO;
 import se.uu.ebc.bemanning.entity.YearlyStaffing;
-import se.uu.ebc.bemanning.vo.YearlyStaffingVO;
 import se.uu.ebc.bemanning.repo.YearlyStaffingRepo;
 
 
@@ -38,32 +37,32 @@ public class YearlyStaffingService {
 
 	/* YSP */
 	
-	public List<YearlyStaffingVO> getAllYearlyStaffings() throws ResourceNotFoundException  {
-		List<YearlyStaffingVO> pVO = new ArrayList<YearlyStaffingVO>();
+	public List<YearlyStaffingDTO> getAllYearlyStaffings() throws ResourceNotFoundException  {
+		List<YearlyStaffingDTO> pVO = new ArrayList<YearlyStaffingDTO>();
 			log.debug("getAllYearlyStaffings()");
 			for (YearlyStaffing p : yearlyStaffingRepo.findAll()) {
- 				pVO.add(modelMapper.map(p, YearlyStaffingVO.class));
+ 				pVO.add(modelMapper.map(p, YearlyStaffingDTO.class));
   			}
          	return pVO;        	        
     }
 
-	public YearlyStaffingVO getById (Long id) {
+	public YearlyStaffingDTO getById (Long id) {
 		YearlyStaffing p = yearlyStaffingRepo.findById(id).get();
-		return modelMapper.map(p, YearlyStaffingVO.class);
+		return modelMapper.map(p, YearlyStaffingDTO.class);
 	}   
 		
-	public YearlyStaffingVO saveYearlyStaffing(YearlyStaffingVO pvo) throws Exception {
+	public YearlyStaffingDTO saveYearlyStaffing(YearlyStaffingDTO pvo) throws Exception {
     	YearlyStaffing p = pvo.getId() == null ? toYearlyStaffing(pvo) : toYearlyStaffing(yearlyStaffingRepo.findById(pvo.getId()).get(), pvo);
     	yearlyStaffingRepo.save(p);
- 		return modelMapper.map(p, YearlyStaffingVO.class);
+ 		return modelMapper.map(p, YearlyStaffingDTO.class);
    
     }
 
-	private YearlyStaffing toYearlyStaffing (YearlyStaffingVO pvo) throws Exception {
+	private YearlyStaffing toYearlyStaffing (YearlyStaffingDTO pvo) throws Exception {
  		return toYearlyStaffing (new YearlyStaffing(), pvo);
    	}
 
-	private YearlyStaffing toYearlyStaffing (YearlyStaffing p, YearlyStaffingVO pvo) throws Exception {
+	private YearlyStaffing toYearlyStaffing (YearlyStaffing p, YearlyStaffingDTO pvo) throws Exception {
 		modelMapper.map(pvo, p);
 		return p;
 	}

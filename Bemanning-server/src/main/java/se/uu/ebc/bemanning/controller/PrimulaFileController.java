@@ -14,11 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import se.uu.ebc.bemanning.dto.FormFileDataDTO;
+import se.uu.ebc.bemanning.dto.TEExcelDTO;
 import se.uu.ebc.bemanning.service.PrimulaExcelService;
-import se.uu.ebc.bemanning.vo.FormFileDataVO;
-import se.uu.ebc.bemanning.vo.TEExcelVO;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -58,7 +56,7 @@ public class PrimulaFileController {
 	@RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String viewCSVCIUploadRequest(Model model, HttpServletRequest request) {
 		try {
-			FormFileDataVO fb = new FormFileDataVO();
+			FormFileDataDTO fb = new FormFileDataDTO();
 			fb.setIgnoreExistingValues(false);
 
 //			model.addAttribute("years",edRepo.getYears());
@@ -74,7 +72,7 @@ public class PrimulaFileController {
 
 	@Secured({("ROLE_PRIMULAADMIN")})
 	@RequestMapping(value="/bulk/upload", method = RequestMethod.POST, headers = "Accept=application/json")
-    public String requestUpdateRegsFromCSV(Model model, HttpServletRequest request, HttpServletResponse response, final FormFileDataVO formValues) throws IOException{
+    public String requestUpdateRegsFromCSV(Model model, HttpServletRequest request, HttpServletResponse response, final FormFileDataDTO formValues) throws IOException{
 
 		log.debug("FormValues: {}",formValues);
         Path path = Paths.get(excelFilePath);

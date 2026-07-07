@@ -1,4 +1,6 @@
 .DS_Store
 ._*.java
+._*.*
+._*
 Bemanning-server/config
 Bemanning-server/target

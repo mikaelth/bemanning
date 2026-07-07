@@ -22,10 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 
 
 import se.uu.ebc.bemanning.security.SecurityService;
+import se.uu.ebc.bemanning.dto.PersonDTO;
+import se.uu.ebc.bemanning.dto.UserDTO;
 import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.service.PeopleService;
-import se.uu.ebc.bemanning.vo.PersonVO;
-import se.uu.ebc.bemanning.vo.UserVO;
 
 import java.util.List;
 import java.util.HashSet;
@@ -53,8 +53,8 @@ public class PersonRestController {
 	}
 
 	private record DeleteStatus (Boolean sucess, Long id) {}
-	private record CreatePersonStatus (Boolean sucess, PersonVO people) {}
-	private record People (List<PersonVO> people) {};
+	private record CreatePersonStatus (Boolean sucess, PersonDTO people) {}
+	private record People (List<PersonDTO> people) {};
 
 
 	/* Persons */	
@@ -65,22 +65,22 @@ public class PersonRestController {
     }
 
     @GetMapping(value="/people/{id}")
-    public PersonVO getEntity(@PathVariable Long id) {
+    public PersonDTO getEntity(@PathVariable Long id) {
 		return peopleService.getById(id);
     }
 
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @PostMapping(value="/people")
-	public ResponseEntity<CreatePersonStatus> createEntity(@Valid @RequestBody PersonVO pVO) throws Exception {
-		PersonVO npVO = peopleService.savePerson(pVO);
+	public ResponseEntity<CreatePersonStatus> createEntity(@Valid @RequestBody PersonDTO pVO) throws IllegalArgumentException, Exception {
+		PersonDTO npVO = peopleService.savePerson(pVO);
 		return ResponseEntity.ok(new CreatePersonStatus(true,npVO));
 	}
 
 	@PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
     @PutMapping(value="/people/{id}")
-    public ResponseEntity<CreatePersonStatus> updateEntity(@Valid @RequestBody PersonVO pVO, @PathVariable Long id) throws Exception {
+    public ResponseEntity<CreatePersonStatus> updateEntity(@Valid @RequestBody PersonDTO pVO, @PathVariable Long id) throws IllegalArgumentException, Exception {
 		if (pVO.getId().equals(id)) {
-			PersonVO npVO = peopleService.savePerson(pVO);
+			PersonDTO npVO = peopleService.savePerson(pVO);
 			return ResponseEntity.ok(new CreatePersonStatus(true,npVO));
 		} else {
 			throw ( new IllegalArgumentException() );
@@ -100,7 +100,7 @@ public class PersonRestController {
 
 
 	@GetMapping(value="/currentuser")
-    public ResponseEntity<UserVO> loggedInUser(Principal principal) throws Exception {
+    public ResponseEntity<UserDTO> loggedInUser(Principal principal) throws Exception {
 			log.debug("loggedInUser... "+ principal);
 			if (principal == null) {
 				// Dummy for testing purposes
@@ -111,14 +111,14 @@ public class PersonRestController {
 
     }
 
-	private UserVO createDummyUser() {
+	private UserDTO createDummyUser() {
 
 		HashSet<UserRoles> roles = new HashSet<UserRoles>();
 		roles.add(UserRoles.Staff);
 		HashMap<String,String> depts = new HashMap<String,String>();
 		depts.put(Integer.toString (Year.now().getValue()) , "IOB");
 
-		UserVO uvo = UserVO.builder()
+		UserDTO uvo = UserDTO.builder()
 			.id(0L)
 			.username("anonymous")
 			.formName("Anonymous")
