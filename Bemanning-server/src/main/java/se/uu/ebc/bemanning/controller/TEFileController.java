@@ -19,6 +19,7 @@ import se.uu.ebc.bemanning.dto.TEExcelDTO;
 import se.uu.ebc.bemanning.service.TimeEditExcelService;
 import lombok.extern.slf4j.Slf4j;
 
+@CrossOrigin(origins = "http://localhost:1841", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @Slf4j
 @Controller
 @RequestMapping("/files/te")

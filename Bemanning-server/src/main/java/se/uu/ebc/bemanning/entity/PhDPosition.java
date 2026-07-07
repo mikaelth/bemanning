@@ -25,6 +25,7 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.FetchType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -58,14 +59,14 @@ public class PhDPosition  extends Auditable {
     @Column(name = "ID")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(name = "PERSON_FK")
 	private Person person;
 
     
 	@OrderBy("date ASC")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "phdPosition")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "phdPosition",fetch = FetchType.LAZY)
     private List<Progress> progresses = new ArrayList<Progress>();
     
     @Column(name = "START")
@@ -84,6 +85,8 @@ public class PhDPosition  extends Auditable {
     private boolean inactive;
 
 
+	/* Accessor method hacks */
+	
     public List<Progress> getProgresses() 
     {
 		Collections.sort(progresses, new Comparator<Progress>() {

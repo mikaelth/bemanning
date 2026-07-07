@@ -1,6 +1,6 @@
 package se.uu.ebc.bemanning;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.boot.SpringApplication;
@@ -14,16 +14,17 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import org.springframework.core.env.Environment;
 
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
+//import org.springframework.ldap.core.LdapTemplate;
+//import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
-import org.springframework.web.service.registry.ImportHttpServices;
+//import org.springframework.web.service.registry.ImportHttpServices;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.context.annotation.Configuration;
+//import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+//import org.springframework.context.annotation.Configuration;
 
+//import se.uu.ebc.bemanning.security.SecurityService;
 import se.uu.ebc.bemanning.service.ColumnHeadersRecord;
-
+//import se.uu.ebc.bemanning.service.PeopleService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -47,8 +48,12 @@ public class Bemanning /* extends SpringBootServletInitializer { Deploying to To
 	@Value("${luntan.rest.base.url}")
 	String luntanBaseUrl;
 
-    @Autowired
-    private Environment env;
+    //@Autowired
+    private final Environment env;
+    // Spring automatically injects this dependency!
+	public Bemanning(Environment env) {
+		this.env = env;
+	}
 
 	@Bean
 	public RestClient luntanCIRestClient() {

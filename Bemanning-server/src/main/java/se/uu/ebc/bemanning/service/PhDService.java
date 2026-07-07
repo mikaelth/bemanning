@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.Comparator;
 
 import java.time.Year;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.annotation.PostConstruct;
 import se.uu.ebc.bemanning.entity.Progress;
@@ -23,6 +25,8 @@ import se.uu.ebc.bemanning.repo.PersonRepo;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.modelmapper.Converter;
+import org.modelmapper.AbstractConverter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,10 +73,21 @@ public class PhDService {
  
 	@PostConstruct
 	public void init () {
- 		phdToVOMapper.addMapping(PhDPosition::currentRemainingProjectTime, PhDPositionDTO::setCurrentRemainingProjectTime);
- 		phdToVOMapper.addMapping(PhDPosition::predictedFinishDate, PhDPositionDTO::setPredictedFinishDate);
- 		phdToVOMapper.addMapping(PhDPosition::predictedHalfTime, PhDPositionDTO::setPredictedHalfTime);
- 		phdToVOMapper.addMapping(PhDPosition::predicted80Percent, PhDPositionDTO::setPredicted80Percent);
+
+
+		mapper.addConverter(isoLocalDateTimeConverter);
+
+
+ 		phdToVOMapper.addMapping(src -> src.getPerson().getId(), PhDPositionDTO::setPersonId);
+ //		phdToVOMapper.addMapping(src -> src.getStart().toString(), PhDPositionDTO::setStart);
+//  		phdToVOMapper.addMapping(PhDPosition::predictedFinishDate, PhDPositionDTO::setPredictedFinishDate);
+//  		phdToVOMapper.addMapping(PhDPosition::predictedHalfTime, PhDPositionDTO::setPredictedHalfTime);
+//  		phdToVOMapper.addMapping(PhDPosition::predicted80Percent, PhDPositionDTO::setPredicted80Percent);
+//  		phdToVOMapper.addMapping(PhDPosition::currentRemainingProjectTime, PhDPositionDTO::setCurrentRemainingProjectTime);
+// 		phdToVOMapper.addMapping(PhDPosition::getStart, PhDPositionDTO::setStart);
+
+		phdToVOMapper.addMappings(mapper -> mapper.skip(PhDPositionDTO::setProgram));
+
 	}
  	
  	
@@ -113,6 +128,14 @@ public class PhDService {
 		}
 	}
 
+	Converter<String, LocalDateTime> isoLocalDateTimeConverter = new AbstractConverter<String, LocalDateTime>() {
+    	private final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+
+	    @Override
+	    protected LocalDateTime convert(String source) {
+ 	       return source == null ? null : LocalDateTime.parse(source, formatter);
+ 	   }
+	};
 
 	/* PhD Positions */
 
@@ -140,6 +163,7 @@ public class PhDService {
 
 	public PhDPositionDTO getPhDById (Long id) {
 		log.debug("getById()");
+//	mapper.validate();
 		PhDPosition p = phdPositionRepo.findById(id).get();
 		log.debug(p.toString());
 		return mapper.map(p, PhDPositionDTO.class);

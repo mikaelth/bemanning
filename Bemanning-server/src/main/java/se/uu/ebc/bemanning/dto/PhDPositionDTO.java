@@ -18,16 +18,20 @@ public class PhDPositionDTO {
 
 	private Long personId;
 
-    private LocalDateTime start;
-    private LocalDateTime dissertation;
+ 
+    private String start;
+//    private LocalDateTime start;
+//    private LocalDateTime dissertation;
 
     private String note;
     private boolean inactive;
 
+/* 
 	private LocalDateTime predictedFinishDate;
  	private LocalDateTime predictedHalfTime;
 	private LocalDateTime predicted80Percent;
 	private Float currentRemainingProjectTime;
+ */
 
 	private String program;
 	
