@@ -35,8 +35,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import jakarta.annotation.PostConstruct;
 
-import org.modelmapper.ModelMapper;
-
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;

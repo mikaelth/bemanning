@@ -23,6 +23,9 @@ import se.uu.ebc.bemanning.repo.PhDPositionRepo;
 import se.uu.ebc.bemanning.repo.ProgressRepo;
 import se.uu.ebc.bemanning.repo.PersonRepo;
 
+import se.uu.ebc.bemanning.mapper.PhDPositionMapper;
+import se.uu.ebc.bemanning.mapper.ProgressMapper;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.Converter;
@@ -38,26 +41,37 @@ import org.springframework.dao.OptimisticLockingFailureException;
 @Service
 public class PhDService {
 
+	private final PhDPositionMapper phdMapper;
+	private final ProgressMapper progressMapper;
+	private final PhDPositionRepo phdPositionRepo;
+	private final ProgressRepo progressRepo;
+	private final PersonRepo personRepo;
+	private final StaffService staffService;
 
-	@Autowired
-	PhDPositionRepo phdPositionRepo;
+	/* Constructor injection */
+	public PhDService (PhDPositionMapper phdMapper,
+		ProgressMapper progressMapper,	
+		PhDPositionRepo phdPositionRepo,
+		ProgressRepo progressRepo, 
+		PersonRepo personRepo,
+		StaffService staffService) {
+		
+		this.phdMapper = phdMapper;
+		this.progressMapper = progressMapper;	
+		this.phdPositionRepo = phdPositionRepo;
+		this.progressRepo = progressRepo; 
+		this.personRepo = personRepo;
+		this.staffService = staffService;		
+	}
 
-	@Autowired
-	ProgressRepo progressRepo;
-	
-	@Autowired
-	PersonRepo personRepo;
-
-	@Autowired
-	StaffService staffService;
+	/* 
+	private ModelMapper progressModelMapper = new ModelMapper();
 	
 	private ModelMapper mapper = new ModelMapper();
-	private ModelMapper progressModelMapper = new ModelMapper();
 	
 	private TypeMap<PhDPosition, PhDPositionDTO> phdToVOMapper = mapper.createTypeMap(PhDPosition.class, PhDPositionDTO.class);
 	private TypeMap<PhDPositionDTO,PhDPosition> voTophdMapper = mapper.createTypeMap(PhDPositionDTO.class, PhDPosition.class);
 
-/* 
 	public Set<Staff> getAllRelevantStaff(OrganisationUnit dept, String year) throws Exception {
 		return staffRepo.getRelevantStaff(dept,year);
 	}    
@@ -68,7 +82,7 @@ public class PhDService {
 
  	}
  	
- */
+
  	
  
 	@PostConstruct
@@ -90,7 +104,7 @@ public class PhDService {
 
 	}
  	
- 	
+ */ 	
  	
  	
  	public List<PhDPosition> allSorted () {
@@ -128,6 +142,7 @@ public class PhDService {
 		}
 	}
 
+/* 
 	Converter<String, LocalDateTime> isoLocalDateTimeConverter = new AbstractConverter<String, LocalDateTime>() {
     	private final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
@@ -136,6 +151,7 @@ public class PhDService {
  	       return source == null ? null : LocalDateTime.parse(source, formatter);
  	   }
 	};
+ */
 
 	/* PhD Positions */
 
@@ -153,7 +169,8 @@ public class PhDService {
 				log.debug("getAllPhDPositions staff: "+s);
 				String program = s == null ? "" : s.getOrganisationUnit().getSvName();			
 
- 				PhDPositionDTO pVO = mapper.map(p,PhDPositionDTO.class);
+ 	//			PhDPositionDTO pVO = mapper.map(p,PhDPositionDTO.class);
+				PhDPositionDTO pVO = phdMapper.entityToDTO(p);
  				pVO.setProgram(program);
  				pVOs.add(pVO);
  			}
@@ -163,10 +180,11 @@ public class PhDService {
 
 	public PhDPositionDTO getPhDById (Long id) {
 		log.debug("getById()");
-//	mapper.validate();
 		PhDPosition p = phdPositionRepo.findById(id).get();
 		log.debug(p.toString());
-		return mapper.map(p, PhDPositionDTO.class);
+	//	return mapper.map(p, PhDPositionDTO.class);
+		return phdMapper.entityToDTO(p);
+
 	}   
     
     public PhDPositionDTO savePhDPosition(PhDPositionDTO pvo) throws Exception {
@@ -175,7 +193,9 @@ public class PhDService {
 
 		String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
 		Staff s = staffService.findUserByPersonAndYear(p.getPerson(),year);
-		PhDPositionDTO pVO = mapper.map(p,PhDPositionDTO.class);
+//		PhDPositionDTO pVO = mapper.map(p,PhDPositionDTO.class);
+		PhDPositionDTO pVO = phdMapper.entityToDTO(p);
+
  		pVO.setProgram(s == null ? "" : s.getOrganisationUnit().getSvName());
 
 		return pVO;
@@ -187,11 +207,13 @@ public class PhDService {
     }
    	 
 	private PhDPosition toPhDPosition (PhDPositionDTO pvo) throws Exception {
-		return toPhDPosition (new PhDPosition(),pvo);
+		return phdMapper.dtoToEntity(pvo);
+//		return toPhDPosition (new PhDPosition(),pvo);
    	}
 
 	private PhDPosition toPhDPosition (PhDPosition p, PhDPositionDTO pvo) throws Exception {
-		mapper.map(pvo,p);
+//		mapper.map(pvo,p);
+		phdMapper.updateEntityFromDTO(pvo,p);
 		return p;
 	}
  
@@ -202,8 +224,9 @@ public class PhDService {
 	public List<ProgressDTO> getAllProgress() throws ResourceNotFoundException  {
 		List<ProgressDTO> pVO = new ArrayList<ProgressDTO>();
 		for (Progress p : progressRepo.findAll()) {
- 			pVO.add(progressModelMapper.map(p, ProgressDTO.class));
- 		}
+ //			pVO.add(progressModelMapper.map(p, ProgressDTO.class));
+  			pVO.add(progressMapper.entityToDTO(p));
+		}
         return pVO;        	        
 
 			
@@ -213,7 +236,8 @@ public class PhDService {
     public ProgressDTO saveProgress(ProgressDTO pvo) throws Exception {
     	Progress p = pvo.getId() == null ? toProgress(pvo) : toProgress(progressRepo.findById(pvo.getId()).get(), pvo);
     	progressRepo.save(p);
-		return progressModelMapper.map(p,ProgressDTO.class);
+//		return progressModelMapper.map(p,ProgressDTO.class);
+		return progressMapper.entityToDTO(p);
     
     }
 
@@ -226,7 +250,10 @@ public class PhDService {
    	}
 
 	private Progress toProgress (Progress p, ProgressDTO pvo) throws Exception {
-		progressModelMapper.map(pvo,p);
+//		progressModelMapper.map(pvo,p);
+		progressMapper.updateEntityFromDTO(pvo,p);
+		p.setPhdPosition(phdPositionRepo.findById(pvo.getPhdPositionId()).get());
+
 		return p;
 
 	}

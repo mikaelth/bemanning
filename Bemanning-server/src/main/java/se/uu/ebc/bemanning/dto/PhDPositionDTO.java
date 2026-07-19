@@ -1,5 +1,6 @@
 package se.uu.ebc.bemanning.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -19,19 +20,18 @@ public class PhDPositionDTO {
 	private Long personId;
 
  
-    private String start;
-//    private LocalDateTime start;
-//    private LocalDateTime dissertation;
+    private LocalDate start;
+    private LocalDate dissertation;
 
     private String note;
     private boolean inactive;
 
-/* 
-	private LocalDateTime predictedFinishDate;
- 	private LocalDateTime predictedHalfTime;
-	private LocalDateTime predicted80Percent;
+ 
+	private LocalDate predictedFinishDate;
+ 	private LocalDate predictedHalfTime;
+	private LocalDate predicted80Percent;
 	private Float currentRemainingProjectTime;
- */
+ 
 
 	private String program;
 	

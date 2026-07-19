@@ -66,7 +66,7 @@ public class PhDPosition  extends Auditable {
 
     
 	@OrderBy("date ASC")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "phdPosition",fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "phdPosition",fetch = FetchType.EAGER)
     private List<Progress> progresses = new ArrayList<Progress>();
     
     @Column(name = "START")

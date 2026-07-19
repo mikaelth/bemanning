@@ -6,8 +6,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,6 +33,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 /**
  * Unit tests for PersonRestController using MockMvc.
  *
@@ -44,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("PersonRestController Tests")
 class PersonRestControllerTest {
 
-    @Autowired
+     @Autowired
     private MockMvc mockMvc;
 
     // ObjectMapper is needed for JSON serialization in REST API tests
@@ -100,14 +105,14 @@ class PersonRestControllerTest {
             .andExpect(jsonPath("$.people").isEmpty());
     }
 
-/* 
+ 
     @Test
     @DisplayName("GET /rest/people - requires authentication")
     void getAllPeople_unauthenticated_returns401() throws Exception {
         mockMvc.perform(get("/rest/people"))
             .andExpect(status().isUnauthorized());
     }
- */
+ 
 
 
     // -------------------------------------------------------------------------
@@ -264,7 +269,7 @@ class PersonRestControllerTest {
     // -------------------------------------------------------------------------
 
     @Test
-    @DisplayName("GET /rest/currentuser - returns user from security service")
+    @DisplayName("GET /rest/currentuser - returns user from security servAllice")
     @WithMockUser(username = "anna.svensson")
     void getCurrentUser_returnsUser() throws Exception {
         UserDTO userDTO = UserDTO.builder()
