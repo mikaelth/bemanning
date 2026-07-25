@@ -37,7 +37,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/rest")
-@CrossOrigin(origins = "http://localhost:1841")
+@CrossOrigin(origins = {"http://localhost:1841","http://localhost:1962"})
 @Slf4j
 public class PersonRestController {
 

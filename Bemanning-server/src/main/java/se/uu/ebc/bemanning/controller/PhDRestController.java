@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
  
 @RestController
 @RequestMapping(value = "/rest")
-@CrossOrigin(origins = "http://localhost:1841", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
+@CrossOrigin(origins = {"http://localhost:1962","http://localhost:1841"})
 @Slf4j
 public class PhDRestController {
 

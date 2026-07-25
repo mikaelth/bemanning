@@ -21,7 +21,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/rest")
-@CrossOrigin(origins = "http://localhost:1841")
+@CrossOrigin(origins = {"http://localhost:1962","http://localhost:1841"})
 @Slf4j
 public class TestController {
 
