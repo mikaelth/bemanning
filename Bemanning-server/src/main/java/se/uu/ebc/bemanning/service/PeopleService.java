@@ -46,9 +46,9 @@ public class PeopleService {
         this.personRepo = personRepo;
     }
 
+/* 
 
 	private ModelMapper modelMapper = new ModelMapper();
-/* 
 	@Autowired
 	private UserRepo userRepo;
 
@@ -72,38 +72,22 @@ public class PeopleService {
 
 	/* Person */
 
-	public List<PersonDTO> getAllPersons() throws ResourceNotFoundException  {
-		List<PersonDTO> pVO = new ArrayList<PersonDTO>();
-//		try {	
+	public List<Person> getAllPersons() throws ResourceNotFoundException  {
 			log.debug("getAllPersons()");
-			for (Person p : personRepo.findAll()) {
- 				pVO.add(modelMapper.map(p, PersonDTO.class));
- 				
-// Map<String,String> ldapSessionMap = akka.doLookup(p);
-// logger.debug("mail: "+(ldapSessionMap.containsKey("mail") ? ldapSessionMap.get("mail") :"") +", phone: " + (ldapSessionMap.containsKey("telephoneNumber") ? ldapSessionMap.get("telephoneNumber") :""));
-
-//				logger.debug(ReflectionToStringBuilder.toString(akka.doLookup(p), ToStringStyle.MULTI_LINE_STYLE));
- 			}
-         	return pVO;        	        
-//        } catch (Exception e) {
-
-//			return null;
-			
-//        }
+		return personRepo.findAll(); 				
     }
 
-	public PersonDTO getById (Long id) {
-		Person p = personRepo.findById(id).get();
-		return modelMapper.map(p, PersonDTO.class);
+	public Person getById (Long id) {
+		return personRepo.findById(id).orElseThrow();
 	}   
 		
-	public PersonDTO savePerson(PersonDTO pvo) throws Exception {
-    	Person p = pvo.getId() == null ? toPerson(pvo) : toPerson(personRepo.findById(pvo.getId()).get(), pvo);
-    	personRepo.save(p);
- 		return modelMapper.map(p, PersonDTO.class);
+	public Person savePerson(Person person) throws Exception {
+    	personRepo.save(person);
+ 		return person;
    
     }
 
+/* 
 	private Person toPerson (PersonDTO pvo) throws Exception {
  		return toPerson (new Person(), pvo);
    	}
@@ -113,6 +97,7 @@ public class PeopleService {
 		return p;
 	}
     
+ */
 	public synchronized void deletePerson(Long pID) throws IllegalArgumentException, OptimisticLockingFailureException {
 		personRepo.deleteById(pID);
 		return;

@@ -9,8 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import org.springframework.web.client.RestClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
 
 import org.springframework.core.env.Environment;
 
@@ -69,13 +67,12 @@ public class Bemanning /* extends SpringBootServletInitializer { Deploying to To
 		SpringApplication.run(Bemanning.class, args);
 	}
 
-
-	@RequestMapping("/")
-	public RedirectView directToIndex()
-	{
-    	RedirectView redirectView = new RedirectView();
-    	redirectView.setUrl("index.html");
-    	return redirectView;
-	}
+	// NOTE: The previous @RequestMapping("/") that redirected the app root to the
+	// legacy ExtJS SPA (index.html) was removed. With React routing enabled, the
+	// Vaadin servlet must own the root context (/*), and Vaadin issues its
+	// bootstrap/UIDL requests against "/" (e.g. /?v-r=init). A Spring MVC mapping
+	// on "/" would intercept those requests and cause "Connection lost, trying to
+	// reconnect". The legacy ExtJS SPA is still reachable directly at
+	// /index.html (served as a static resource).
 
 }

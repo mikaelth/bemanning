@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class UGAItem extends Auditable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;  
     

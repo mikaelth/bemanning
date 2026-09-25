@@ -39,7 +39,17 @@ public class BemanningDevSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         return http
-			.csrf(csrf -> csrf.ignoringRequestMatchers("/rest/**")) // Disable CSRF for REST endpoints
+			// Vaadin's framework requests (UIDL, heartbeat, dev-tools/push) are POSTed
+			// to the servlet root (e.g. /?v-r=uidl). Spring Security's CSRF filter was
+			// rejecting those with HTTP 403, which the browser surfaces as
+			// "Connection lost, trying to reconnect". Vaadin has its own CSRF protection
+			// for these requests (the Vaadin-Security-Key for UIDL and the Vaadin-Push-ID
+			// for the websocket), so Spring Security CSRF must not also guard them.
+			// In this dev profile everything is permitAll for local development, so we
+			// disable Spring Security CSRF entirely here. (In the prod/CAS config, prefer
+			// Vaadin's VaadinSecurityConfigurer, which ignores CSRF for framework requests
+			// while keeping it enabled elsewhere.)
+			.csrf(csrf -> csrf.disable())
         	.build();
     }
 }

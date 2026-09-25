@@ -26,30 +26,40 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 @Service
 public class CourseService {
 
-    @Autowired
+//    @Autowired
     RestClient luntanCIRestClient;
 
-    @Autowired
+//    @Autowired
     CourseRepo courseRepo;
 
-	private ModelMapper modelMapper = new ModelMapper();
+//	private ModelMapper modelMapper = new ModelMapper();
 
+	public CourseService (RestClient luntanCI, CourseRepo courseRepo) {
+		this.luntanCIRestClient=luntanCI;
+		this.courseRepo = courseRepo;
+	}
 	/* Courses */
 	
-	public List<CourseDTO> getAllCourses() throws ResourceNotFoundException  {
-		List<CourseDTO> pVO = new ArrayList<CourseDTO>();
-			log.debug("getAllCourses()");
-			for (Course p : courseRepo.findAll()) {
- 				pVO.add(modelMapper.map(p, CourseDTO.class));
-  			}
-         	return pVO;        	        
+	public List<Course> getAllCourses() throws ResourceNotFoundException  {
+		List<Course> courses = courseRepo.findAll();
+		return courses;        	        
     }
 
-	public CourseDTO getById (Long id) {
-		Course p = courseRepo.findById(id).get();
-		return modelMapper.map(p, CourseDTO.class);
+	public Course getById (Long id) {
+		return courseRepo.findById(id).orElseThrow();
 	}   
-		
+
+	public Course saveCourse(Course course) throws Exception {	
+		courseRepo.save(course);
+		return course;
+	}
+	
+	public synchronized void deleteCourse(Long pID) throws IllegalArgumentException, OptimisticLockingFailureException {
+		courseRepo.deleteById(pID);
+		return;
+    }
+	
+/* 
 	public CourseDTO saveCourse(CourseDTO pvo) throws Exception {
     	Course p = pvo.getId() == null ? toCourse(pvo) : toCourse(courseRepo.findById(pvo.getId()).get(), pvo);
     	courseRepo.save(p);
@@ -71,6 +81,7 @@ public class CourseService {
 		return;
     }
 
+ */
 
 	/* Course instances */
 	
