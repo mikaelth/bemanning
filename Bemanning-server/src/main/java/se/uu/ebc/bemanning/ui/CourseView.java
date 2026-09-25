@@ -16,6 +16,7 @@ import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -74,6 +75,14 @@ public class CourseView extends VerticalLayout {
 
     // Backing list so newly-added (unsaved) rows can be dropped on cancel.
     private final List<Course> courses = new ArrayList<>();
+    // In-memory list data view captured from grid.setItems(...); used to apply
+    // the per-column filters.
+    private GridListDataView<Course> dataView;
+
+    // "All" sentinel for the three-state (group) filter.
+    private static final String FILTER_ALL = "(alla)";
+    // Holds the current per-column filter criteria; CourseFilter#test AND-s them.
+    private final CourseFilter filter = new CourseFilter();
 
     private final Button newButton = new Button("New course");
 
@@ -103,7 +112,7 @@ public class CourseView extends VerticalLayout {
 
         // Display columns, each supplied with an editor component below.
         Grid.Column<Course> codeCol = grid.addColumn(Course::getCode)
-                .setHeader("Code").setSortable(true).setAutoWidth(true);
+                .setHeader("Code").setSortable(true).setWidth("100px").setFlexGrow(0);
         Grid.Column<Course> seNameCol = grid.addColumn(Course::getSeName)
                 .setHeader("Name (sv)").setSortable(true).setAutoWidth(true);
         Grid.Column<Course> enNameCol = grid.addColumn(Course::getEnName)
@@ -117,6 +126,71 @@ public class CourseView extends VerticalLayout {
                 .setHeader("Actions").setAutoWidth(true).setFlexGrow(0);
 
         buildEditorComponents(codeCol, seNameCol, enNameCol, groupCol, creditsCol, actionsCol);
+
+        buildFilterRow(codeCol, seNameCol, enNameCol, groupCol, creditsCol);
+    }
+
+    /**
+     * Adds a filter row beneath the header with one filter field per data
+     * column. Each field updates {@link #filter} and re-runs the combined
+     * predicate on the grid's {@link com.vaadin.flow.data.provider.ListDataView}.
+     * All active column filters are AND-ed together.
+     */
+    private void buildFilterRow(Grid.Column<Course> codeCol,
+                                Grid.Column<Course> seNameCol,
+                                Grid.Column<Course> enNameCol,
+                                Grid.Column<Course> groupCol,
+                                Grid.Column<Course> creditsCol) {
+        HeaderRow filterRow = grid.appendHeaderRow();
+
+        filterRow.getCell(codeCol).setComponent(
+                textFilter("Code", value -> filter.code = value));
+        filterRow.getCell(seNameCol).setComponent(
+                textFilter("Name (sv)", value -> filter.seName = value));
+        filterRow.getCell(enNameCol).setComponent(
+                textFilter("Name (en)", value -> filter.enName = value));
+        filterRow.getCell(groupCol).setComponent(buildGroupFilter());
+        filterRow.getCell(creditsCol).setComponent(
+                textFilter("Credits", value -> filter.credits = value));
+    }
+
+    /** A text field that runs {@code setter} then re-applies the combined filter. */
+    private TextField textFilter(String placeholder, java.util.function.Consumer<String> setter) {
+        TextField field = new TextField();
+        field.setPlaceholder(placeholder);
+        field.setClearButtonVisible(true);
+        field.setWidthFull();
+        field.setValueChangeMode(com.vaadin.flow.data.value.ValueChangeMode.LAZY);
+        field.addValueChangeListener(e -> {
+            setter.accept(e.getValue());
+            applyFilter();
+        });
+        return field;
+    }
+
+    /** A Select of course groups (All / each group) mapped to a display name. */
+    private Select<String> buildGroupFilter() {
+        Select<String> select = new Select<>();
+        List<String> items = new ArrayList<>();
+        items.add(FILTER_ALL);
+        for (CourseGroup group : CourseGroup.values()) {
+            items.add(group.displayName());
+        }
+        select.setItems(items);
+        select.setValue(FILTER_ALL);
+        select.setWidthFull();
+        select.addValueChangeListener(e -> {
+            String v = e.getValue();
+            filter.group = (FILTER_ALL.equals(v) || v == null) ? null : v;
+            applyFilter();
+        });
+        return select;
+    }
+
+    private void applyFilter() {
+        if (dataView != null) {
+            dataView.setFilter(filter::test);
+        }
     }
 
     /**
@@ -256,7 +330,9 @@ public class CourseView extends VerticalLayout {
         try {
             courses.clear();
             courses.addAll(courseService.getAllCourses());
-            grid.setItems(courses);
+            dataView = grid.setItems(courses);
+            // Re-apply any active column filters to the freshly loaded data.
+            applyFilter();
         } catch (Exception ex) {
             log.error("Failed to load courses", ex);
             notifyError("Could not load courses: " + ex.getMessage());
@@ -327,5 +403,41 @@ public class CourseView extends VerticalLayout {
     private void notifyError(String message) {
         Notification n = Notification.show(message, 5000, Notification.Position.BOTTOM_START);
         n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+    }
+
+    /**
+     * Holds the current per-column filter criteria and combines them with AND
+     * semantics. A null/blank criterion means "no filter" for that column.
+     */
+    private static class CourseFilter {
+        private String code;
+        private String seName;
+        private String enName;
+        private String credits;
+        private String group; // null = any, otherwise the group display name
+
+        boolean test(Course course) {
+            return matchesText(code, course.getCode())
+                    && matchesText(seName, course.getSeName())
+                    && matchesText(enName, course.getEnName())
+                    && matchesText(credits, course.getCredits() == null
+                            ? null : String.valueOf(course.getCredits()))
+                    && matchesGroup(course);
+        }
+
+        private boolean matchesText(String needle, String value) {
+            if (needle == null || needle.isBlank()) {
+                return true;
+            }
+            return value != null
+                    && value.toLowerCase().contains(needle.toLowerCase().trim());
+        }
+
+        private boolean matchesGroup(Course course) {
+            if (group == null || group.isBlank()) {
+                return true;
+            }
+            return group.equals(course.getCourseGroup());
+        }
     }
 }
