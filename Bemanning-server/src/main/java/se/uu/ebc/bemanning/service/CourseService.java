@@ -15,7 +15,9 @@ import java.util.Map;
 import se.uu.ebc.luntan.vo.CourseInstanceVO;
 import se.uu.ebc.bemanning.dto.CourseDTO;
 import se.uu.ebc.bemanning.entity.course.Course;
+import se.uu.ebc.bemanning.entity.courseinstance.CourseInstance;
 import se.uu.ebc.bemanning.repo.CourseRepo;
+import se.uu.ebc.bemanning.repo.CourseInstanceRepo;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,17 +28,16 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 @Service
 public class CourseService {
 
-//    @Autowired
-    RestClient luntanCIRestClient;
 
-//    @Autowired
-    CourseRepo courseRepo;
+    private final RestClient luntanCIRestClient;
+    private final CourseRepo courseRepo;
+    private final CourseInstanceRepo ciRepo;
 
-//	private ModelMapper modelMapper = new ModelMapper();
 
-	public CourseService (RestClient luntanCI, CourseRepo courseRepo) {
+	public CourseService (RestClient luntanCI, CourseRepo courseRepo, CourseInstanceRepo ciRepo) {
 		this.luntanCIRestClient=luntanCI;
 		this.courseRepo = courseRepo;
+		this.ciRepo = ciRepo;
 	}
 	/* Courses */
 	
@@ -56,6 +57,11 @@ public class CourseService {
 	
 	public synchronized void deleteCourse(Long pID) throws IllegalArgumentException, OptimisticLockingFailureException {
 		courseRepo.deleteById(pID);
+		return;
+    }
+
+	public synchronized void deleteCourse(Course c) throws IllegalArgumentException, OptimisticLockingFailureException {
+		courseRepo.delete(c);
 		return;
     }
 	
@@ -84,6 +90,35 @@ public class CourseService {
  */
 
 	/* Course instances */
+	
+	public List<CourseInstance> getAllCourseInstances() throws ResourceNotFoundException  {
+		List<CourseInstance> courses = ciRepo.findAll();
+		return courses;        	        
+    }
+
+	public CourseInstance getCourseInstanceById (Long id) {
+		return ciRepo.findById(id).orElseThrow();
+	}   
+
+	public List<CourseInstance> getCourseInstancesByYear (String year) {
+		return ciRepo.findByYear(year);
+	}   
+
+	public CourseInstance saveCourseInstance(CourseInstance course) throws Exception {	
+		ciRepo.save(course);
+		return course;
+	}
+	
+	public synchronized void deleteCourseInstance(Long pID) throws IllegalArgumentException, OptimisticLockingFailureException {
+		ciRepo.deleteById(pID);
+		return;
+    }
+
+	public synchronized void deleteCourseInstance(CourseInstance ci) throws IllegalArgumentException, OptimisticLockingFailureException {
+		ciRepo.delete(ci);
+		return;
+    }
+	
 	
     public List<CourseInstanceVO> getCourseInstances() {
         Map<String,List<CourseInstanceVO>> courseInstances = luntanCIRestClient

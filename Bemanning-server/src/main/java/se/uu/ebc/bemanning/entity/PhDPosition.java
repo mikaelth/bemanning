@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Gatherers;
 import java.util.stream.Gatherer;
 import java.util.stream.Stream;
+import java.util.Optional;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -26,6 +27,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -41,6 +44,7 @@ import se.uu.ebc.bemanning.enums.EmploymentType;
 //@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+//@RequiredArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
 @Slf4j
 public class PhDPosition  extends Auditable {
@@ -55,7 +59,7 @@ public class PhDPosition  extends Auditable {
 	private static final float REMAIN_AT_75 = 0.25f*48.0f;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
@@ -84,6 +88,26 @@ public class PhDPosition  extends Auditable {
     @Column(name = "INACTIVE")
     private boolean inactive;
 
+	@Transient
+	String ouProxy = "";
+	
+	/* Constructor */
+	
+	public PhDPosition (long id,
+		Person person,
+		List<Progress> progresses,
+		LocalDateTime start,
+		LocalDateTime dissertation,
+		String note,
+		boolean inactive) {
+			this.id = id;
+			this.person = person;
+			this.progresses = progresses;
+			this.start = start;
+			this.dissertation = dissertation;
+			this.note = note;
+			this.inactive = inactive;
+	}
 
 	/* Accessor method hacks */
 	
@@ -98,6 +122,25 @@ public class PhDPosition  extends Auditable {
 		});
         return progresses;
     }
+
+	@PostLoad
+	public void setProxyOuName() {
+		Optional<Staff> proxyStaff = Optional.empty();
+		if (this.person != null && this.person.getStaff() != null) {
+			// Pick the staff row for the latest year. getYear() may be null, so
+			// use a null-safe comparator (null years sort lowest) to avoid an NPE
+			// while an entity is being hydrated (@PostLoad).
+			proxyStaff = this.person.getStaff().stream()
+				.collect(Collectors.maxBy(
+					Comparator.comparing(Staff::getYear,
+						Comparator.nullsFirst(Comparator.naturalOrder()))));
+		}
+		if (proxyStaff.isPresent() && proxyStaff.get().getOrganisationUnit() != null) {
+			ouProxy = proxyStaff.get().getOrganisationUnit().getSvName();
+		} else {
+			ouProxy = "";
+		}
+	}
     
     public LocalDateTime getStart() 
     {

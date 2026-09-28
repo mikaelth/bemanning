@@ -48,7 +48,7 @@ public abstract class CourseStaffing extends Auditable {
     private static final float STUDENT_LECTURE_FACTOR = 8.0f;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 

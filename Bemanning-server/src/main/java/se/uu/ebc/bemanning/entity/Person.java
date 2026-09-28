@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Person extends Auditable {
 	    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="native")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 

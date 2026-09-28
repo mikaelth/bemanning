@@ -37,18 +37,23 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 @Service
 public class CourseStaffingService {
 
-    @Autowired
+//    @Autowired
     CourseStaffingRepo csRepo;
 
-    @Autowired
+//    @Autowired
     OrganisationUnitRepo ouRepo;
 
-	private ModelMapper mapper = new ModelMapper();
+// 	private ModelMapper mapper = new ModelMapper();
+// 	
+// 	private TypeMap<CourseStaffing, CourseStaffingDTO> csToVOMapper = mapper.createTypeMap(CourseStaffing.class, CourseStaffingDTO.class);
+// 	private TypeMap<CourseStaffingDTO,CourseStaffing> voToCSmapper = mapper.createTypeMap(CourseStaffingDTO.class, CourseStaffing.class);
+// 
+
+	public CourseStaffingService (CourseStaffingRepo csRepo, OrganisationUnitRepo ouRepo) {
+		this.csRepo = csRepo;
+		this.ouRepo = ouRepo;
+	}
 	
-	private TypeMap<CourseStaffing, CourseStaffingDTO> csToVOMapper = mapper.createTypeMap(CourseStaffing.class, CourseStaffingDTO.class);
-	private TypeMap<CourseStaffingDTO,CourseStaffing> voToCSmapper = mapper.createTypeMap(CourseStaffingDTO.class, CourseStaffing.class);
-
-
 	@PostConstruct
 	public void init () {
  		// csToVOMapper.addMapping(CourseStaffing::currentRemainingProjectTime, CourseStaffingVO::setCurrentRemainingProjectTime);
@@ -58,26 +63,27 @@ public class CourseStaffingService {
 
 	/* CoursesStaffings */
 	
-	public List<CourseStaffingDTO> getAllCourseStaffings() throws ResourceNotFoundException  {
-		List<CourseStaffingDTO> pVO = new ArrayList<CourseStaffingDTO>();
-			log.debug("getAllCourseStaffings()");
-			for (CourseStaffing p : csRepo.findAll()) {
- 				pVO.add(mapper.map(p, CourseStaffingDTO.class));
-  			}
-         	return pVO;        	        
+	public List<CourseStaffing> getAllCourseStaffings() throws ResourceNotFoundException  {
+		List<CourseStaffing> pVO = csRepo.findAll();
+    	return pVO;        	        
     }
 
-	public CourseStaffingDTO getCourseStaffingById (Long id) {
-		CourseStaffing p = csRepo.findById(id).get();
-		return mapper.map(p, CourseStaffingDTO.class);
+	public List<CourseStaffing> getCourseStaffingsByYear(String year) throws ResourceNotFoundException  {
+		List<CourseStaffing> pVO = csRepo.findCourseStaffingByYear(year);
+    	return pVO;        	        
+    }
+
+	public CourseStaffing getCourseStaffingById (Long id) {
+		CourseStaffing p = csRepo.findById(id).orElseThrow();
+		return p;
 	}   
 		
-	public CourseStaffingDTO saveCourseStaffing(CourseStaffingDTO pvo) throws Exception {
-    	CourseStaffing p = pvo.getId() == null ? toCourseStaffing(pvo) : toCourseStaffing(csRepo.findById(pvo.getId()).get(), pvo);
+	public CourseStaffing saveCourseStaffing(CourseStaffing p) throws Exception {
     	csRepo.save(p);
- 		return mapper.map(p, CourseStaffingDTO.class);
+ 		return p;
     }
 
+/* 
 	private CourseStaffing toCourseStaffing (CourseStaffingDTO pvo) throws Exception {
 		CourseStaffing cs = switch (pvo.getType()) {
 			case null -> throw new IllegalArgumentException();
@@ -92,11 +98,13 @@ public class CourseStaffingService {
 		mapper.map(pvo, p);
 		return p;
 	}
+ */
     
 	public synchronized void deleteCourseStaffing(Long pID) throws IllegalArgumentException, OptimisticLockingFailureException {
 		csRepo.deleteById(pID);
 		return;
     }
+
 
 	public CourseStaffing createCouurseStaffing (Staff staff, CourseInstance ci) {
 		CourseStaffingModern cs = new CourseStaffingModern();
@@ -106,4 +114,5 @@ public class CourseStaffingService {
 		
 		return cs;
 	}
+
 }

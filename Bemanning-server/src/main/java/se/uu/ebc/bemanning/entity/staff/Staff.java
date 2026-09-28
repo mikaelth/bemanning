@@ -60,7 +60,7 @@ public abstract class Staff extends Auditable {
 	private final static int LECTURE_HOUR_COST = 1285;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
@@ -70,13 +70,17 @@ public abstract class Staff extends Auditable {
     @JoinColumn(name = "PERSON_FK")
 	private Person person;
 
+    // EAGER: the organisation unit is a @NotNull association that staff views,
+    // the OU filter and the PhDPosition @PostLoad proxy all read after the
+    // session has closed (open-in-view is disabled), so a LAZY proxy would throw
+    // LazyInitializationException. It mirrors the EAGER 'person' association.
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(name = "OU_FK")
 	private OrganisationUnit organisationUnit;
 
 
-    @OneToMany(mappedBy = "staff" ,  fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "staff" ,  fetch = FetchType.LAZY)
     private Set<CourseStaffing> assignments;
 
     @OneToMany(mappedBy = "courseLeader", fetch = FetchType.LAZY)

@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class YearsOfHierarchy  extends Auditable {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
     

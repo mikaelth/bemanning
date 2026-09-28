@@ -33,7 +33,7 @@ import se.uu.ebc.bemanning.entity.staff.Staff;
 public class OrganisationUnit  extends Auditable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 

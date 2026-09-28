@@ -31,6 +31,9 @@ public interface StaffRepo extends JpaRepository<Staff, Long>, JpaSpecificationE
 	@Query("SELECT s FROM Staff AS s WHERE s.person = ?1 and s.year = ?2")
 	public List<Staff> findUserByPersonAndYear(Person person, String year);
 
+	@Query("SELECT s.organisationUnit FROM Staff AS s WHERE s.person = ?1 and s.year = ?2")
+	public Optional<OrganisationUnit> findOuByPersonAndYear(Person person, String year);
+
 	@Query("SELECT s FROM Staff AS s WHERE s.person = ?1 and s.year = ?2 and s.position = ?3")
 	public Staff findUserByPersonYearAndPosition(Person person, String year, EmploymentType position);
 

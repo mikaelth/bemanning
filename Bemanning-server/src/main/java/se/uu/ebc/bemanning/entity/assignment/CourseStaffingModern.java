@@ -48,13 +48,13 @@ public class CourseStaffingModern extends CourseStaffing {
     private static final float STUDENT_LECTURE_FACTOR = 8.0f;
 
     @NotNull
-    @OneToOne(mappedBy = "courseStaffing")
+    @OneToOne(mappedBy = "courseStaffing", cascade = CascadeType.ALL)
     private AssignmentPlan plan;
 
-    @OneToOne(mappedBy = "courseStaffing",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "courseStaffing", cascade = CascadeType.ALL)
     private AssignmentTE te;
 
-    @OneToOne(mappedBy = "courseStaffing")
+    @OneToOne(mappedBy = "courseStaffing", cascade = CascadeType.ALL)
     private AssignmentOutcome outcome;
 
 //     @Column(name = "NOTE", length = 255)

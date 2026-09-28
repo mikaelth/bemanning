@@ -27,6 +27,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.router.Menu;
 
 import se.uu.ebc.bemanning.enums.UserRoles;
 import se.uu.ebc.bemanning.service.PeopleService;
@@ -49,8 +50,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 // The Vaadin servlet is mapped to the root context (/*), so this route resolves
 // to /people. (Spring Data REST is served under /api, so there is no collision.)
-@Route("people")
+@Route(value = "people", layout = MainLayout.class)
 @PageTitle("Personer")
+@Menu(order = 4, icon = "icons/user.svg", title = "Personer")
 @AnonymousAllowed // Vaadin navigation access control requires an explicit access
                   // annotation; without one the route is denied (HTTP 403). The
                   // write actions remain guarded by @PreAuthorize(ROLE_COREDATAADMIN).
@@ -111,22 +113,22 @@ public class PersonView extends VerticalLayout {
 
         // Display columns, each supplied with an editor component below.
         Grid.Column<Person> activeCol = grid.addColumn(p -> p.isActive() ? "Ja" : "Nej")
-                .setHeader("Aktiv").setAutoWidth(true);
+                .setHeader("Aktiv").setWidth("80px").setFlexGrow(0);
         Grid.Column<Person> usernameCol = grid.addColumn(Person::getUsername)
-                .setHeader("AKKA id").setSortable(true).setAutoWidth(true);
+                .setHeader("AKKA id").setSortable(true).setWidth("100px").setFlexGrow(0);
         Grid.Column<Person> givenNameCol = grid.addColumn(Person::getGivenName)
                 .setHeader("Förnamn").setSortable(true).setAutoWidth(true);
         Grid.Column<Person> familyNameCol = grid.addColumn(Person::getFamilyName)
                 .setHeader("Efternamn").setSortable(true).setAutoWidth(true);
         Grid.Column<Person> familyFirstCol = grid.addColumn(p -> p.isFamilyFirst() ? "Ja" : "Nej")
-                .setHeader("Familjenamn först").setAutoWidth(true);
+                .setHeader("Familjenamn först").setWidth("80px").setFlexGrow(0);
         Grid.Column<Person> rolesCol = grid.addColumn(this::rolesLabel)
-                .setHeader("Behörigheter").setAutoWidth(true);
+                .setHeader("Behörigheter").setWidth("200px").setFlexGrow(0);
         Grid.Column<Person> noteCol = grid.addColumn(Person::getNote)
-                .setHeader("Anteckningar").setAutoWidth(true);
+                .setHeader("Anteckningar").setAutoWidth(true).setFlexGrow(1);
 
         Grid.Column<Person> actionsCol = grid.addComponentColumn(this::buildRowActions)
-                .setHeader("").setAutoWidth(true).setFlexGrow(0);
+                .setHeader("Handling").setAutoWidth(true).setFlexGrow(0);
 
         buildEditorComponents( activeCol, usernameCol, givenNameCol, familyNameCol, familyFirstCol,
                rolesCol, noteCol, actionsCol);

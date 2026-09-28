@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import jakarta.annotation.PostConstruct;
+import se.uu.ebc.bemanning.entity.Person;
 import se.uu.ebc.bemanning.entity.Progress;
 import se.uu.ebc.bemanning.entity.staff.Staff;
 import se.uu.ebc.bemanning.dto.PhDPositionDTO;
@@ -23,8 +24,8 @@ import se.uu.ebc.bemanning.repo.PhDPositionRepo;
 import se.uu.ebc.bemanning.repo.ProgressRepo;
 import se.uu.ebc.bemanning.repo.PersonRepo;
 
-import se.uu.ebc.bemanning.mapper.PhDPositionMapper;
-import se.uu.ebc.bemanning.mapper.ProgressMapper;
+//import se.uu.ebc.bemanning.mapper.PhDPositionMapper;
+//import se.uu.ebc.bemanning.mapper.ProgressMapper;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -41,23 +42,20 @@ import org.springframework.dao.OptimisticLockingFailureException;
 @Service
 public class PhDService {
 
-	private final PhDPositionMapper phdMapper;
-	private final ProgressMapper progressMapper;
+//	private final PhDPositionMapper phdMapper;
+//	private final ProgressMapper progressMapper;
 	private final PhDPositionRepo phdPositionRepo;
 	private final ProgressRepo progressRepo;
 	private final PersonRepo personRepo;
 	private final StaffService staffService;
 
 	/* Constructor injection */
-	public PhDService (PhDPositionMapper phdMapper,
-		ProgressMapper progressMapper,	
+	public PhDService (	
 		PhDPositionRepo phdPositionRepo,
 		ProgressRepo progressRepo, 
 		PersonRepo personRepo,
 		StaffService staffService) {
 		
-		this.phdMapper = phdMapper;
-		this.progressMapper = progressMapper;	
 		this.phdPositionRepo = phdPositionRepo;
 		this.progressRepo = progressRepo; 
 		this.personRepo = personRepo;
@@ -155,50 +153,25 @@ public class PhDService {
 
 	/* PhD Positions */
 
-	public List<PhDPositionDTO> getAllPhDPositions() throws ResourceNotFoundException {
-		List<PhDPositionDTO> pVOs = new ArrayList<PhDPositionDTO>();
+	public List<PhDPosition> getAllPhDPositions() throws ResourceNotFoundException {
+ 		String year = String.valueOf(Year.now().getValue());
+		List<PhDPosition> pVOs = phdPositionRepo.findAll();
 
-
- 			String year = String.valueOf(Year.now().getValue());
- 			
-			log.debug("getAllPhDPositions year: "+year);
-
-			for (PhDPosition p : phdPositionRepo.findAll()) {
-				log.debug("getAllPhDPositions person: "+p.getPerson().getName());
-				Staff s = staffService.findUserByPersonAndYear(p.getPerson(),year);
-				log.debug("getAllPhDPositions staff: "+s);
-				String program = s == null ? "" : s.getOrganisationUnit().getSvName();			
-
- 	//			PhDPositionDTO pVO = mapper.map(p,PhDPositionDTO.class);
-				PhDPositionDTO pVO = phdMapper.entityToDTO(p);
- 				pVO.setProgram(program);
- 				pVOs.add(pVO);
- 			}
-         	return pVOs;        	        
+	 	return pVOs;        	        
 
     }
 
-	public PhDPositionDTO getPhDById (Long id) {
+	public PhDPosition getPhDById (Long id) {
 		log.debug("getById()");
-		PhDPosition p = phdPositionRepo.findById(id).get();
+		PhDPosition p = phdPositionRepo.findById(id).orElseThrow();
 		log.debug(p.toString());
-	//	return mapper.map(p, PhDPositionDTO.class);
-		return phdMapper.entityToDTO(p);
+		return p;
 
 	}   
     
-    public PhDPositionDTO savePhDPosition(PhDPositionDTO pvo) throws Exception {
-    	PhDPosition p = pvo.getId() == null ? toPhDPosition(pvo) : toPhDPosition(phdPositionRepo.findById(pvo.getId()).get(), pvo);
+    public PhDPosition savePhDPosition(PhDPosition p) throws Exception {
     	phdPositionRepo.save(p);
-
-		String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-		Staff s = staffService.findUserByPersonAndYear(p.getPerson(),year);
-//		PhDPositionDTO pVO = mapper.map(p,PhDPositionDTO.class);
-		PhDPositionDTO pVO = phdMapper.entityToDTO(p);
-
- 		pVO.setProgram(s == null ? "" : s.getOrganisationUnit().getSvName());
-
-		return pVO;
+		return p;
     
     }
 
@@ -206,6 +179,17 @@ public class PhDService {
 		phdPositionRepo.deleteById(pID);
     }
    	 
+   	 
+	public String findCurrentAffiliation (Person person, String year) {
+
+		log.debug("findCurrentAffiliation by {} and {}",person.getName(),year);
+		if (staffService.findOuByPersonAndYear(person, year).isPresent()) {
+			return staffService.findOuByPersonAndYear(person, year).get().getSvName();
+		} else {
+			return "";
+		}
+	}   	 
+/* 
 	private PhDPosition toPhDPosition (PhDPositionDTO pvo) throws Exception {
 		return phdMapper.dtoToEntity(pvo);
 //		return toPhDPosition (new PhDPosition(),pvo);
@@ -216,35 +200,27 @@ public class PhDService {
 		phdMapper.updateEntityFromDTO(pvo,p);
 		return p;
 	}
+ */
  
 					
 	
 	/* Progresses */
 
-	public List<ProgressDTO> getAllProgress() throws ResourceNotFoundException  {
-		List<ProgressDTO> pVO = new ArrayList<ProgressDTO>();
-		for (Progress p : progressRepo.findAll()) {
- //			pVO.add(progressModelMapper.map(p, ProgressDTO.class));
-  			pVO.add(progressMapper.entityToDTO(p));
-		}
+	public List<Progress> getAllProgress() throws ResourceNotFoundException  {
+		List<Progress> pVO = progressRepo.findAll();
         return pVO;        	        
-
-			
     }
-   
-    
-    public ProgressDTO saveProgress(ProgressDTO pvo) throws Exception {
-    	Progress p = pvo.getId() == null ? toProgress(pvo) : toProgress(progressRepo.findById(pvo.getId()).get(), pvo);
+     
+    public Progress saveProgress(Progress p) throws Exception {
     	progressRepo.save(p);
-//		return progressModelMapper.map(p,ProgressDTO.class);
-		return progressMapper.entityToDTO(p);
-    
+		return p;  
     }
 
     public synchronized void deleteProgress(Long pID) throws IllegalArgumentException, OptimisticLockingFailureException {
 		progressRepo.deleteById(pID);
     }	
  
+/* 
 	private Progress toProgress (ProgressDTO pvo) throws Exception {
  		return toProgress (new Progress(), pvo);
    	}
@@ -257,6 +233,7 @@ public class PhDService {
 		return p;
 
 	}
+ */
 	
 	
 }

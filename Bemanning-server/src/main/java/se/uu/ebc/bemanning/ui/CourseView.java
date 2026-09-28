@@ -29,6 +29,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import se.uu.ebc.bemanning.enums.CourseGroup;
 import se.uu.ebc.bemanning.service.CourseService;
 import se.uu.ebc.bemanning.entity.course.Course;
+import com.vaadin.flow.router.Menu;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,8 +56,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 // The Vaadin servlet is mapped to the root context (/*), which is required for
 // the React Router bootstrap. This route therefore resolves to /courses.
-@Route("courses")
+@Route(value = "courses", layout = MainLayout.class)
 @PageTitle("Courses")
+//@Menu(order = 0, icon = "icons/clipboard-check.svg", title = "Kurser")
+@Menu(order = 5, icon = "icons/open-book.svg", title = "Kurser")
 @AnonymousAllowed // Vaadin navigation access control requires an explicit access
                   // annotation; without one the route is denied (HTTP 403). The
                   // write actions remain guarded by @PreAuthorize(ROLE_COREDATAADMIN),
@@ -112,18 +115,18 @@ public class CourseView extends VerticalLayout {
 
         // Display columns, each supplied with an editor component below.
         Grid.Column<Course> codeCol = grid.addColumn(Course::getCode)
-                .setHeader("Code").setSortable(true).setWidth("100px").setFlexGrow(0);
+                .setHeader("Kurskod").setSortable(true).setWidth("100px").setFlexGrow(0);
         Grid.Column<Course> seNameCol = grid.addColumn(Course::getSeName)
-                .setHeader("Name (sv)").setSortable(true).setAutoWidth(true);
+                .setHeader("Namn (sv)").setSortable(true).setAutoWidth(true);
         Grid.Column<Course> enNameCol = grid.addColumn(Course::getEnName)
-                .setHeader("Name (en)").setSortable(true).setAutoWidth(true);
+                .setHeader("Namn (en)").setSortable(true).setAutoWidth(true);
         Grid.Column<Course> groupCol = grid.addColumn(this::courseGroupLabel)
-                .setHeader("Group").setAutoWidth(true);
+                .setHeader("Kursgrupp").setAutoWidth(true);
         Grid.Column<Course> creditsCol = grid.addColumn(Course::getCredits)
-                .setHeader("Credits").setAutoWidth(true);
+                .setHeader("hp").setAutoWidth(true);
 
         Grid.Column<Course> actionsCol = grid.addComponentColumn(this::buildRowActions)
-                .setHeader("Actions").setAutoWidth(true).setFlexGrow(0);
+                .setHeader("Handling").setAutoWidth(true).setFlexGrow(0);
 
         buildEditorComponents(codeCol, seNameCol, enNameCol, groupCol, creditsCol, actionsCol);
 
@@ -352,7 +355,6 @@ public class CourseView extends VerticalLayout {
         if (edited == null) {
             return;
         }
-        log.info("[save] before editor.save(): courseGroup={}", edited.getCourseGroup());
         // save() returns false and keeps the editor open when validation fails.
         if (!editor.save()) {
             notifyError("Please fix the highlighted fields.");

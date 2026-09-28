@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TEActivity  extends Auditable {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @NotNull

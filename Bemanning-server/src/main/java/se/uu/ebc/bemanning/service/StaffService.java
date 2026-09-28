@@ -84,47 +84,36 @@ public class StaffService {
 
 	/* Staff */
 
-	public List<StaffDTO> getAllStaff() throws ResourceNotFoundException  {
-		List<StaffDTO> sVO = new ArrayList<StaffDTO>();
-			log.debug("getAllStaff()");
-			for (Staff s : staffRepo.findAll()) {
- 				sVO.add(modelMapper.map(s, StaffDTO.class));
-
- 			}
-         	return sVO;
+	public List<Staff> getAllStaff() throws ResourceNotFoundException  {
+		List<Staff> sVO = staffRepo.findAll();
+    	return sVO;
 
     }
 
-	public StaffDTO getById (Long id) {
-		log.debug("getById()");
-		Staff s = staffRepo.findById(id).get();
-		log.debug(s.toString());
-		return modelMapper.map(s, StaffDTO.class);
-//		return new StaffVO(s);
+	/** Distinct staffed years (descending), used to populate the year selector. */
+	public List<String> getStaffedYears() {
+		return staffRepo.getStaffedYears();
 	}
 
-	public StaffDTO saveStaff(StaffDTO svo) throws Exception {
-    	Staff s = svo.getId() == null ? toStaff(svo) : toStaff(staffRepo.findById(svo.getId()).get(), svo);
-    	staffRepo.save(s);
- 		return modelMapper.map(s, StaffDTO.class);
-
-    }
-
-	private Staff toStaff (StaffDTO svo) throws Exception {
-		return switch (svo.getStaffKind()) {
- 			case StaffKind.AKKA -> toStaff (new AkkaStaff(), svo);
- 			case StaffKind.EXTERNAL -> toStaff (new ExternalStaff(), svo);
- 			default -> throw new IllegalArgumentException ("No such staff kind");
- 		};
-   	}
-
-	private Staff toStaff (Staff s, StaffDTO svo) throws Exception {
-		modelMapper.map(svo, s);
+	public Staff getById (Long id) {
+		log.debug("getById()");
+		Staff s = staffRepo.findById(id).orElseThrow();
 		return s;
 	}
 
+	public Staff saveStaff(Staff s) throws Exception {
+    	staffRepo.save(s);
+ 		return s;
+
+    }
+
 	public synchronized void deleteStaff(Long sID) throws IllegalArgumentException, OptimisticLockingFailureException {
 		staffRepo.deleteById(sID);
+		return;
+    }
+
+	public synchronized void deleteStaff(Staff s) throws IllegalArgumentException, OptimisticLockingFailureException {
+		staffRepo.delete(s);
 		return;
     }
 
@@ -139,7 +128,9 @@ public class StaffService {
  		return Optional.ofNullable(findUserByPersonAndYear(person,year));
  	}
 
-
+	public Optional<OrganisationUnit> findOuByPersonAndYear(Person person, String year) {
+		return staffRepo.findOuByPersonAndYear(person,year);
+	}
 	/* Staff */
 
 /*
@@ -238,6 +229,10 @@ logger.debug("getAllStaff, done findAll, took " + Duration.between(start,end));
     }
  */
 
+	public List<Staff> getStaffByYear (String year)
+	{
+		return staffRepo.findByYear(year);
+ 	}
 
 	public List<Staff> getAssignedStaff (String year, OrganisationUnit dept)
 	{
