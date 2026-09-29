@@ -57,42 +57,42 @@ public class PhDPosition  extends Auditable {
 	private static final float REMAIN_AT_HALF = 24.0f;
 	private static final float REMAIN_AT_80 = 0.2f*48.0f;
 	private static final float REMAIN_AT_75 = 0.25f*48.0f;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(name = "PERSON_FK")
 	private Person person;
 
-    
+
 	@OrderBy("date ASC")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "phdPosition",fetch = FetchType.EAGER)
     private List<Progress> progresses = new ArrayList<Progress>();
-    
+
     @Column(name = "START")
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime start;
-    
+
     @Column(name = "DISSERTATION")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dissertation;
-    
+
     @Column(name = "NOTE", length = 255)
     private String note;
-    
+
     @Column(name = "INACTIVE")
     private boolean inactive;
 
 	@Transient
 	String ouProxy = "";
-	
+
 	/* Constructor */
-	
+
 	public PhDPosition (long id,
 		Person person,
 		List<Progress> progresses,
@@ -110,8 +110,8 @@ public class PhDPosition  extends Auditable {
 	}
 
 	/* Accessor method hacks */
-	
-    public List<Progress> getProgresses() 
+
+    public List<Progress> getProgresses()
     {
 		Collections.sort(progresses, new Comparator<Progress>() {
 			@Override
@@ -141,8 +141,8 @@ public class PhDPosition  extends Auditable {
 			ouProxy = "";
 		}
 	}
-    
-    public LocalDateTime getStart() 
+
+    public LocalDateTime getStart()
     {
 		LocalDateTime start = this.start;
 		if (progresses.size() > 0){
@@ -153,11 +153,11 @@ public class PhDPosition  extends Auditable {
 
 
 	/* Public methods */
-	
-	public Float usedISPDate(LocalDateTime ispDate) 
+
+	public Float usedISPDate(LocalDateTime ispDate)
 	{
 		String workingYear = String.valueOf(ispDate.getYear());
-		
+
 		float remainTime = remainingProjectTime(ispDate, false);
 		float usedTime = remainTime < 0.0f ? REMAIN_AT_START : REMAIN_AT_START - remainTime;
 
@@ -181,7 +181,7 @@ public class PhDPosition  extends Auditable {
 		} else {
 			log.error("Number of Staff positions incorrect for " + this.person.getName());
 		}
-		
+
 		log.debug(this.person.getName() + " planned " + daysPlannedGU + ", days worked " +  daysWorkedGU + ", used time " + usedTime);
 
 		return usedTime;
@@ -191,27 +191,27 @@ public class PhDPosition  extends Auditable {
 	public LocalDateTime predictedFinishDate()
 	{
 		log.debug("MTh predictedFinishDate ");
-		
+
 		if (this.progresses.size() > 0) {
 			Progress latestEntry = this.getProgresses().iterator().next();
-			
+
 			log.debug("Latest entry is " + latestEntry.getDate().toString());
-			
+
 //			float remainAtLatest = remainingProjectTime(latestEntry.getDate(), false);
 			float remainAtLatest = this.progresses.size() == 1 ? latestEntry.getRemainingMonths() : remainingProjectTime(latestEntry.getDate(), false);
 
 			float remainPredInDays = remainAtLatest * MONTH_IN_DAYS / (latestEntry.getActivity() * latestEntry.getProjectFraction());
-				
+
 			LocalDateTime endDate = latestEntry.getDate().plusDays(Math.round(remainPredInDays));
 
 			log.debug("MTh predictedFinishDate is " + endDate);
-		
+
 			return endDate;
 		} else {
 			return LocalDateTime.now();
 		}
 	}
-	
+
  	public LocalDateTime predictedHalfTime()
 	{
 		return predictDate(REMAIN_AT_HALF);
@@ -227,7 +227,7 @@ public class PhDPosition  extends Auditable {
 		return predictDate(REMAIN_AT_75);
 	}
 
-    public Float yearlyGU(String year) 
+    public Float yearlyGU(String year)
     {
     	return periodGU(year, LocalDateTime.of(Integer.parseInt(year) + 1, 1, 1, 0, 0));
     }
@@ -236,14 +236,14 @@ public class PhDPosition  extends Auditable {
 	private Float periodGU(String year, LocalDateTime atDate)
     {
 		log.debug("MTh yearlyGU " + year);
-		
+
 		float yearFactor = 1.0f;
 		LocalDateTime predFinish = this.predictedFinishDate();
-		
+
 		LocalDateTime periodBegin = LocalDateTime.of(Integer.parseInt(year), 1, 1, 0, 0);
 		LocalDateTime periodEnd = atDate;
 		List<Progress> slots = new ArrayList<Progress>();
-		
+
 		if (predFinish.isBefore(periodEnd)) {
 			long totalDuration = ChronoUnit.MILLIS.between(periodBegin, periodEnd);
 			long finishDuration = ChronoUnit.MILLIS.between(periodBegin, predFinish);
@@ -253,7 +253,7 @@ public class PhDPosition  extends Auditable {
 
 		log.debug("MTh yearlyGU, begin " + periodBegin);
 		log.debug("MTh yearlyGU, end " + periodEnd);
-		
+
 		for (Progress entry : this.getProgresses()) {
 			log.debug("MTh yearlyGU, entry " + entry.getDate());
 
@@ -265,7 +265,7 @@ public class PhDPosition  extends Auditable {
 				log.debug("MTh yearlyGU, entry should be added as IB");
 			}
 		}
-		
+
 		if (log.isDebugEnabled()) {
 			for (Progress ent : slots) {
 				log.debug("MTh yearlyGU " + ent.getDate());
@@ -275,7 +275,7 @@ public class PhDPosition  extends Auditable {
 		Progress next = null;
 		float pGU = 0.0f;
 		long totalPeriodMillis = ChronoUnit.MILLIS.between(periodBegin, periodEnd);
-		
+
 		for (Progress slot : slots) {
 			if (next != null) {
 				LocalDateTime slotStart = slot.getDate().isAfter(periodBegin) ? slot.getDate() : periodBegin;
@@ -290,7 +290,7 @@ public class PhDPosition  extends Auditable {
 			}
 			next = slot;
 		}
-		
+
         return pGU * yearFactor;
     }
 
@@ -298,7 +298,7 @@ public class PhDPosition  extends Auditable {
 	public Float remainingProjectTime(LocalDateTime atDate, boolean ignoreSameDateEntry)
 	{
 
-/* 
+/*
 		record AtDateSlot (LocalDateTime date) implements ActivitySlot {
 			@Override
 			public Float activity () {
@@ -309,7 +309,7 @@ public class PhDPosition  extends Auditable {
 				return 0.0f;
 			}
 		}
-	
+
 		List<ActivitySlot> slots = new ArrayList<ActivitySlot>(progresses);
 		//slots.addAll(progresses);
 		slots.add(new AtDateSlot(atDate));
@@ -324,14 +324,14 @@ public class PhDPosition  extends Auditable {
 
 		List<SlotRec> atDateList = new ArrayList<SlotRec>();
 		atDateList.add(new SlotRec(atDate, 0.0f, 0.0f));
-		
+
 		Stream<SlotRec> workSlots = progresses
 				.stream()
 				.filter(slot -> slot.getDate().isBefore(atDate))
 				.map(p -> new SlotRec(p.getDate(),p.getActivity()*p.getProjectFraction(), p.getAddedMonths()));
-				
+
 		log.debug("workSlots " + workSlots.toString());
-	
+
 		Float usedMonths = Stream.concat(workSlots,atDateList.stream())
 .peek(slot -> log.debug("the slot " + slot.date.toString()))
 				.sorted((a, b) -> b.date.compareTo(a.date))
@@ -341,9 +341,9 @@ public class PhDPosition  extends Auditable {
 
 		log.debug("Used months " + usedMonths);
 		return REMAIN_AT_START-usedMonths;
-	} 
+	}
 
- 
+
 	public Float currentRemainingProjectTime()
 	{
 		return remainingProjectTime(LocalDateTime.now(), false);
@@ -351,15 +351,15 @@ public class PhDPosition  extends Auditable {
 
 
 	/* Private utility methods */
-	
+
 	private LocalDateTime predictDate(float months)
 	{
-	
+
 		log.debug("MTh predictedHalfTime ");
- 
+
 /*
 		record SlotRec (LocalDateTime date  start, LocalDateTime end , Float intensity, Float addedMonths, Float monthsAtStart) {
- 
+
 			Float timeUsed () {
 		       	return ChronoUnit.DAYS.between(start,end)/MONTH_IN_DAYS * this.intensity + ( addedMonths!= null ? addedMonths : 0.0f );
 			}
@@ -374,7 +374,7 @@ public class PhDPosition  extends Auditable {
 
 		};
  */
-/* 
+/*
 try {
 		Object lastSlot = progresses
 			.stream()
@@ -384,7 +384,7 @@ try {
 			.gather(Gatherers.windowSliding(2))
 //.peek(w -> log.debug( (w.get(0).monthsAtStart().isPresent() ? w.get(0).getRemainingMonths().toString() : "null") + ", " + (w.get(1).monthsAtStart().isPresent() ? w.get(1).getRemainingMonths().toString() : "null")))
 			.gather(Gatherer.of((state, w, downstream) -> {
-					w.get(1).setMonthsAtStart( w.get(1).monthsAtStart().isPresent() ? w.get(1).getRemainingMonths() : w.get(0).theMonthsAtBeginning() - w.get(0).phdTimeSlotUsed(w.get(1).getDate()) ); 
+					w.get(1).setMonthsAtStart( w.get(1).monthsAtStart().isPresent() ? w.get(1).getRemainingMonths() : w.get(0).theMonthsAtBeginning() - w.get(0).phdTimeSlotUsed(w.get(1).getDate()) );
 	           		downstream.push((Progress)w.get(1));
             		return true;
         	}))
@@ -403,11 +403,11 @@ log.debug ("Predicted date: " + aDate.toString());
 log.error("Caught an exception in stream, ", e);
 }
  */
- 
-		
+
+
 		if (this.progresses.size() > 0) {
 			if (this.progresses.size() == 1) {
-				return progresses.get(0).getDate().plusDays(Math.round( (progresses.get(0).theMonthsAtBeginning() - months) * MONTH_IN_DAYS /  ( progresses.get(0).getActivity() * progresses.get(0).getProjectFraction() )));							
+				return progresses.get(0).getDate().plusDays(Math.round( (progresses.get(0).theMonthsAtBeginning() - months) * MONTH_IN_DAYS /  ( progresses.get(0).getActivity() * progresses.get(0).getProjectFraction() )));
 			} else {
 				Object lastSlot = progresses
 					.stream()
@@ -415,7 +415,7 @@ log.error("Caught an exception in stream, ", e);
 .peek(slot -> log.debug("369 the slot " + slot.getDate().toString()))
 					.gather(Gatherers.windowSliding(2))
 					.gather(Gatherer.of((state, w, downstream) -> {
-							w.get(1).setMonthsAtStart( w.get(1).monthsAtStart().isPresent() ? w.get(1).getRemainingMonths() : w.get(0).theMonthsAtBeginning() - w.get(0).phdTimeSlotUsed(w.get(1).getDate()) ); 
+							w.get(1).setMonthsAtStart( w.get(1).monthsAtStart().isPresent() ? w.get(1).getRemainingMonths() : w.get(0).theMonthsAtBeginning() - w.get(0).phdTimeSlotUsed(w.get(1).getDate()) );
 							downstream.push( ((Progress)w.get(1)) );
 							return true;
 					}))
@@ -423,14 +423,14 @@ log.error("Caught an exception in stream, ", e);
 					.filter(s -> ((Progress)s).theMonthsAtBeginning() > months)
 .peek(slot -> log.debug("378 the slot " + ((Progress)slot).getDate().toString()))
 					.reduce((first, second) -> second).orElse(getProgresses().get(0)); /* get last slot; if there is no subsequent slot with remaining time > initial time, use slot with initial time */
-			
+
 				log.debug("lastSlot is null: " + (lastSlot == null ? "true" : "false"));
 				log.debug ("The last object: " + ((Progress)lastSlot).getDate().toString());
-		
+
 				return  ((Progress)lastSlot).getDate().plusDays(Math.round( (((Progress)lastSlot).theMonthsAtBeginning() - months) * MONTH_IN_DAYS /  ( ((Progress)lastSlot).getActivity() * ((Progress)lastSlot).getProjectFraction() )));
-		
+
 			}
-/* 
+/*
 			java.util.Iterator<Progress> entryIterator = this.getProgresses().iterator();
 			Progress entry = entryIterator.next();
 			while (entryIterator.hasNext() && months > remainingProjectTime(entry.getDate(), false)) {
@@ -439,17 +439,17 @@ log.error("Caught an exception in stream, ", e);
 			float remainAtLatest = remainingProjectTime(entry.getDate(), false);
 
 			float remainPredInDays = (remainAtLatest - months) * MONTH_IN_DAYS / (entry.getActivity() * entry.getProjectFraction());
-				
+
 			LocalDateTime endDate = entry.getDate().plusDays(Math.round(remainPredInDays));
 
 			log.debug("MTh predictedHalfTime is " + endDate);
- */	
+ */
 		} else {
 			return LocalDateTime.now();
 		}
 	}
 
- 
+
 	private Float endYearRemainingProjectTime()
 	{
 		LocalDateTime endOfYear = LocalDateTime.of(LocalDate.now().getYear(), 12, 31, 23, 59, 59);

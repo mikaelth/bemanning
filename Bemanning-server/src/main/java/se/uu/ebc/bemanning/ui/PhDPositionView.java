@@ -567,9 +567,9 @@ public class PhDPositionView extends VerticalLayout {
      * budget year, resolved via {@link PhDService#findCurrentAffiliation}.
      */
     private String programLabel(PhDPosition p) {
-    
+
     	return p.getOuProxy();
-/* 
+/*
         if (p.getPerson() == null) {
             return "";
         }
@@ -587,7 +587,7 @@ public class PhDPositionView extends VerticalLayout {
     }
 
     /** Parses the app-wide budget year (a String) into a {@link Year}. */
-/* 
+/*
     private Year currentBudgetYear() {
         String value = yearContext.getYear();
         if (value == null || value.isBlank()) {

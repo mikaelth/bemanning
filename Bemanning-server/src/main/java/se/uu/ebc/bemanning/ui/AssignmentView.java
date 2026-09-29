@@ -181,12 +181,22 @@ public class AssignmentView extends VerticalLayout {
     }
 
     private VerticalLayout buildBody() {
-        // Grid on top, editor form below it (stacked vertically).
+        // Grid on top, editor form below it (stacked vertically), each taking
+        // half of the available height.
         VerticalLayout body = new VerticalLayout(grid, formPanel);
-        // Give the grid the bulk of the vertical space (spans more rows).
-        body.setFlexGrow(3, grid);
+        // flex-basis:0 + equal grow makes the two panels split the height 50/50
+        // regardless of their content size.
+        grid.getStyle().set("flex-basis", "0");
+        // min-height:0 lets the grid shrink within its flex track instead of
+        // being pinned to its content/100% height, so the 50/50 split holds.
+        grid.getStyle().set("min-height", "0");
+        formPanel.getStyle().set("flex-basis", "0");
+        formPanel.getStyle().set("min-height", "0");
+        body.setFlexGrow(1, grid);
         body.setFlexGrow(1, formPanel);
-        body.setPadding(false);
+        // Let the form panel scroll internally instead of pushing past its half.
+        formPanel.getStyle().set("overflow", "auto");
+        body.setPadding(true);
         body.setSizeFull();
         return body;
     }
@@ -196,15 +206,15 @@ public class AssignmentView extends VerticalLayout {
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         grid.setSizeFull();
 
-        grid.addColumn(this::staffLabel).setHeader("Staff").setSortable(true).setAutoWidth(true);
-        grid.addColumn(this::courseInstanceLabel).setHeader("Course instance")
+        grid.addColumn(this::staffLabel).setHeader("Personal").setSortable(true).setAutoWidth(true);
+        grid.addColumn(this::courseInstanceLabel).setHeader("Kurstillfälle")
                 .setSortable(true).setAutoWidth(true);
-        grid.addColumn(this::assigningDeptLabel).setHeader("Assigning dept").setAutoWidth(true);
-        grid.addColumn(cs -> cs.isLegacy() ? "Legacy" : "Modern").setHeader("Type").setAutoWidth(true);
-        grid.addColumn(cs -> safeFloat(cs::getTotalHours)).setHeader("Total hours").setAutoWidth(true);
+        grid.addColumn(this::assigningDeptLabel).setHeader("Bemannande").setWidth("80px").setFlexGrow(0);
+        grid.addColumn(cs -> cs.isLegacy() ? "Legacy" : "Modern").setHeader("Typ").setWidth("100px").setFlexGrow(0);
+        grid.addColumn(cs -> safeFloat(cs::getTotalHours)).setHeader("Timmar totalt").setWidth("100px").setFlexGrow(0);
         grid.addColumn(cs -> safeFloat(cs::getPlainTeachingHours))
-                .setHeader("Teaching hours").setAutoWidth(true);
-        grid.addColumn(CourseStaffing::getNote).setHeader("Note").setAutoWidth(true);
+                .setHeader("Undervisningstimmar").setWidth("100px").setFlexGrow(0);
+        grid.addColumn(CourseStaffing::getNote).setHeader("Anteckningar").setAutoWidth(true);
 
         grid.asSingleSelect().addValueChangeListener(e -> onSelect(e.getValue()));
     }

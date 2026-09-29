@@ -36,61 +36,61 @@ import lombok.extern.slf4j.Slf4j;
 //@EqualsAndHashCode(callSuper = true)
 @Slf4j
 public class Person extends Auditable {
-	    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
-    
+
     @OneToOne(mappedBy = "person")
     private PhDPosition phDPosition;
-    
+
     @OneToMany(mappedBy = "person",fetch = FetchType.LAZY)
     private Set<Staff> staff;
-    
+
     @Column(name = "GIVEN_NAME", length = 255)
     @NotNull
     private String givenName;
-    
+
     @Column(name = "FAMILY_NAME", length = 255)
     @NotNull
     private String familyName;
-    
+
     @Column(name = "FAMILY_FIRST")
     private boolean familyFirst;
-    
+
     @Column(name = "NOTE", length = 255)
     private String note;
-    
+
     @Column(name = "USERNAME", length = 255, unique = true)
     @NotNull
     private String username;
-    
+
     @Column(name = "IS_ACTIVE")
     private boolean isActive;
 
- 
+
 	@ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
 	@CollectionTable(name="USER_ROLE", joinColumns=@JoinColumn(name="user_fk"))
 	@Column(name="ROLE")
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Set<UserRoles> userRoles = new HashSet<UserRoles>();
- 
- 
+
+
 	/* Constructors */
-	
+
 	public Person() {
 		staff = new HashSet<Staff>();
 		userRoles.add(UserRoles.Staff);
 	}
-	
+
     /* Custom business methods */
 
     public java.lang.String getName()
     {
-        return 
+        return
         	isFamilyFirst() ?
         	getFamilyName()+" "+getGivenName() :
         	getGivenName()+" "+getFamilyName();
@@ -98,14 +98,14 @@ public class Person extends Auditable {
 
     public java.lang.String getFormName()
     {
-        return 
+        return
         	getFamilyName()+", "+getGivenName();
     }
 
 	public Boolean isPhDEnrolled()
 	{
-		return ( (this.getPhDPosition() != null) && (this.getPhDPosition().getProgresses().size()>0) );	
+		return ( (this.getPhDPosition() != null) && (this.getPhDPosition().getProgresses().size()>0) );
 	}
-  
+
 
 }

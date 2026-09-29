@@ -72,7 +72,7 @@ public class CourseInstanceView extends VerticalLayout {
     // Per-column filter criteria (course group + course), AND-ed together.
     private final InstanceFilter filter = new InstanceFilter();
 
-    private final Button newButton = new Button("New course instance");
+    private final Button newButton = new Button("Nytt kurstillfälle");
 
     private CourseInstance pendingNew;
 
@@ -190,7 +190,7 @@ public class CourseInstanceView extends VerticalLayout {
                 .bind(CourseInstance::getCourseLeader, CourseInstance::setCourseLeader);
         leaderCol.setEditorComponent(leaderField);
 
-/* 
+/*
         DatePicker startField = new DatePicker();
         startField.setWidthFull();
         binder.forField(startField)
