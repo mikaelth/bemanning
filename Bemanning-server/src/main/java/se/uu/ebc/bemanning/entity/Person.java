@@ -3,12 +3,14 @@ package se.uu.ebc.bemanning.entity;
 import java.util.Set;
 import java.util.HashSet;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,8 +18,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.FetchType;
-
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import jakarta.validation.constraints.NotNull;
 import se.uu.ebc.bemanning.entity.staff.Staff;
@@ -43,10 +45,11 @@ public class Person extends Auditable {
     private Long id;
 
 
-    @OneToOne(mappedBy = "person")
+    @OneToOne(mappedBy = "person",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @NotFound(action=NotFoundAction.IGNORE)
     private PhDPosition phDPosition;
 
-    @OneToMany(mappedBy = "person",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "person",fetch = FetchType.LAZY,cascade=CascadeType.ALL)
     private Set<Staff> staff;
 
     @Column(name = "GIVEN_NAME", length = 255)

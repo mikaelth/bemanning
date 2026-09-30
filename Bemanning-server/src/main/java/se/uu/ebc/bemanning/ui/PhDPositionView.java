@@ -459,11 +459,11 @@ public class PhDPositionView extends VerticalLayout {
 
     @PreAuthorize("hasRole('ROLE_PHDADMIN')")
     private void delete(PhDPosition position) {
-        if (position == null || position.getId() == null) {
+        if (position == null) {
             return;
         }
         try {
-            phdService.deletePhDPosition(position.getId());
+            phdService.deletePhDPosition(position);
             notifySuccess("PhD position deleted.");
             loadPositions();
         } catch (Exception ex) {

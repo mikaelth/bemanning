@@ -23,6 +23,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.CascadeType;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +66,8 @@ public abstract class Staff extends Auditable {
     private Long id;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+                    CascadeType.REFRESH},fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(name = "PERSON_FK")
 	private Person person;

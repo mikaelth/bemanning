@@ -63,7 +63,8 @@ public class PhDPosition  extends Auditable {
     @Column(name = "ID")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.EAGER)
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+                    CascadeType.REFRESH},fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(name = "PERSON_FK")
 	private Person person;

@@ -36,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Slf4j
@@ -171,7 +172,9 @@ public class PhDService {
 
     public PhDPosition savePhDPosition(PhDPosition p) throws Exception {
 
+		log.debug("Saving PhDPosition {}",p);
 		phdPositionRepo.save(p);
+		log.debug("Saved PhDPosition {}",p);
 
     	if (p.getProgresses().size() == 0) {
 			p.getProgresses().add(creatInitialProgress(p));
@@ -189,14 +192,49 @@ public class PhDService {
 			prog.setProjectFraction(0.9f);
 			prog.setGuFraction(0.1f);
 			prog.setRemainingMonths(48.0f);
+		log.debug("Created progress {}",prog);
  		return prog;
    	}
 
-
+	@Transactional
     public synchronized void deletePhDPosition(Long pID) throws IllegalArgumentException, OptimisticLockingFailureException {
-		phdPositionRepo.deleteById(pID);
+		// Load the managed instance so we can break the bidirectional link
+		// before removing it (see deletePhDPosition(PhDPosition) for why).
+		phdPositionRepo.findById(pID).ifPresent(this::removePosition);
     }
 
+	@Transactional
+    public synchronized void deletePhDPosition(PhDPosition p) throws IllegalArgumentException, OptimisticLockingFailureException {
+		log.debug("Deleting {}",p);
+		if (p == null || p.getId() == null) {
+			return;
+		}
+		// Re-load a MANAGED instance in this transaction. The one coming from the
+		// Vaadin grid is detached (open-in-view=false), and deleting it directly
+		// leaves Person.phDPosition (mappedBy, cascade=ALL) pointing back at it,
+		// so on flush Hibernate re-associates/re-persists the row and the delete
+		// silently has no effect.
+		phdPositionRepo.findById(p.getId()).ifPresent(this::removePosition);
+    }
+
+	/**
+	 * Removes a MANAGED PhDPosition, first severing the bidirectional
+	 * Person &harr; PhDPosition link. Person owns the inverse side with
+	 * {@code cascade = ALL}; unless we null {@code person.phDPosition} the parent
+	 * cascade re-saves the child on flush and the delete never reaches the DB.
+	 * Child {@code progresses} are removed via their own {@code cascade = ALL}.
+	 */
+	private void removePosition(PhDPosition managed) {
+		Person owner = managed.getPerson();
+		if (owner != null) {
+			owner.setPhDPosition(null);
+			managed.setPerson(null);
+		}
+		phdPositionRepo.delete(managed);
+		// Flush within the transaction so any constraint problem surfaces here
+		// (and is logged) instead of being swallowed at commit time.
+		phdPositionRepo.flush();
+	}
 
 	public String findCurrentAffiliation (Person person, String year) {
 
