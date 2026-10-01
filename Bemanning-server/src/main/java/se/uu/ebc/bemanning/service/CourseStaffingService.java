@@ -79,6 +79,12 @@ public class CourseStaffingService {
 	}   
 		
 	public CourseStaffing saveCourseStaffing(CourseStaffing p) throws Exception {
+  		log.atDebug().setMessage("saveCourseStaffing id {} with ci {}, staff = {}")
+  			.addArgument(p.getId())
+  			.addArgument(p.getCourseInstance())
+  			.addArgument(p.getStaff())
+ 		 .log();
+
     	csRepo.save(p);
  		return p;
     }

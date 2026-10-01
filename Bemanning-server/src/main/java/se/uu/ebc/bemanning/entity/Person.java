@@ -45,7 +45,7 @@ public class Person extends Auditable {
     private Long id;
 
 
-    @OneToOne(mappedBy = "person",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(mappedBy = "person",cascade = {CascadeType.ALL})
     @NotFound(action=NotFoundAction.IGNORE)
     private PhDPosition phDPosition;
 

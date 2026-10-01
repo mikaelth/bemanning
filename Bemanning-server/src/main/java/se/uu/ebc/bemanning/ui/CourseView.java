@@ -87,7 +87,7 @@ public class CourseView extends VerticalLayout {
     // Holds the current per-column filter criteria; CourseFilter#test AND-s them.
     private final CourseFilter filter = new CourseFilter();
 
-    private final Button newButton = new Button("New course");
+    private final Button newButton = new Button("Ny kurs");
 
     // Tracks a row that was added via "New course" but not yet persisted, so a
     // cancelled edit removes it from the grid instead of leaving an empty row.

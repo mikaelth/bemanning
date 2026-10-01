@@ -80,6 +80,12 @@ public class AssignmentView extends VerticalLayout {
 
     private final Grid<CourseStaffing> grid = new Grid<>(CourseStaffing.class, false);
     private final List<CourseStaffing> staffings = new ArrayList<>();
+    // In-memory data view captured from grid.setItems(...), for the column filters.
+    private com.vaadin.flow.component.grid.dataview.GridListDataView<CourseStaffing> dataView;
+    // Current grid selection; used to default a new entry's staff/course instance.
+    private CourseStaffing selectedRow;
+    // Column filter criteria (Personal / Kurstillfälle / Bemannande / Typ / Anteckningar).
+    private final StaffingFilter filter = new StaffingFilter();
 
     // Binder for the CourseStaffing-level fields (staff, course instance,
     // assigning dept, note).
@@ -104,9 +110,9 @@ public class AssignmentView extends VerticalLayout {
     private FormLayout notesForm;
     private final VerticalLayout formPanel = new VerticalLayout();
 
-    private final Button saveButton = new Button("Save");
-    private final Button deleteButton = new Button("Delete");
-    private final Button newButton = new Button("New staffing");
+    private final Button saveButton = new Button("Spara");
+    private final Button deleteButton = new Button("Ta bort");
+    private final Button newButton = new Button("Ny bemanningspost");
 
     // The staffing currently shown in the form, or null when nothing editable
     // is selected.
@@ -135,6 +141,8 @@ public class AssignmentView extends VerticalLayout {
         // so the session-scoped YearContext does not retain a detached view.
         addAttachListener(attach -> {
             Registration reg = yearContext.addYearChangeListener(year -> {
+                // Repopulate the staff / course-instance popups for the new year.
+                loadSelectorItems();
                 loadStaffings();
                 showStaffing(null);
             });
@@ -151,7 +159,7 @@ public class AssignmentView extends VerticalLayout {
             log.error("Failed to load staff", ex);
         }
         try {
-            courseInstanceField.setItems(courseService.getAllCourseInstances());
+            courseInstanceField.setItems(courseService.getCourseInstancesByYear(yearContext.getYear()));
             courseInstanceField.setItemLabelGenerator(
                     ci -> ci == null ? "" : ci.getDesignation());
         } catch (Exception ex) {
@@ -206,20 +214,82 @@ public class AssignmentView extends VerticalLayout {
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         grid.setSizeFull();
 
-        grid.addColumn(this::staffLabel).setHeader("Personal").setSortable(true).setAutoWidth(true);
-        grid.addColumn(this::courseInstanceLabel).setHeader("Kurstillfälle")
-                .setSortable(true).setAutoWidth(true);
-        grid.addColumn(this::assigningDeptLabel).setHeader("Bemannande").setWidth("80px").setFlexGrow(0);
-        grid.addColumn(cs -> cs.isLegacy() ? "Legacy" : "Modern").setHeader("Typ").setWidth("100px").setFlexGrow(0);
+        Grid.Column<CourseStaffing> staffCol = grid.addColumn(this::staffLabel)
+                .setHeader("Personal").setSortable(true).setAutoWidth(true);
+        Grid.Column<CourseStaffing> ciCol = grid.addColumn(this::courseInstanceLabel)
+                .setHeader("Kurstillfälle").setSortable(true).setAutoWidth(true);
+        Grid.Column<CourseStaffing> deptCol = grid.addColumn(this::assigningDeptLabel)
+                .setHeader("Bemannande").setWidth("80px").setFlexGrow(0);
+        Grid.Column<CourseStaffing> typeCol = grid.addColumn(this::typeLabel)
+                .setHeader("Typ").setWidth("100px").setFlexGrow(0);
         grid.addColumn(cs -> safeFloat(cs::getTotalHours)).setHeader("Timmar totalt").setWidth("100px").setFlexGrow(0);
         grid.addColumn(cs -> safeFloat(cs::getPlainTeachingHours))
                 .setHeader("Undervisningstimmar").setWidth("100px").setFlexGrow(0);
-        grid.addColumn(CourseStaffing::getNote).setHeader("Anteckningar").setAutoWidth(true);
+        Grid.Column<CourseStaffing> noteCol = grid.addColumn(CourseStaffing::getNote)
+                .setHeader("Anteckningar").setAutoWidth(true);
 
         grid.asSingleSelect().addValueChangeListener(e -> onSelect(e.getValue()));
+
+        buildFilterRow(staffCol, ciCol, deptCol, typeCol, noteCol);
+    }
+
+    private String typeLabel(CourseStaffing cs) {
+        return cs.isLegacy() ? "Legacy" : "Modern";
+    }
+
+    /**
+     * Adds a header filter row with filters on Personal, Kurstillfälle,
+     * Bemannande, Typ and Anteckningar. All active filters are AND-ed.
+     */
+    private void buildFilterRow(Grid.Column<CourseStaffing> staffCol,
+                                Grid.Column<CourseStaffing> ciCol,
+                                Grid.Column<CourseStaffing> deptCol,
+                                Grid.Column<CourseStaffing> typeCol,
+                                Grid.Column<CourseStaffing> noteCol) {
+        com.vaadin.flow.component.grid.HeaderRow filterRow = grid.appendHeaderRow();
+        filterRow.getCell(staffCol).setComponent(
+                textFilter("Personal", value -> filter.staff = value));
+        filterRow.getCell(ciCol).setComponent(
+                textFilter("Kurstillfälle", value -> filter.courseInstance = value));
+        filterRow.getCell(deptCol).setComponent(
+                textFilter("Bemannande", value -> filter.dept = value));
+
+        ComboBox<String> typeSelect = new ComboBox<>();
+        typeSelect.setItems("Modern", "Legacy");
+        typeSelect.setPlaceholder("Typ");
+        typeSelect.setClearButtonVisible(true);
+        typeSelect.setWidthFull();
+        typeSelect.addValueChangeListener(e -> {
+            filter.type = e.getValue();
+            applyFilter();
+        });
+        filterRow.getCell(typeCol).setComponent(typeSelect);
+
+        filterRow.getCell(noteCol).setComponent(
+                textFilter("Anteckningar", value -> filter.note = value));
+    }
+
+    private TextField textFilter(String placeholder, java.util.function.Consumer<String> setter) {
+        TextField field = new TextField();
+        field.setPlaceholder(placeholder);
+        field.setClearButtonVisible(true);
+        field.setWidthFull();
+        field.setValueChangeMode(com.vaadin.flow.data.value.ValueChangeMode.LAZY);
+        field.addValueChangeListener(e -> {
+            setter.accept(e.getValue());
+            applyFilter();
+        });
+        return field;
+    }
+
+    private void applyFilter() {
+        if (dataView != null) {
+            dataView.setFilter(filter::test);
+        }
     }
 
     private void onSelect(CourseStaffing selected) {
+        this.selectedRow = selected;
         if (selected instanceof CourseStaffingModern modern) {
             showStaffing(modern);
         } else {
@@ -283,7 +353,7 @@ public class AssignmentView extends VerticalLayout {
                 .bind(CourseStaffing::getNote, CourseStaffing::setNote);
 
         FormLayout staffingForm = new FormLayout();
-        staffingForm.add(staffField, courseInstanceField, assigningDeptField, staffingNote);
+        staffingForm.add(staffField, courseInstanceField, assigningDeptField /*, staffingNote */);
 
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveButton.addClickListener(e -> save());
@@ -298,7 +368,7 @@ public class AssignmentView extends VerticalLayout {
         formPanel.add(
 //                formTitle,
 //                legacyNotice,
-//                staffingForm,
+                staffingForm,
                 new H3("Timmar"),
                 hoursGrid,
 //                new H3("Anteckningar"),
@@ -406,6 +476,14 @@ public class AssignmentView extends VerticalLayout {
 
     private void addStaffing() {
         CourseStaffingModern fresh = new CourseStaffingModern();
+        // Default staff / course instance (and dept) from the currently selected
+        // row, so a new entry starts from the same context. Capture these before
+        // grid.select(fresh) below changes the selection.
+        if (selectedRow != null) {
+            fresh.setStaff(selectedRow.getStaff());
+            fresh.setCourseInstance(selectedRow.getCourseInstance());
+            fresh.setAssigningDept(selectedRow.getAssigningDept());
+        }
         // Every modern staffing owns a plan; te/outcome are created on demand.
         fresh.setPlan(newAssignment(new AssignmentPlan(), fresh));
         fresh.setTe((AssignmentTE) newAssignment(new AssignmentTE(), fresh));
@@ -434,7 +512,8 @@ public class AssignmentView extends VerticalLayout {
             staffings.clear();
             // Year-scoped query (year filtering happens in the query layer).
             staffings.addAll(courseStaffingService.getCourseStaffingsByYear(year));
-            grid.setItems(staffings);
+            dataView = grid.setItems(staffings);
+            applyFilter();
         } catch (Exception ex) {
             log.error("Failed to load course staffings", ex);
             notifyError("Could not load staffings: " + ex.getMessage());
@@ -486,7 +565,7 @@ public class AssignmentView extends VerticalLayout {
         notesForm.setEnabled(enabled);
         saveButton.setEnabled(enabled);
         deleteButton.setEnabled(enabled && current != null && current.getId() != null);
-        formTitle.setText(enabled ? "Edit assignment" : "Assignment");
+        formTitle.setText(enabled ? "Redigera bemanningspost" : "Bemanningspost");
     }
 
     @PreAuthorize("hasRole('ROLE_COREDATAADMIN')")
@@ -539,5 +618,38 @@ public class AssignmentView extends VerticalLayout {
     private void notifyError(String message) {
         Notification n = Notification.show(message, 5000, Notification.Position.BOTTOM_START);
         n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+    }
+
+    /**
+     * Column filter criteria (Personal, Kurstillfälle, Bemannande, Typ,
+     * Anteckningar), combined with AND. Non-static so it can reuse the view's
+     * label helpers. Blank / null criteria match everything.
+     */
+    private class StaffingFilter {
+        private String staff;
+        private String courseInstance;
+        private String dept;
+        private String type;   // "Modern" / "Legacy" / null
+        private String note;
+
+        boolean test(CourseStaffing cs) {
+            return matches(staff, staffLabel(cs))
+                    && matches(courseInstance, courseInstanceLabel(cs))
+                    && matches(dept, assigningDeptLabel(cs))
+                    && matchesType(cs)
+                    && matches(note, cs.getNote());
+        }
+
+        private boolean matchesType(CourseStaffing cs) {
+            return type == null || type.isBlank() || type.equals(typeLabel(cs));
+        }
+
+        private boolean matches(String needle, String value) {
+            if (needle == null || needle.isBlank()) {
+                return true;
+            }
+            return value != null
+                    && value.toLowerCase().contains(needle.toLowerCase().trim());
+        }
     }
 }

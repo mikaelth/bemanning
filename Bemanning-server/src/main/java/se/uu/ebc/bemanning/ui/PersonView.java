@@ -79,7 +79,7 @@ public class PersonView extends VerticalLayout {
     // Holds the current per-column filter criteria; PersonFilter#test AND-s them.
     private final PersonFilter filter = new PersonFilter();
 
-    private final Button newButton = new Button("New person");
+    private final Button newButton = new Button("Ny person");
 
     // Tracks a row that was added via "New person" but not yet persisted, so a
     // cancelled edit removes it from the grid instead of leaving an empty row.

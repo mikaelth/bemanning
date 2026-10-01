@@ -55,7 +55,7 @@ public class TimeEditExcelService {
     private final CourseStaffingService csService;
 
  	/* Constructor injection */
-   public TimeEditExcelService (ColumnHeadersRecord colHeaders, TEActivityRepo teActivityRepo, CourseStaffingRepo csRepo, StaffRepo staffRepo, CourseInstanceRepo ciRepo, CourseStaffingService csService) {
+	public TimeEditExcelService (ColumnHeadersRecord colHeaders, TEActivityRepo teActivityRepo, CourseStaffingRepo csRepo, StaffRepo staffRepo, CourseInstanceRepo ciRepo, CourseStaffingService csService) {
         this.colHeaders = colHeaders;
 		this.teActivityRepo = teActivityRepo;
 		this.csRepo = csRepo;
@@ -63,6 +63,7 @@ public class TimeEditExcelService {
 		this.ciRepo = ciRepo;
 		this.csService = csService;
     }
+
 	public record EntryRecord (String staff, String course, String activity, ActivityType actType, Float hours) {
 		public String getActKey() {
 			return staff+";"+course+";"+actType.toString();
@@ -183,7 +184,9 @@ public class TimeEditExcelService {
 		for (String theKey : entryMap.keySet()) {
 
 			ActivityType actType = teActivityRepo.findBpActivityByTeText(entryMap.get(theKey).activity()).orElse(ActivityType.UNKNOWN);
+			log.debug("Course is {}",entryMap.get(theKey).course());
 			String[] courseString = entryMap.get(theKey).course().split("-");
+			log.debug("Course string is {}",courseString);
 			TEExcelDTO tVO = new TEExcelDTO().builder()
 				.activity(entryMap.get(theKey).activity())
 				.activityType(actType)
@@ -192,7 +195,7 @@ public class TimeEditExcelService {
 				.duration(sumMap.get(entryMap.get(theKey).getActKey()))
 				.courseCode(courseString[0])
 				.year("20" + courseString[1].substring(1,3))
-				.ciNumber(courseString[2])
+				.ciNumber(courseString.size() > 2 ? courseString[2] :"")
 				.build();
 			teEntries.add(tVO);
 			log.debug("Entry {}",tVO);

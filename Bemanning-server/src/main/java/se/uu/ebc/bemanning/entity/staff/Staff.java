@@ -66,8 +66,9 @@ public abstract class Staff extends Auditable {
     private Long id;
 
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-                    CascadeType.REFRESH},fetch = FetchType.EAGER)
+//    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+//                    CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @ManyToOne
     @NotNull
     @JoinColumn(name = "PERSON_FK")
 	private Person person;
