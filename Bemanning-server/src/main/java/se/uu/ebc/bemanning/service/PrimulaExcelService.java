@@ -69,7 +69,8 @@ public class PrimulaExcelService {
 
 //        entries.forEach(entry -> {updateAkkaCost(entry, "2026");});
         entries.forEach( entry -> {pMap.put(entry.getPNIN(),entry);} );
-		pMap.values().forEach(entry -> {updateAkkaCost(entry, "2026");});
+//		pMap.values().forEach(entry -> {updateAkkaCost(entry, "2026");});
+		pMap.values().forEach(entry -> {updateAkkaCost(entry, entry.getMonth().substring(0,4), overWrite);});
 
         return entries;
     }
@@ -93,16 +94,19 @@ public class PrimulaExcelService {
 	}
  */
 
-	private void updateAkkaCost (PrimulaEntriesExcel entry, String year) {
+	private void updateAkkaCost (PrimulaEntriesExcel entry, String year, boolean replace) {
 
 		try {
 			for (String eNum : akkaService.findUsernameBypNIN(entry.pNINForLdap())) {
+//			log.debug("Year {}",year);
 				akkaStaffRepo.findStaffByUsernameAndYear(eNum, year).ifPresent (
 					staff -> {
-						staff.setHourlyCharge (entry.hourlyCost());
-						akkaStaffRepo.save(staff);
-						log.debug("With {}, {}, updated {} to {}",eNum, entry.pNINForLdap(), staff.getPerson().getName(),staff.getHourlyCharge());
-						entry.setUpdated(true);
+						if ( replace || staff.getHourlyCharge() == 0 ) {
+							staff.setHourlyCharge (entry.hourlyCost());
+							akkaStaffRepo.save(staff);
+							log.debug("With {}, {}, updated {} to {} for {}",eNum, entry.pNINForLdap(), staff.getPerson().getName(),staff.getHourlyCharge(),year);
+							entry.setUpdated(true);
+						}
 					}
 				);
 			}

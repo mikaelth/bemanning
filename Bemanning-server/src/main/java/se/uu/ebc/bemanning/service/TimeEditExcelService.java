@@ -195,7 +195,7 @@ public class TimeEditExcelService {
 				.duration(sumMap.get(entryMap.get(theKey).getActKey()))
 				.courseCode(courseString[0])
 				.year("20" + courseString[1].substring(1,3))
-				.ciNumber(courseString.size() > 2 ? courseString[2] :"")
+				.ciNumber(courseString.length > 2 ? courseString[2] :"")
 				.build();
 			teEntries.add(tVO);
 			log.debug("Entry {}",tVO);
@@ -246,11 +246,11 @@ public class TimeEditExcelService {
 			}
 		} else {
 			if (theCI.isPresent()) {
-				teEntry.setStatus(TEMatchStatus.NOTEACHER);	
+				teEntry.setStatus(TEMatchStatus.NOTEACHER);
 			} else {
 				teEntry.setStatus(TEMatchStatus.NOMATCH);
 			}
-		}	
+		}
 	}
 
 }

@@ -178,8 +178,7 @@ public class AssignmentView extends VerticalLayout {
         if (staff == null || staff.getPerson() == null) {
             return "";
         }
-        String year = staff.getYear() == null ? "" : " (" + staff.getYear() + ")";
-        return staff.getPerson().getName() + year;
+        return staff.getPerson().getName();
     }
 
     private HorizontalLayout buildToolbar() {

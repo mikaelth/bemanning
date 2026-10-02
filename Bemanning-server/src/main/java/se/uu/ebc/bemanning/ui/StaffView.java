@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Route(value = "staff", layout = MainLayout.class)
 @PageTitle("Staff")
-@Menu(order = 2, icon = "icons/users.svg", title = "Personal")
+@Menu(order = 3, icon = "icons/users.svg", title = "Personal")
 @AnonymousAllowed // Vaadin navigation access control requires an explicit access
                   // annotation. Write actions remain guarded by @PreAuthorize.
 @Slf4j

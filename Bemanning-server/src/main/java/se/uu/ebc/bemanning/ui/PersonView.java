@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 // to /people. (Spring Data REST is served under /api, so there is no collision.)
 @Route(value = "people", layout = MainLayout.class)
 @PageTitle("Personer")
-@Menu(order = 4, icon = "icons/user.svg", title = "Personer")
+@Menu(order = 5, icon = "icons/user.svg", title = "Personer")
 @AnonymousAllowed // Vaadin navigation access control requires an explicit access
                   // annotation; without one the route is denied (HTTP 403). The
                   // write actions remain guarded by @PreAuthorize(ROLE_COREDATAADMIN).

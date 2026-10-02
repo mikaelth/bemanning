@@ -59,7 +59,7 @@ import lombok.extern.slf4j.Slf4j;
 @Route(value = "courses", layout = MainLayout.class)
 @PageTitle("Courses")
 //@Menu(order = 0, icon = "icons/clipboard-check.svg", title = "Kurser")
-@Menu(order = 5, icon = "icons/open-book.svg", title = "Kurser")
+@Menu(order = 4, icon = "icons/open-book.svg", title = "Kurser")
 @AnonymousAllowed // Vaadin navigation access control requires an explicit access
                   // annotation; without one the route is denied (HTTP 403). The
                   // write actions remain guarded by @PreAuthorize(ROLE_COREDATAADMIN),

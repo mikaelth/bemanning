@@ -24,6 +24,9 @@ public class PrimulaEntriesExcel {
     @ExcelCellName("Personnr")
     private String pNIN;
 
+	@ExcelCellName("Utbmån")
+	private String month;
+
     @ExcelCellName("   Omf")
     private Float omf;
 
@@ -35,20 +38,20 @@ public class PrimulaEntriesExcel {
 
 	@Builder.Default
 	private boolean updated =  false;
-	
-	
+
+
 	public Float hourlyCost() {
 		Double c = Math.ceil((cost/((omf*kOmf)/(100*100)))/MONTH_IN_HOURS);
 		return c.floatValue();
 	}
-	
+
 	public String pNINForLdap() {
 		String[] parts = pNIN.split("-");
-		
+
 		if (Integer.parseInt(parts[0]) < 551231) {
 			return "20"+parts[0]+parts[1];
 		} else {
-			return "19"+parts[0]+parts[1];		
+			return "19"+parts[0]+parts[1];
 		}
 	}
 }
