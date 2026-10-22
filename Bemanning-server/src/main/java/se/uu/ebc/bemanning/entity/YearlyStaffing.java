@@ -45,6 +45,8 @@ public class YearlyStaffing extends Auditable {
 	@Embedded
 	private FactorRecord teachingFactors;
     
-	
+    public int numberOfCourseInstances () {
+    	return courseInstances.size();
+    }
 
 }

@@ -15,5 +15,6 @@ public class YearlyStaffingDTO {
     private String dept;
     private String year;
 	private FactorRecord teachingFactors;
+	private int numberOfCourseInstances;
 //    private Map<String, Float> teachingFactors;
 }
