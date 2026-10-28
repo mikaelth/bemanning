@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Route(value = "yearlystaffing", layout = MainLayout.class)
 @PageTitle("Årlig bemanning")
-@Menu(order = 8, icon = "icons/calendar.svg", title = "Årlig bemanning")
+@Menu(order = 8, icon = "icons/calendar-o.svg", title = "Årlig bemanning")
 @AnonymousAllowed // Vaadin navigation access control requires an explicit access
                   // annotation. Write actions remain guarded by @PreAuthorize.
 @Slf4j
